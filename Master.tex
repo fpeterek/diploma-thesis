@@ -1,0 +1,81 @@
+\documentclass[czech,master]{diploma}
+\usepackage[autostyle=true,czech=quotes]{csquotes}
+\usepackage[backend=biber, style=iso-numeric, alldates=iso]{biblatex}
+\usepackage{dcolumn}
+\usepackage{subfig}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage[cpp]{diplomalst}
+
+\ThesisAuthor{Bc. Filip Peterek}
+\ThesisSupervisor{prof. RNDr. Marie Duží, CSc.}
+\CzechThesisTitle{Implementace jazyka TIL-Script}
+\EnglishThesisTitle{Implementation of the TIL-Script Language}
+\SubmissionYear{2023}
+
+\ThesisAssignmentFileName{spec.pdf}
+
+\Acknowledgement{Děkuji svému dealerovi drog, bo bez něj bych to nedal.}
+
+\CzechAbstract{
+    Aaaaaaaaaaaaaaaaaaaaaaaaaa
+}
+
+\CzechKeywords{
+    Sebevražda, nadměrné užívání drog
+}
+
+\EnglishAbstract{
+    Aaaaaaaaaaaaaaaaaaaaaaaa
+}
+
+\EnglishKeywords{
+    Suicide, drug abuse
+}
+
+\AddAcronym{TIL}{Transparentní intenzionální logika}
+\AddAcronym{JVM}{Java Virtual Machine}
+
+\addbibresource{biblatex-examples.bib}
+\addbibresource{coffee.bib}
+
+% Novy druh tabulkoveho sloupce, ve kterem jsou cisla zarovnana podle desetinne carky
+\newcolumntype{d}[1]{D{,}{,}{#1}}
+
+
+% Zacatek dokumentu
+\begin{document}
+
+% Nechame vysazet titulni strany.
+\MakeTitlePages
+
+% Jsou v praci obrazky? Pokud ano vysazime jejich seznam a odstrankujeme.
+% Pokud ne smazeme nasledujici dve makra.
+\listoffigures
+\clearpage
+
+% Jsou v praci tabulky? Pokud ano vysazime jejich seznam a odstrankujeme.
+% Pokud ne smazeme nasledujici dve makra.
+\listoftables
+\clearpage
+
+% A nasleduje text zaverecne prace.
+\input{Chapters/Introduction.tex}
+\input{Chapters/SampleChapter1.tex}
+\input{Chapters/SampleChapter2.tex}
+\input{Chapters/TechnicalDetails.tex}
+\input{Chapters/Conclusion.tex}
+
+% Seznam literatury
+\printbibliography[title={Literatura}, heading=bibintoc]
+
+% Prilohy
+\appendix
+\input{Chapters/Appendix1.tex}
+\input{Chapters/Appendix2.tex}
+
+% Priloha vlozena primo do hlavniho LaTeX souboru. Ne vsechny prilohy je nutne mit ve zvlastnich souborech.
+\chapter{Dlouhý zdrojový kód}
+\lstinputlisting[label=src:CppExternal,caption={Dlouhý zdrojový kód v jazyce C++ načtený s externího souboru}]{SourceCodes/ArraySortingAlgorithms.cpp}
+
+\end{document}
