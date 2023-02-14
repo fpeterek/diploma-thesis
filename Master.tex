@@ -5,6 +5,7 @@
 \usepackage{subfig}
 \usepackage{hyperref}
 \usepackage{xurl}
+\usepackage{tikz}
 \usepackage[cpp]{diplomalst}
 
 \ThesisAuthor{Bc. Filip Peterek}
@@ -15,22 +16,34 @@
 
 \ThesisAssignmentFileName{spec.pdf}
 
-\Acknowledgement{Děkuji svému dealerovi drog, bo bez něj bych to nedal.}
+\Acknowledgement{TODO: Doplnit poděkování, až bude práce hotová}
 
 \CzechAbstract{
-    Aaaaaaaaaaaaaaaaaaaaaaaaaa
+    Cílem práce je implementovat programovací jazyk TILScript. Jazyk TILScript slouží jako
+    výpočetní varianta logického kalkulu TIL, jenž umožňuje jednoduchý strojový zápis konstrukcí
+    Transparentní intenzionální logiky, ale také jejich následné provedení. Práce dále řeší
+    praktické problémy s interpretací TILScriptu, a to například definice pojmenovaných funkcí,
+    interakce s databází, apod. Dále se práce snaží navrhnout nadmnožinu jazyka TILSkript, která
+    umožní konstrukce TILu nejen provádět, ale také analyzovat, vytvářet je, a pracovat s nimi.
 }
 
 \CzechKeywords{
-    Sebevražda, nadměrné užívání drog
+    Transparentní intenzionální logika, TILScript, překladač
 }
 
 \EnglishAbstract{
-    Aaaaaaaaaaaaaaaaaaaaaaaa
+    The goal of the thesis is the definition and implementation of the TILScript language.
+    TILScript is a scripting language which serves the purpose of a computational variant of
+    Transparent intensional logic, a logical calculus based on typed lambda calculi. TILScript
+    allows for not just representation, but also execution of TIL constructions. This work also
+    deals with practical problems of TILScript implementation, such as definitions of named
+    functions, interaction with databases, and so on. Furthermore, this thesis attempts to define
+    a superset of the TILScript language, which allows for not just the execution of constructions,
+    but also for their creation and analysis.
 }
 
 \EnglishKeywords{
-    Suicide, drug abuse
+    Transparent intensional logic, TILScript, interpreter
 }
 
 \AddAcronym{TIL}{Transparentní intenzionální logika}
@@ -46,25 +59,27 @@
 % Zacatek dokumentu
 \begin{document}
 
-% Nechame vysazet titulni strany.
 \MakeTitlePages
 
+% TODO
 % Jsou v praci obrazky? Pokud ano vysazime jejich seznam a odstrankujeme.
 % Pokud ne smazeme nasledujici dve makra.
 \listoffigures
 \clearpage
 
+% TODO
 % Jsou v praci tabulky? Pokud ano vysazime jejich seznam a odstrankujeme.
 % Pokud ne smazeme nasledujici dve makra.
 \listoftables
 \clearpage
 
 % A nasleduje text zaverecne prace.
-\input{Chapters/Introduction.tex}
-\input{Chapters/SampleChapter1.tex}
-\input{Chapters/SampleChapter2.tex}
-\input{Chapters/TechnicalDetails.tex}
-\input{Chapters/Conclusion.tex}
+% \input{Chapters/Introduction.tex}
+\input{Chapters/TIL.tex}
+% \input{Chapters/SampleChapter1.tex}
+% \input{Chapters/SampleChapter2.tex}
+% \input{Chapters/TechnicalDetails.tex}
+% \input{Chapters/Conclusion.tex}
 
 % Seznam literatury
 \printbibliography[title={Literatura}, heading=bibintoc]

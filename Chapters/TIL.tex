@@ -1,0 +1,41 @@
+\chapter{Transparentní intenzionální logika}
+\label{sec:TILIntroduction}
+
+% TODO: Citace
+Transparentní intenzionální logika (TIL) je logický systém založený na typovaném lambda kalkulu.
+TIL je využíván k logické analýze přirozeného jazyka. Oproti tradičnímu lambda kalkulu, jenž
+se využívá jako komputační model, tedy jako pouhý prostředek k dosažení konkrétní hodnoty --
+výsledku, v Transparentní intenzionální logice hraje konstrukce kalkulu často důležitější roli,
+než hodnota, kterou by konstrukce po provedení zkonstruovala.
+
+Jako příklad využití lambda kalkulu jako výpočetní model lze uvést např. funkcionální programovací
+jazyk Haskell. Interně je Haskell kompilován do lambda kalkulu (přesněji do jeho supersetu
+obsahujícího např. čísla nebo logické hodnoty, která jinak v lambda kalkulu musíme kódovat pomocí
+Churchova kódování -- K-kombinátorů, apod.). Ultimátně v Haskellu ovšem lambda kalkul slouží pouze
+k získání konkrétního výsledku. Nadefinujeme vztah mezi vstupem a výstupem, a program napsaný
+v Haskellu nám vstup transformuje. Pokud zanedbáme efektivitu programu, nezajímá nás, jakým
+způsobem program spočítal výsledek, dokud jej spočítal správně.
+
+Naopak Transparentní intenzionální logika je hyperintenzionálním kalkulem, který nám umožňuje
+vytvářet konstrukce vypovídající o jiných konstrukcích. TIL vychází z myšlenky, že výraz
+přirozeného jazyka sice označuje denotát -- konkrétní individuum, významem výrazu ovšem není
+samotný denotát, který ani nemusí nutně existovat. Význam výrazu je abstraktní a lze jej zachytit
+konstrukcí. Daná konstrukce poté při provedení zkonstruuje denotát výrazu. Jako příklad lze uvést
+například výraz "francouzský král." V době psaní této práce Francie krále nemá. Výraz nemá žádný
+denotát, neuvádí žádné konkrétní individuum. Přesto výrazu "francouzský král" rozumíme, výraz má
+svůj význam, jen v současné době neuvádí žádnou osobu. A budeme-li chtít o významu výrazu
+"francouzský král" něco vypovědět, například že francouzský král je monarchou v čele Francie,
+daný monarcha nemusí existovat. Dále lze uvést například rozdíl mezi výrazy "logaritmus 1024
+o základě 2" a "5 + 5". Denotátem obou výrazů je 10. Zadáme-li do interpreteru Haskellu výrazy
+\lstset{language=Haskell}
+\lstinline{logBase 2 1024} a \lstinline{5 + 5}, získáme v obou případech stejný výsledek.
+V přirozeném jazyce ovšem chápeme značný rozdíl mezi oběma výrazy, ačkoliv mají stejný denotát.
+"Logaritmus 1024 o základě 2" vyjadřuje číslo, kterým musíme umocnit dvojku, abychom získali 1024.
+Výraz "5 + 5" očividně vyjadřuje úplně jinou matematickou operaci a jeho výsledek spočítáme jiným
+postupem.
+
+
+\begin{tikzpicture}
+\end{tikzpicture}
+
+\endinput
