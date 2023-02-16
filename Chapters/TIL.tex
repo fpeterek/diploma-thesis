@@ -34,8 +34,23 @@ V přirozeném jazyce ovšem chápeme značný rozdíl mezi oběma výrazy, ačk
 Výraz "5 + 5" očividně vyjadřuje úplně jinou matematickou operaci a jeho výsledek spočítáme jiným
 postupem.
 
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \node[draw, fit={(0, 0) (2, 1)},              xshift=3cm, inner sep=0pt, label=center:Výraz] (A) {};
+        \node[draw, fit={(0, 0) (2, 1)}, yshift=-5cm,             inner sep=0pt, label=center:Konstrukce] (B) {};
+        \node[draw, fit={(0, 0) (2, 1)}, yshift=-5cm, xshift=6cm, inner sep=0pt, label=center:Denotát] (C) {};
 
-\begin{tikzpicture}
-\end{tikzpicture}
+        \path (A) -- node[sloped] (ab) {vyjadřuje}  (B);
+        \path (A) -- node[sloped] (ac) {označuje}   (C);
+        \path (B) -- node[sloped] (bc) {konstruuje} (C);
+
+        \draw [-latex]          (A)--(ab)--(B);
+        \draw [-latex] [dashed] (A)--(ac)--(C);
+        \draw [-latex]          (B)--(bc)--(C);
+    \end{tikzpicture}
+    \caption{Schéma procedurální sémantiky TIL}
+    \label{fig:til-semantics}
+\end{figure}
 
 \endinput
