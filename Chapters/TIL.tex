@@ -53,26 +53,96 @@ postupem.
     \label{fig:til-semantics}
 \end{figure}
 
-Denotátem výrazu může být jak objekt z báze, konstrukce, i funkce.
+Denotátem výrazu může být nejen objekt z báze, ale i konstrukce nebo funkce.
 
 Jak již bylo zmíněno, Transparentní intenzionální logika vychází z typovaného lambda kalkulu, proto
 také každý objekt musí mít svůj typ. Pro správné pochopení TILu, a tedy i této práce, je tak nutné 
 znát typovou hierarchii TIL.
 
-\subsection{Báze}
+\section{Báze}
 
-Báze je kolekce vzájemně disjunktních neprázdných množin, které dohromady definují universum
-diskurzu. Tyto množiny definují atomické objekty. Každá množina dále objektům určuje určitá
+Báze je kolekce vzájemně disjunktních neprázdných množin, které dohromady definují s jakými objekty
+budeme pracovat. Tyto množiny definují atomické objekty. Každá množina dále objektům určuje určitá
 základní kritéria (např. pokud jako jednu z množin báze zvolíme množinu $\mathbb{N}$, víme, že
-všechny objekty z této množiny budou čísla).
+všechny objekty z této množiny budou čísla). Vždy se ovšem jedná pouze o nejnutnější
+a nejzákladnější vlastnosti. Báze například nemá žádný vliv na vlastnosti proměnlivé v čase.
 
-\subsection{Typy 1. řádu}
+Bázi volíme dle potřeb konkrétní aplikace a univerza diskurzu. Například používáme-li TIL k logické
+analýze matematických vět, jako bázi lze zvolit například množinu celých čísel, množinu reálných
+čísel, a množinu pravdivostních hodnot. Musíme však vzít v potaz, že tato báze neobsahuje čísla
+komplexní.
 
+Patří-li objekt x do množiny $\alpha$ z báze, říkáme, že se jedná o objekt typu $\alpha$.
+K explicitnímu uvedení typu objektu \textit{x} využíváme zápis $x/\alpha$. Množinám tvořícím bázi
+lze přirozeně říkat typy.
 
-\subsection{Rozvětvěná hierarchie typů}
+Pro analýzu přirozeného jazyka se většinou volí objektová báze skládající se z typů {$o$, $\iota$,
+$\tau$, $\omega$}. Tyto typy jsou podrobněji popsány v tabulce \ref{tab:default-base}.
 
-\subsection{Konstrukce TIL}
+\begin{table}
+    \caption{Výchozí báze pro analýzu přirozeného jazyka}
+    \label{tab:default-base}
+    \centering
 
-\subsection{Charakteristické rysy TIL}
+    \begin{tabular} { | l l | }
+        \hline
+        Typ      & Popis typu \\
+        \hline
+        $o$      & Množina pravdivostních hodnot \\
+        $\iota$  & Množina individuí (univerzum diskurzu) \\
+        $\tau$   & Množina časových okamžiků/reálných čísel \\
+        $\omega$ & Množina logicky možných světů \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Funkce}
+
+V matematice se jako základní molekulární typ využívají relace. Funkce je poté speciální typ relace,
+který je zprava jednoznačný. V TIL je však základním molekulárním typem funkce. Chceme-li v TIL
+vyjádřit $n$-ární relaci nad množinou $\alpha_1 \times ... \times \alpha_n$, lze tak samozřejmě
+udělat definicí $n$-ární funkce z $\alpha_1 \times ... \times \alpha_n$ do $o$, která každému prvku
+z $\alpha_1 \times ... \times \alpha_n$ přiřadí pravdivostní hodnotu na základě toho, zda prvek
+do relace patří, nebo ne.
+
+Narozdíl od tradičního lambda kalkulu, kde jsou funkce pouze nulární nebo unární, v Transparentní
+intenzionální logice není arita funkce omezena.
+
+\subsection{Intenze a extenze}
+
+V TIL dále rozlišujeme funkce na tzv. \textit{intenze} a \textit{extenze}. Intenze jsou funkce
+z možných světů. Extenze jsou funkce, jejichž doménou množina možných světů není, a tudíž jejich
+funkční hodnota nezávisí na stavu světa.
+
+Intenze jsou obecně funkce typu $(\alpha\omega)$ pro libovolný typ $\alpha$. Nejčastěji se však
+jedná o funkce typu $((\alpha\tau)\omega)$, tedy funkce zobrazující možné světy do chronologií
+objektů typu $\alpha$.
+
+\section{Konstrukce TIL}
+
+Konstrukce v Transparentní intenzionální logice jsou abstraktní procedury. Tyto procedury jsou
+strukturované -- nejedná se o množiny, mají pevně danou strukturu, a na uspořádání případných
+podprocedur záleží. Tyto konstrukce lze podle definovaných pravidel provést. Provedením konstrukce,
+získáme výstup, případně nezískáme nic, viz pravidla provedení konstrukcí \ref{execution-rules}.
+
+\section{Pravidla provedení konstrukcí} \label{execution-rules}
+
+\subsection{Princip kompozicionality} 
+
+\section{Typy 1. řádu}
+
+Nechť \textit{B} je báze. Pak:
+
+\begin{enumerate}[i)]
+    \item Každá množina z báze \textit{B} je atomický typ řádu 1 nad \textit{B}.
+    \item Nechť $\alpha, \beta_1, ...,\beta_m (m > 0)$ jsou typy řádu 1 nad \textit{B}. Pak soubor
+        všech \textit{m}-árních parciálních funkcí $(\alpha\beta_1...\beta_m)$, tedy zobrazení z 
+        $\beta_1 \times ... \times \beta_m$ do $\alpha$, je molekulární typ řádu 1 nad \textit{B}.
+    \item Nic jiného není typem řádu 1 nad bází \textit{B}.
+\end{enumerate}
+
+\section{Rozvětvěná hierarchie typů}
+
+\section{Charakteristické rysy TIL}
 
 \endinput
