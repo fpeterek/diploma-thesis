@@ -106,7 +106,7 @@ z $\alpha_1 \times ... \times \alpha_n$ přiřadí pravdivostní hodnotu na zák
 do relace patří, nebo ne.
 
 Narozdíl od tradičního lambda kalkulu, kde jsou funkce pouze nulární nebo unární, v Transparentní
-intenzionální logice není arita funkce omezena.
+intenzionální logice není arita funkce omezena. Dále můžeme v TIL pracovat s funkcemi parciálními.
 
 \subsection{Intenze a extenze}
 
@@ -124,10 +124,63 @@ Konstrukce v Transparentní intenzionální logice jsou abstraktní procedury. T
 strukturované -- nejedná se o množiny, mají pevně danou strukturu, a na uspořádání případných
 podprocedur záleží. Tyto konstrukce lze podle definovaných pravidel provést. Provedením konstrukce,
 získáme výstup, případně nezískáme nic, viz pravidla provedení konstrukcí \ref{execution-rules}.
+Konstrukce, které nekonstruují žádný výstup, nazýváme \textit{nevlastní} (anglicky
+\textit{improper}). V TIL pracujeme s šesti druhy konstrukcí.
 
-\section{Pravidla provedení konstrukcí} \label{execution-rules}
+Jak již bylo zmíněno, konstrukce můžou v TIL operovat nejen nad objekty, které nejsou konstrukcemi,
+tedy nad objekty z báze, ale také nad jinými konstrukce. Konstrukce však může operovat pouze nad
+konstrukcemi nižšího řádu, než je konstrukce samotná, viz \ref{type-order}. Každou podkonstrukci,
+kterou musíme provést při provedení konstrukce, nazýváme \textit{konstituentem}. V TIL existuje
+šest různých druhů konstrukcí. Dvě atomické -- mají pouze jeden konstituent, a to sebe samotné,
+a čtyři molekulární. Atomickými konstrukcemi jsou \textit{trivializace} a \textit{proměnné}. Mezi
+molekulární konstrukce poté řadíme \textit{kompozice}, \textit{uzávěry}, \textit{provedení} a
+\textit{dvojí provedení}.
+
+\textit{Proměnné} jsou konstrukce, které na základě valuace \textit{v} \textit{v}-konstruují
+objekty. Skutečnost, že proměnná $x$ \textit{v}-konstruuje hodnotu typu $\alpha$ značíme
+$x \rightarrow_v \alpha$.
+
+\lstset{language=Lisp}
+\textit{Trivializace} pro libovolný objekt \textit{X} konstruuje samotný objekt \textit{X}.
+Konstrukce je v Transparentní intenzionální logice potřebná, neboť výchozím módem pro konstrukce
+je provedení. Samotná konstrukce \textit{X} by tak byla automaticky provedena, a místo konstrukce
+\textit{X} bychom dostali pouze její denotát. Pokud bychom chtěli zkonstruovat konstrukci
+\textit{X}, musíme ji trivializovat. Tím se provede pouze konstrukce trivializace. A protože
+trivializace nemá jiný konstituent, než sebe samotnou, konstrukce \textit{X} se tak neprovede.
+V literatuře se trivializace \textit{X} tradičně značí ${}^0X$. Obzvlášť se používá také zápis
+$'X$. Tento zápis je poté využit i v jazyce TILScript. Trivializaci lze považovat za ekvivalent
+funkce \lstinline{QUOTE} z jazyka Lisp. Trivializace taktéž bývá využívána ke konstruování hodnot,
+které nelze provést (objekty z báze, funkce) a tudíž je nelze zmínit netrivializované.
+
+\textit{Kompozice} je využívána k aplikaci funkcí. Kompozice $[X Y_1...Y_m]$ značí aplikaci funkce
+konstruované konstrukcí $X$ na argumenty zkonstruované konstrukcemi $Y_1,...,Y_m$. Pokud konstrukce
+$X$ konstruuje funkci $f$, všechny podkonstrukce $Y_1,...,Y_m$ konstruují hodnotu, a je-li funkce
+$f$ na daných argumentech definovaná, kompozice $v$-konstruuje funkční hodnotu na těchto
+argumentech. V opačném případě je kompozice nevlastní.
+
+\textit{Uzávěr} $\lambda x_1...x_m Y$ je konstrukce $v$-konstruující funkci. $x_1,...x_m$ musí
+být navzájem různé proměnné, $Y$ musí být konstrukcí. Konstruce uzávěru je velmi podobná abstrakci
+v lambda kalkulu. Narozdíl od lambda kalkulu však v TILu může uzávěr konstruovat funkce s aritou
+vyšší než jedna. Uzávěr nemůže být nikdy nevlastní, může však konstruovat tzv.
+\textit{degenerovanou funkci}, tedy funkci, která je nedefinovaná na celém definičním oboru.
+
+\textit{Provedení} ${}^1X$ je konstrukce $v$-konstruující objekt konstruovaný konstrukcí $X$.
+Pokud je konstrukce $X$ $v$-nevlastní, je provedení ${}^1X$ také $v$-nevlastní. Jelikož je však
+provedení výchozím módem pro objekty, většinou se neuvádí. Provést lze pouze konstrukce. Objekty
+z báze (tedy čísla, individua, apod...) či funkce nelze provést, jejich provedení nekonstruuje nic.
+Proto je potřeba tyto objekty vždy trivializovat.
+
+\textit{Dvojí provedení} ${}^2X$ je poslední z výčtu konstrukcí. Je-li $X$ konstrukcí
+$v$-konstruující konstrukci $Y$, a $v$-konstruuje-li konstrukce $Y$ objekt $Z$, pak ${}^2X$
+$v$-konstruuje $Z$. V opačném případě je dvojí provedení ${}^2X$ $v$-nevlastní.
+
+Jiné konstrukce v Transparentní intenzionální logice neexistují.
 
 \subsection{Princip kompozicionality} 
+
+Princip kompozicionality je důležitým rysem Transparentní intenzionální logiky. Princip
+kompozicionality uvádí, že je-li libovolný konstituent konstrukce $X$ $v$-nevlastní a v dané
+valuaci nekonstruuje žádnou hodnotu, pak je $v$-nevlastní i konstrukce $X$.
 
 \section{Typy 1. řádu}
 
@@ -141,7 +194,7 @@ Nechť \textit{B} je báze. Pak:
     \item Nic jiného není typem řádu 1 nad bází \textit{B}.
 \end{enumerate}
 
-\section{Rozvětvěná hierarchie typů}
+\section{Rozvětvěná hierarchie typů} \label{type-order}
 
 \section{Charakteristické rysy TIL}
 
