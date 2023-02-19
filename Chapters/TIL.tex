@@ -123,9 +123,8 @@ objektů typu $\alpha$.
 Konstrukce v Transparentní intenzionální logice jsou abstraktní procedury. Tyto procedury jsou
 strukturované -- nejedná se o množiny, mají pevně danou strukturu, a na uspořádání případných
 podprocedur záleží. Tyto konstrukce lze podle definovaných pravidel provést. Provedením konstrukce,
-získáme výstup, případně nezískáme nic, viz pravidla provedení konstrukcí \ref{execution-rules}.
-Konstrukce, které nekonstruují žádný výstup, nazýváme \textit{nevlastní} (anglicky
-\textit{improper}). V TIL pracujeme s šesti druhy konstrukcí.
+získáme výstup, případně nezískáme nic. Konstrukce, které nekonstruují žádný výstup, nazýváme
+\textit{nevlastní} (anglicky \textit{improper}). V TIL pracujeme s šesti druhy konstrukcí.
 
 Jak již bylo zmíněno, konstrukce můžou v TIL operovat nejen nad objekty, které nejsou konstrukcemi,
 tedy nad objekty z báze, ale také nad jinými konstrukce. Konstrukce však může operovat pouze nad
@@ -182,7 +181,13 @@ Princip kompozicionality je důležitým rysem Transparentní intenzionální lo
 kompozicionality uvádí, že je-li libovolný konstituent konstrukce $X$ $v$-nevlastní a v dané
 valuaci nekonstruuje žádnou hodnotu, pak je $v$-nevlastní i konstrukce $X$.
 
-\section{Typy 1. řádu}
+\section{Typy 1. řádu} \label{fst-order}
+
+% TODO: Doplnit citaci
+Definice je skoro slovo od slova převzata z knihy
+\textit{TIL jako procedurální logika -- Průvodce zvídavého čtenáře Transparentní intensionální
+logikou}. Tato sekce slouží jako krátké vysvětlení základů Transparentní intenzionální logiky
+se čtenář může obrátit například na tuto knihu.
 
 Nechť \textit{B} je báze. Pak:
 
@@ -196,6 +201,57 @@ Nechť \textit{B} je báze. Pak:
 
 \section{Rozvětvěná hierarchie typů} \label{type-order}
 
-\section{Charakteristické rysy TIL}
+%TODO: Doplnit citaci
+Definice je opět skoro slovo od slova převzata z.
+
+Nechť \textit{B} je báze. Pak:
+
+\subsection{$T_1$ (typy řádu 1)}
+Viz sekce \ref{fst-order}.
+
+\subsection{$C_n$ (konstrukce řádu n)}
+
+\begin{enumerate}[i)]
+    \item Nechť $x$ je proměnná $v$-konstruující objekt typu řádu $n$. Pak $x$ je
+        \textit{kontrukce řádu n nad b}.
+    \item Nechť $X$ je prvek typu řádu $n$. Pak trivializace ${}^0X$, provedení ${}^1X$ a dvojí
+        provedení ${}^2X$ jsou \textit{konstrukcemi řádu n nad b}.
+    \item Nechť $X, Y_1, ... Y_m$ jsou konstrukce řádu $n$ nad \textit{B}. Pak kompozice 
+        $[X Y_1...Y_m]$ je \textit{konstrukce řádu n nad b}.
+    \item Nechť $x_1,...,x_m$ jsou vzájemně různé proměnné a $X$ je konstrukce řádu $n$
+        nad \textit{B}. Pak uzávěr $[\lambda x_1 ... x_m X]$ je \textit{konstrukce řádu n nad b}.
+    \item Nic jiného není konstrukcí řádu $n$ nad bází \textit{B}.
+\end{enumerate}
+
+\subsection{$T_{n+1}$ (typy řádu n+1)}
+
+Nechť $*_n$ je kolekce všech konstrukcí řádu $n$ nad $B$.
+
+\begin{enumerate}[i)]
+    \item $*_n$ a každý typ řádu $n$ jsou \textit{typy řádu n+1 nad B}.
+    \item Jsou-li $\alpha, \beta_1,...,\beta_m$ typy řádu $n+1$ nad \textit{B}, pak
+        $(\alpha \beta_1...\beta_m)$, tedy kolekce parciálních funkcí, je
+        \textit{typy řádu n+1 nad B}.
+    \item Nic jiného není typ řádu $n+1$ nad \textit{B}.
+\end{enumerate}
+
+% \section{Charakteristické rysy TIL}
+
+% \subsection{Princip kompozicionality}
+
+% Princip kompozicionality říká, že význam výrazu je jednoznačně určen významy jeho podsložek.
+% Z principu kompozicionality také vyplývá, že nemá-li konstrukce žádný význam (tedy jedná se o
+% nevlastní konstrukci), nemají význam ani konstrukce, pro něž je daná nevlastní konstrukce
+% konstituentem.
+
+% \subsection{Antikontextualismus}
+
+% Antikontextualismus znamená, že význam výrazu je stejný nezávisle na stavu světa.
+
+% \subsection{Antiaktualismus}
+
+\section{Analytické a empirické výrazy}
+
+V TIL pracujeme s dvěma typy výrazů.
 
 \endinput
