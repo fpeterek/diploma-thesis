@@ -1,7 +1,8 @@
 \chapter{Úvod}
 \label{sec:Introduction}
 
-% TODO: Ocitovat n-gramove modely, word2vec, ChatGPT
+% TODO: Ocitovat n-gramove modely, word2vec, GPT-3
+% W2V: https://arxiv.org/pdf/1301.3781.pdf
 % GPT-3: https://arxiv.org/abs/2005.14165
 
 Analýza přirozeného jazyka jako disciplína stále rychleji stoupá na oblibě i důležitosti. Jistě
@@ -9,6 +10,46 @@ málokomu unikly například n-gramové modely založené na predikci následuj�
 z předcházejících $n$ slov, či vektorové modely jako Word2Vec, umožňující reprezentovat význam
 slov pomocí vektorů. Poslední dobou se velmi často mluví o jazykovém modelu GPT-3.
 
-Výčet přístupů k analýze přirozeného jazyka však nekončí n-gramy a neuronovými sítěmi.
+Výčet přístupů k analýze přirozeného jazyka však nekončí n-gramy a neuronovými sítěmi. K analýze
+přirozených jazyků lze přistoupit také za pomocí logiky. Mezi průkopníky tohoto přístupu patřil
+také český logik Pavel Tichý, tvůrce Transparentní intenzionální logiky.
+
+Transparentní intenzionální logika (dále také TIL) je logický systém založený na typovaném lambda
+kalkulu. TIL umožňuje modelovat a analyzovat výrazy přirozeného jazyka za pomocí logiky. Jako
+doplněk TILu poté vznikl také funkcionální programovací jazyk TILScript, sloužící k interpretaci
+konstrukcí Transparentní intenzionální logiky. Syntax i sémantika TILScriptu jsou silně inspirovány
+TILem, ovšem přirozeně s určitými úpravami tak, aby byl TILScript rozumně zapisovatelný
+a interpretovatelný na počítači.
+
+A právě interpretací TILScriptu se zabývá tento text. Součástí práce tak je navázání
+na předcházející vývoj jazyka TILScript, rozšíření gramatiky TILScriptu nutné pro akomodaci nových
+prvků jazyka (např. direktiva \textit{import} sloužící k importu symbolů definovaných v jiném
+souboru), nebo také samotná interpretace jazyka TILScript, společně s kontrolou typové koherence.
+Dále se práce navrhuje způsob, jak volat funkce platformy JVM. Tento přístup otevírá jazyku
+TILScript celý ekosystém platformy JVM. Zatímco tedy práce nijak neřeší a neimplementuje získávání
+informací z již existující databáze, soustředí se spíše na zjednodušení přístupu k existujícím
+knihovnám, aby do budoucna nebyl problém rychle a jednoduše naprogramovat přístup k libovolnému
+zdroji dat.
+
+Nakonec se práce snaží navrhnout určitou nadmnožinu jazyka TILScript tak, aby TILScript mohl
+sloužit nejen k interpretaci konstrukcí TIL, ale také k jejich tvorbě a analýze. V současné době
+pro analýzu a práci s konstrukcemi TILScriptu existují nástroje psané v jazyce Java. Existuje-li
+však v současné době programovací jazyk vytvořený přímo pro logiky pracující s TILem, není důvod
+tento jazyk nevyužít a nerozšířit také o nástroje pro analýzu, tvorbu i transformaci TILScript
+konstrukcí. Pro pokročilejší práci s TILScriptem by tak nebylo třeba učit se jiný programovací
+jazyk (Java), nebo využívat externí nástroje, ale naopak by byl k dispozici již familiérní nástroj,
+jehož základy jsou již příznivům Transparentní intenzionální logiky dobře známy. Cílem této
+nadmnožiny ovšem není předefinovat TIL, či nějak výrazně měnit jádro TILScriptu, jinak by se
+ostatně také nemohlo jednat o nadmnožinu. Tyto nové prvky jsou od jádra TILScriptu, které slouží
+převážně jako výpočetní varianta TIL, jednoduše oddělitelné. Při práci s interpreterem, jehož
+implementace je součástí této práce, není problém se této nadmnožině vyhnout a nevyužívat ji.
+Také lze, na základě tohoto textu, implementovat interpreter samotného TILScriptu bez jakýchkoliv
+rozšíření.
+
+Práce se do znatelné míry inspiruje výzkumem amerického profesora Johna McCarthyho a programovacím
+jazykem Lisp. Jelikož Lisp vychází z lambda kalkulu, pracuje s parciálními funkcemi, a nerozlišuje
+mezi programem a daty (tedy Lisp programy můžou pracovat s, generovat a transformovat Lisp
+konstrukce), lze mezi Lispem a TILem nalézt řadu podobností. Primárním odlišovacím znakem
+Transparentní intenzionální logiky je ovšem rigorózně definovaný typový systém.
 
 \endinput
