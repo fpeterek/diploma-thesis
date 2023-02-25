@@ -1,7 +1,71 @@
 \chapter{TILScript}
 
+Nyní konečně přišel čas představit TILScript. TILScript je interpretovaný funkcionální programovací
+jazyk, do znatelné míry inspirovaný jazyky jako Haskell nebo Lisp. Syntax TILScriptu by měla co
+nejvíce připomínat syntaktické prvky Transparentní intenzionální logiky, aby pouhá znalost TILu
+stačila k okamžitému pochopení TILScriptu. Sémantika by poté měla být stejná.
+
+Tato kapitola je rozdělena do tří sekcí. V první sekci jsou popsány důležité základní rysy
+TILScriptu. Druhá sekce popisuje již existující prvky TILScriptu, a případně dokumentuje změny
+oproti předchozím verzím TILScriptu. Poslední sekce se věnuje navrhovaným rozšířením jazyka
+TILScript.
+
+\section{Charakteristické rysy TILScriptu}
+
+Tato sekce popisuje charakteristické rysy TILScriptu v takové podobě, jakou nabývá v této práci.
+Pokud se v některém bodě TILScript neshoduje s TILem či předchozími verzemi TILScriptu, je rozdíl
+náležitě popsán a vysvětlen.
+
+\subsection{Lambda kalkul parciálních funkcí}
+
+\subsubsection{Shora neomezená arita funkcí}
+
+% TODO: Ozdrojovat currying asi? Idk, lambda kalkul
+
+Narozdíl od lambda kalkulu ve své tradiční podobě, nebo například jazyka Haskell, v Transparentní
+intezionální logice není arita funkce shora omezená. TILScript musí tento fakt reflektovat. Proto
+tento jazyk umožňuje definici i aplikaci funkcí libovolné (samozřejmě nezáporné) arity. Také zde
+neexistuje rozvíjení funkcí (anglicky \textit{currying}). Zatímco např. v Haskellu jsou funkce
+arity dvě nebo vyšší automaticky rozvinuty na sérií několika unárních funkcí, jejichž oborem hodnot
+jsou unární nebo nulární funkce, a jedné nulární funkce která vrací žádaný výsledek, v TILScriptu
+není arita nijak omezená.
+
+\subsubsection{Parciální funkce a respektování principu kompozicionality}
+
+Jelikož v TIL můžou být funkce parciální, musí i TILScript počítat s parcialitou funkcí. Dále musí
+TILScript respektovat princip kompozicionality, základní rys Transparentní intenzionální logiky.
+Jedním z důsledků principu kompozicionality je, že konstrukce, jejíž přinejmenším jeden konstituent
+je nevlastní, bude také nutně nevlastní. Reprezentaci stavu, kdy parciální funkce je aplikována
+na argumenty, na kterých není definována, se věnuje podsekce \textit{Hodnota Nil} \ref{nil-value}
+této kapitoly. Způsob dodržování principu kompozicionality je popsán v podsekci
+\textit{Okamžité vyhodnocování (Eager evaluation)} \ref{eager-eval}.
+
+%TODO: Ocitovat
+Jedinou výjimkou je funkce \lstinline{IsNil}, jež vrací pravdivostní hodnotu \lstinline{True},
+pokud je její jediný argument \lstinline{Nil}, v opačném případě je jejím výsledkem
+\lstinline{False}. Tato speciální sémantika funkce \lstinline{IsNil}, ačkoliv porušuje princip
+kompozicionality a vyžaduje aplikaci unární funkce na "nic," je zvolena jako doplněk k funkci
+\lstinline{Improper/(o*_n)} definované v Průvodci čtenáře, a jako kompromis mezi dodržením
+principů TIL a umožněním zpracování chyb.
+
+\subsection{Neměnnost proměnných a symbolů (\textit{Immutability})}
+
+Jelikož je TILScript funkcionální jazyk, jsou hodnoty všech proměnných konstantní -- tedy
+jakmile je proměnné jednou přiřazena valuace, nelze její hodnotu změnit. Dále nelze proměnnou
+zastínit (angl. \textit{to shadow, shadowing}) v rámci oblasti platnosti (angl. \textit{scope}),
+ve které byla definována. Proměnnou lze zastínit vytvořením nové oblasti platnosti (tedy například
+na novém rámci zásobníku, angl. \textit{stack frame}).
+
+% TODO: symboly
+
+\subsection{Okamžité vyhodnocování (\textit{Eager evaluation})} \label{eager-eval}
+
+\subsection{}
+
 \section{TILScript jako výpočetní varianta TILu}
 
-\section{Rozšíření TILu}
+\section{Rozšíření TILScriptu}
+
+\subsection{Hodnota \textit{Nil}} \label{nil-value}
 
 \endinput
