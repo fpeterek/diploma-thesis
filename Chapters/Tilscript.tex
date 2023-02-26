@@ -56,13 +56,73 @@ zastínit (angl. \textit{to shadow, shadowing}) v rámci oblasti platnosti (angl
 ve které byla definována. Proměnnou lze zastínit vytvořením nové oblasti platnosti (tedy například
 na novém rámci zásobníku, angl. \textit{stack frame}).
 
-% TODO: symboly
+Obdobně nelze redefinovat funkce nebo změnit typ symbolické hodnoty (viz \ref{symbolic-values}).
 
 \subsection{Okamžité vyhodnocování (\textit{Eager evaluation})} \label{eager-eval}
 
-\subsection{}
+%TODO: Toto potřebuju vyhodnotit a dopsat, až zjistím, jak vlastně funguje lazy evaluace v TIL
+
+\subsection{Definice a deklarace symbolů}
+
+TILScript nově rozlišuje mezi deklaracemi a definicemi proměnných a funkcí. Deklarace pouze
+uvědomí překladač o existenci proměnné nebo funkce, nijak ale nedefinuje valuaci proměnné nebo
+sémantiku funkce. Deklarace umožňuje funkci či proměnnou zmínit (např. v trivializaci, v uzávěru),
+neumožňuje nám však proměnnou provést nebo funkci aplikovat -- jak také, když neznáme hodnotu
+proměnné, případně sémantiku dané funkce. Provedení deklarované, avšak nedefinované proměnné
+je chybou, při které interpreter ohlásí chybu a běh programu je ukončen. Deklarovat jeden symbol
+lze vícekrát, deklarace však nesmí být konfliktní a lišit se typy.
+
+\begin{lstlisting}[caption={Hlášení chyby při chybějící definici}]
+$ java -jar interpreter/build/libs/tilscript.jar examples/undef-var.tils
+** Error **
+(4, 1): myVar.
+    ~~~ ^ ~~~
+        Variable 'myVar' is declared but undefined
+$ java -jar interpreter/build/libs/tilscript.jar examples/undef-fn.tils
+** Error **
+(2, 1): MyFn/(Int Int Int).
+    ~~~ ^ ~~~
+        Function MyFn is declared but undefined, application is impossible
+\end{lstlisting}
+
+Definice přiřadí proměnné valuaci, funkci sémantiku. Proměnné s řádnou definicí lze provést
+a můžou tak být konstituentem prováděné konstrukce. Funkce s řádnou definicí lze aplikovat. Funkce
+i proměnné lze definovat pouze jednou. Opakovaná definice je chybou a vyústí v předčasné ukončení
+programu.
+
+Symbolické hodnoty, viz \ref{symbolic-values}, lze pouze deklarovat.
+
+Deklarace jsou automaticky odvozeny z definic. Proto, pokud je známa definice, není třeba dodávat
+také deklaraci. K interpretaci deklarací automaticky dochází před interpretací definic, aby byla
+umožněna např. definice vzájemně rekurzivních funkcí. Definice jsou interpretovány v takovém
+pořadí, v jakém jsou uvedené ve zdrojovém kódu.
+
+Deklarace bez řádných definic na první pohled můžou působit zbytečně. K čemu nám je funkce, kterou
+nelze aplikovat? Nesmíme však zapomenout, že konstrukce TIL samy vyjadřují význam, a nemusí nutně
+sloužit k provedení. Provedením konstrukce sice dostaneme její denotát, ten nás ale ne vždy zajímá.
+Představme si tedy případ, kdy provádíme analýzu výrazu přirozeného jazyka. Výraz analyzujeme
+pomocí Transparentní intenzionální logiky a získáme konstrukci. S danou konstrukcí chceme dále
+pracovat a chceme ji strojově zpracovat. Její denotát nás ovšem nezajímá, zajímá nás pouze význam
+konstrukce. Současně daná konstrukce obsahuje funkci, jejíž definici neznáme, známe, ale nejsme
+schopni ji strojově vyjádřit, nebo nás pouze nezajímá. Jelikož víme, že konstrukci nebudeme
+provádět, a tedy nebudeme ani aplikovat funkci v ní zmíněnou, nepotřebujeme znát její přesnou
+definici. Stačí nám znát pouze její název a typ.
+
+Jako příklad nevyjádřitelné funkce lze uvést například všeobecný kvantifikátor. Ačkoliv všeobecný
+kvantifikátor existuje jako funkce v Transparentní intenzionální logice, nelze jej korektně
+definovat tak, aby byl vždy strojově vyhodnotitelný.
+
+Názvosloví \textit{deklarace}, \textit{definice} je převzáno z programovacího jazyka C, kde
+deklarace pouze uvědomí překladač o existenci symbolu, definice poté přiřadí symbolu konkrétní
+hodnotu. Počet deklarací je shora neomezený, zato definice může existovat nanejvýš jedna. Deklarace
+nedefinovaného symbolu není chybou, ovšem snaha nedefinovaný symbol využít (např. volání funkce,
+přístup k proměnné) vyústí v chybu při procesu linkování.
 
 \section{TILScript jako výpočetní varianta TILu}
+
+Tato sekce popisuje 
+
+\subsection{Symbolické hodnoty} \label{symbolic-values}
 
 \section{Rozšíření TILScriptu}
 
