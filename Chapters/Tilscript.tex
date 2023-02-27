@@ -97,16 +97,16 @@ také deklaraci. K interpretaci deklarací automaticky dochází před interpret
 umožněna např. definice vzájemně rekurzivních funkcí. Definice jsou interpretovány v takovém
 pořadí, v jakém jsou uvedené ve zdrojovém kódu.
 
-Deklarace bez řádných definic na první pohled můžou působit zbytečně. K čemu nám je funkce, kterou
-nelze aplikovat? Nesmíme však zapomenout, že konstrukce TIL samy vyjadřují význam, a nemusí nutně
-sloužit k provedení. Provedením konstrukce sice dostaneme její denotát, ten nás ale ne vždy zajímá.
-Představme si tedy případ, kdy provádíme analýzu výrazu přirozeného jazyka. Výraz analyzujeme
-pomocí Transparentní intenzionální logiky a získáme konstrukci. S danou konstrukcí chceme dále
-pracovat a chceme ji strojově zpracovat. Její denotát nás ovšem nezajímá, zajímá nás pouze význam
-konstrukce. Současně daná konstrukce obsahuje funkci, jejíž definici neznáme, známe, ale nejsme
-schopni ji strojově vyjádřit, nebo nás pouze nezajímá. Jelikož víme, že konstrukci nebudeme
-provádět, a tedy nebudeme ani aplikovat funkci v ní zmíněnou, nepotřebujeme znát její přesnou
-definici. Stačí nám znát pouze její název a typ.
+Deklarace bez řádných definic na první pohled můžou působit zbytečně. K čemu může sloužit funkce,
+kterou nelze aplikovat? Nesmíme však zapomenout, že konstrukce TIL samy vyjadřují význam, a nemusí
+nutně sloužit k provedení. Provedením konstrukce sice dostaneme její denotát, ten nás ale ne vždy
+zajímá. Představme si tedy případ, kdy provádíme analýzu výrazu přirozeného jazyka. Výraz
+analyzujeme pomocí Transparentní intenzionální logiky a získáme konstrukci. S danou konstrukcí
+chceme dále pracovat a chceme ji strojově zpracovat. Její denotát nás ovšem nezajímá, zajímá nás
+pouze význam konstrukce. Současně daná konstrukce obsahuje funkci, jejíž definici neznáme, známe,
+ale nejsme schopni ji strojově vyjádřit, nebo nás pouze nezajímá. Jelikož víme, že konstrukci
+nebudeme provádět, a tedy nebudeme ani aplikovat funkci v ní zmíněnou, nepotřebujeme znát její
+přesnou definici. Stačí nám znát pouze její název a typ.
 
 Jako příklad nevyjádřitelné funkce lze uvést například všeobecný kvantifikátor. Ačkoliv všeobecný
 kvantifikátor existuje jako funkce v Transparentní intenzionální logice, nelze jej korektně
@@ -120,11 +120,57 @@ přístup k proměnné) vyústí v chybu při procesu linkování.
 
 \section{TILScript jako výpočetní varianta TILu}
 
-Tato sekce popisuje 
+Tato sekce popisuje základní výrazy a konstrukce TILScriptu, které existovaly již v předchozích
+verzích jazyka. Pokud práce tyto výrazy nějakým způsobem upravuje, je úprava náležitě popsána
+a zdůvodněna.
+
+\subsection{Atomické datové typy}
+
+Atomické datové typy v TILScriptu vycházejí z výchozí báze využívané v Transparentní intenzionální
+logice k analýze přirozeného jazyka, tedy množinám ${o, \iota, \tau, \omega}$. TILScript ovšem
+rozlišuje mezi časy a reálnými čísly, a pro tyto hodnoty definuje dva nekompatibilní typy, mezi
+kterými neexistuje implicitní konverze. Dále TILScript využívá datový typ $\nu$ představující celá
+čísla. Nakonec TILScript pro názvy typů nevyužívá řecká písmena, která nelze prakticky a jednoduše
+zapisovat na spoustě rozložení klávesnic, ale anglická slova nebo zkratky. Názvy typů vždy začínají
+velkým písmenem.
+
+Typ $o$ představující pravdivostní hodnoty TILScript pojmenovává \lstinline{Bool} a může nabývat
+hodnot \lstinline{True} a \lstinline{False}.
+
+Reálná čísla TILScript reprezentuje typem \lstinline{Real}. V implementaci překladače vytvořeném
+v rámci této práce jsou reálná čísla interně reprezentována typem \lstinline{double}. TILScript
+samotný žádné omezení na reprezentaci reálných čísel nestanovuje, prakticky však reálná čísla
+v současné implementaci reprezentujeme pomocí 64bitové reprezentace dle IEEE 754.
+
+Celá čísla TILScript reprezentuje typem \lstinline{Int}. Obdobně jako u typu \lstinline{Real}
+neexistuje omezení pro reprezentaci celých čísel. Interně je využíván datový typ \lstinline{long},
+jedná se tedy o 64bitové znaménkové číslo reprezentované dvojkovým doplňkem.
+
+Typ $\iota$...
+
+\subsection{Funkce}
+
+\subsection{Trivializace}
+
+\subsection{Literály}
+
+\subsection{Proměnné}
+
+\subsection{Provedení}
+
+\subsection{Kompozice}
+
+\subsection{Uzávěry}
+
+\subsection{N-tice}
+
+\subsection{Seznamy}
 
 \subsection{Symbolické hodnoty} \label{symbolic-values}
 
 \section{Rozšíření TILScriptu}
+
+\subsection{Typ \textit{Text}}
 
 \subsection{Hodnota \textit{Nil}} \label{nil-value}
 
