@@ -165,7 +165,36 @@ popsán v sekci o rozšířeních TILScriptu, viz \ref{text-type}.
 
 \subsection{Generický typ \textit{Any}}
 
+V Transparentní intenzionální logice není neobvyklé definovat typově polymorfní funkce. Zvykem je
+označovat předem neznámé typy řeckým písmenem $\alpha$. Obdobně TILScript umožňuje definici
+typově polymorfních funkcí. Generické typy v TILScriptu značíme slovem \lstinline{Any}, okamžitě
+následovaným indexem polymorfního typu. Index je libovolné číslo z rozsahu
+$\bigl \langle 0; 2^{32}-1 \bigr \rangle$. Nenulové indexy nesmí začínat číslem 0.
+
+Generické typy lze použít pouze v typech funkcí. Má-li více argumentů funkce stejný generický
+typ, tedy typ \lstinline{Any} se stejným indexem, interpreter při procesu typové kontroly zajistí,
+že argumenty, na něž je funkce za běhu aplikována, jsou stejného typu.
+
 \subsection{Funkce}
+
+V matematice známe funkce jako jednoznačné zobrazení z množiny možných argumentů (definiční obor)
+do množiny možných obrazů (obor hodnot). V programovacích jazycích konstrukce nazývané funkcemi
+často nemusí být nejen jednoznačné (výstup nemusí odpovídat pouze argumentům), ale dokonce nemusí
+být ani zobrazením (nevrací žádnou hodnotu, v takovém případě většinou modifikují stav světa,
+jako příklad lze uvést funkce s návratovou hodnotou \lstinline{void} v jazyce C).
+
+V jazyce TILScript, obdobně jako v TIL, jsou funkce vždy zobrazením do určitého oboru hodnot. Díky
+parcialitě může být funkce degenerovaná, a v takovém případě nebude vracet hodnotu pro žádnou
+kombinaci argumentů. V takovém případě se však jedná o určitou formu chybového stavu, spíše než
+záměr, jak by tomu bylo v případě např. jazyka C. V čem se ovšem TILScript od Transparentní
+intenzionální logiky liší, je možná nezávislost obrazu funkce na argumentech nebo možnost
+modifikovat stav světa. TILScript je funkcionální jazyk, proto je na nejlepším uvážení uživatele,
+aby takovéto funkce nedefinoval, a jejich využívání omezil na nutné minimum. Jako příklad funkce,
+jejíž výstup nezáleží na vstupu, můžeme uvést funkci \lstinline{Now}, která vrací aktuální čas.
+Příkladem funkcí s vedlejšími efekty (tedy modifikujících stav světa) pak můžou být funkce
+\lstinline{Print}, \lstinline{Println} ze standardní knihovny, funkce pro zápis do databáze, apod.
+
+% TODO: Deklarace, typy f-ci, zminit definice popsane nize
 
 \subsection{Trivializace}
 
