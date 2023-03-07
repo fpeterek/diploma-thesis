@@ -236,6 +236,27 @@ levý horní index.
 
 \subsection{Proměnné}
 
+Proměnné v TILScriptu opět slouží stejném účelu jako proměnné v TIL, tedy $v$-konstruují hodnotu
+v závislosti na valuaci $v$. Každé proměnné lze přiřadit hodnotu pouze jednou -- pro volné proměnné
+při definici, pro $\lambda$-vázané proměnné při aplikaci funkce.
+
+Volné proměnné lze deklarovat bez přiřazení valuace, ale také definovat a přiřadit jim konkrétní
+hodnotu. Proměnné deklarujeme, pokud nás nezajímá konkrétní valuace. Přiřazení hodnoty využijeme
+například v případě, kdy si chceme uložit výsledek drahé operace (např. čtení z databáze), nebo
+si třeba jen chceme zkrátit zápis dlouhé konstrukce, a chceme pracovat s konkrétní valuací $v$.
+
+\begin{lstlisting}[caption={Příklad využití proměnných}]
+x -> Int.               -- Deklarace proměnné v-konstruující hodnotu typu Int
+y, z -> Int.            -- Deklarace více proměnných najednou
+pi -> Real := '3.1415.  -- Definice proměnné pi aproximující hodnotu $\pi$
+['* pi '2].             -- Využití proměnné pi jako konstituent konstrukce
+long_varName123 -> Int.
+\end{lstlisting}
+
+Název proměnné musí začínat malým písmenem. Je-li konstrukce, jejíž hodnotu přiřazujeme proměnné,
+nevlastní, a tedy nekonstruuje žádnou hodnotu, program skončí chybou. Vždy je třeba uvést typ
+hodnoty, kterou proměnná konstruuje.
+
 \subsection{Provedení}
 
 \subsection{Kompozice}
