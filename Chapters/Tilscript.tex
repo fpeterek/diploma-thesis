@@ -182,23 +182,11 @@ V jazyce TILScript, obdobně jako v TIL, jsou funkce vždy zobrazením do určit
 parcialitě může být funkce degenerovaná, a v takovém případě nebude vracet hodnotu pro žádnou
 kombinaci argumentů. V takovém případě se však jedná o určitou formu chybového stavu, spíše než
 záměr, jak by tomu bylo v případě např. jazyka C. V čem se ovšem TILScript od Transparentní
-intenzionální logiky liší, je možná nezávislost obrazu funkce na argumentech nebo možnost
-modifikovat stav světa. TILScript je funkcionální jazyk, proto je na nejlepším uvážení uživatele,
-aby takovéto funkce nedefinoval, a jejich využívání omezil na nutné minimum. Jako příklad funkce,
-jejíž výstup nezáleží na vstupu, můžeme uvést funkci \lstinline{Now}, která vrací aktuální čas.
-Příkladem funkcí s vedlejšími efekty (tedy modifikujících stav světa) pak můžou být funkce
-\lstinline{Print}, \lstinline{Println} ze standardní knihovny, funkce pro zápis do databáze, apod.
-
-% TODO: Check if this is alright with prof. Duzi
-Dalším ústupkem praktikalitě jsou nulární funkce aplikované pomocí kompozice. Kniha \textit{TIL
-jako procedurální logika} uvádí následující: \textit{Množiny $o, \iota, \tau, \omega$ jsou atomické
-typy, jejichž prvky jsou ne-funkce (či nulární funkce bez argumentů)}. Definuje tedy konstanty
-jako nulární funkce. Tato práce ovšem v TILScriptu definuje také nekonstantní nulární funkce.
-Obrazem takovýchto funkcí může být hodnota závisející na nějakém externím stavu. Tímto stavem může
-být například aktuální čas nastavený na počítači, stav náhodného generátoru čísel, apod.
-Alternativou by bylo využívat pro nekonstantní nulární funkce stejnou syntax jako pro konstanty.
-To by ovšem mohlo působit matoucím dojmem. Navíc již dříve mohly funkce v TILScriptu záviset
-nejen na svých argumentech, ale také na externím stavu, a to například provedením volné proměnné.
+intenzionální logiky liší, je možnost modifikovat stav světa. TILScript je funkcionální jazyk,
+proto je na nejlepším uvážení uživatele, aby takovéto funkce nedefinoval, a jejich využívání omezil
+na nutné minimum. Příkladem funkcí s vedlejšími efekty (tedy modifikujících stav světa) můžou
+být například funkce \lstinline{Print}, \lstinline{Println} ze standardní knihovny, funkce
+pro zápis do databáze, apod. Arita funkce musí být vždy alespoň jedna.
 
 Pro zápis typu funkce využíváme podobnou notaci jako v Transparentní intenzionální logice.
 Typy funkcí denotujeme kulatými závorkami. Uvnitř závorek uvedeme nejprve obor hodnot funkce,
@@ -259,7 +247,30 @@ hodnoty, kterou proměnná konstruuje.
 
 \subsection{Provedení}
 
+Provedení se sémantikou opět nijak neliší od svého ekvivalentu v Transparentní intenzionální logice.
+Syntax ovšem musela být kvůli praktičnosti upravena, a proto bylo upuštěno od pravých horních
+indexů. Provedení denotujeme \lstinline{^1}. Pro dvojí provedení poté využíváme \lstinline{^2}.
+Dřívejší verze TILScriptu definovaly i trojí až deváté provedení. Protože však trojí a vícenásobné
+provedení není v praxi skoro vůbec potřeba (dle Průvodce TIL taková potřeba nenastala), a protože
+limit devátého provedení byl poněkud arbitrární (proč ne například desetinásobné provedení), je
+tato práce konzervativní a drží se definice provedení z Průvodce.
+
+Jelikož jsou všechny konstrukce standardně v módu provedení, není třeba provedení využívat příliš
+často. Hlavně tedy budeme používat dvojí provedení.
+
+\begin{lstlisting}[caption={Příklad využití provedení}]
+^1 x.
+^2['GetComposition argument1 argument2].
+\end{lstlisting}
+
 \subsection{Kompozice}
+
+Kompozice umožňuje aplikovat funkce na argumenty. Kompozice využívají stejnou syntax jako v TIL.
+Protože arita funkce musí být alespoň jedna, musí i kompozice obsahovat alespoň dvě podkonstrukce
+-- funkci samotnou a alespoň jeden její argument. Počet argumentů, na něž funkci aplikujeme, musí
+odpovídat počtu argumentů funkce. Dále nesmí být žádný argument nevlastní (s výjimkou funkcí
+\lstinline{If} a \lstinline{IsNil}). V opačném případě k aplikaci funkce vůbec nedojde, neboť
+nemáme argumenty, na které bychom funkci aplikovali, a kompozice je tak nevlastní.
 
 \subsection{Uzávěry}
 
