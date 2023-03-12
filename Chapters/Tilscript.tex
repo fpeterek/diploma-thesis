@@ -119,6 +119,13 @@ Tato sekce popisuje základní výrazy a konstrukce TILScriptu, které existoval
 verzích jazyka. Pokud práce tyto výrazy nějakým způsobem upravuje, je úprava náležitě popsána
 a zdůvodněna.
 
+\subsection{Věty TILScriptu}
+
+V TILScriptu za věty (\textit{sentence}) považuje výrazy na nejvyšší úrovni v programu. Větou je
+tedy například konstrukce taková, že není podkonstrukcí jiného výrazu než sebe samotné, ale také
+definice funkce, proměnné, typu, apod. Každá věta musí být ukončena terminátorem. Roli terminátoru
+v TILScriptu zastává znak \lstinline{.} (ASCII tečka).
+
 \subsection{Atomické datové typy}
 
 Atomické datové typy v TILScriptu vycházejí z výchozí báze využívané v Transparentní intenzionální
@@ -272,7 +279,43 @@ odpovídat počtu argumentů funkce. Dále nesmí být žádný argument nevlast
 \lstinline{If} a \lstinline{IsNil}). V opačném případě k aplikaci funkce vůbec nedojde, neboť
 nemáme argumenty, na které bychom funkci aplikovali, a kompozice je tak nevlastní.
 
+\begin{lstlisting}[caption={Příklad využití kompozice}]
+['* '2 '6].
+\end{lstlisting}
+
 \subsection{Uzávěry}
+
+Sémantika uzávěrů je opět stejná jako v Transparentní intenzionální logice, syntax ovšem byla
+upravena. Zatímco v TIL často vypouštíme hranaté závorky, v TILScriptu musíme závorky zapsat vždy.
+Řecké písmeno lambda nahrazuje v TILScriptu znak zpětného lomítka.
+
+Zpětné lomítko následuje seznam argumentů funkce konstruované uzávěrem. V dřívějších verzí
+TILScriptu bylo možné typ argumentu v některých případech vynechat -- existovala-li volná proměnná
+se stejným názvem jako $\lambda$-vázaná proměnná v uzávěru, a nebyl-li typ $\lambda$-vázané
+proměnné uveden explicitně, byl typ $\lambda$-vázané proměnné automaticky dedukován podle typu
+stejnojmenné volné proměnné. Tato práce však od této automatické dedukce upouští. Jelikož byly
+do TILScriptu přidány výrazy \lstinline{import} umožňující importovat volné proměnné z jiného
+souboru, uživatel TILScriptu by se mohl dostat do situace, kdy musí procházet několik importovaných
+souborů, jen aby zjistil typ $\lambda$-vázané proměnné. V případě, kdy máme více $\lambda$-vázaných
+proměnných, použijeme čárku pro jejich oddělení.
+
+Za seznamem argumentů může nově následovat explicitní specifikace oboru hodnot konstruované funkce.
+Specifikaci oboru hodnot denotujeme znaky \lstinline{->} které následuje název existujícího typu.
+Explicitní specifikace je nepovinná, může však sloužit k zdůraznění úmyslu uživatele, aby čtenář
+zdrojového kódu na první pohled znal typ funkce. Dále explicitní specifikace typu může pomoct při
+typové kontrole.
+
+Nakonec je třeba uvést konstrukci, nad kterou provádíme abstrakci.
+
+\begin{lstlisting}[caption={Příklad uzávěrů}]
+[\x: Int -> Int ['+ x '2]].
+[\x: Int, y: Int -> Int ['+ x y]].
+[\x: Int, y: Int ['+ x y]].
+
+[[\x: Int, y: Int -> Int ['+ x y]] '2 '3].
+\end{lstlisting}
+
+\subsection{Zkrácený zápis intenzionalizace a extenzionalizace}
 
 \subsection{N-tice}
 
