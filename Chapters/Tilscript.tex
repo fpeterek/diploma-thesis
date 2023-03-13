@@ -307,7 +307,7 @@ typové kontrole.
 
 Nakonec je třeba uvést konstrukci, nad kterou provádíme abstrakci.
 
-\begin{lstlisting}[caption={Příklad uzávěrů}]
+\begin{lstlisting}[caption={Příklad využití uzávěrů}]
 [\x: Int -> Int ['+ x '2]].
 [\x: Int, y: Int -> Int ['+ x y]].
 [\x: Int, y: Int ['+ x y]].
@@ -315,11 +315,71 @@ Nakonec je třeba uvést konstrukci, nad kterou provádíme abstrakci.
 [[\x: Int, y: Int -> Int ['+ x y]] '2 '3].
 \end{lstlisting}
 
-\subsection{Zkrácený zápis intenzí a extenzionalizace}
+\subsection{Zkrácený zápis typu intenzí a extenzionalizace}
 
-\subsection{N-tice}
+V TIL často využíváme zkráceného zápisu jak pro typy intenzí, tak pro jejich extenzionalizaci.
+Pro hodnoty typu $\alpha$ závislé na světamihu zkracujeme zápis $((\alpha\tau)\omega)$
+na $(\alpha_{\tau\omega})$. Obdobně pro extenzionalizaci intenze $a$ využíváme zkráceného zápisu
+$a_{wt}$ ekvivalentnímu konstrukci $[[a w] t]$, kde $a$ je konstrukce konstruující funkci
+(většinou se jedná o trivializaci), a $w \rightarrow_v \omega$, $t \rightarrow_v \tau$. Jedná
+se však pouze o notační zkratku -- o dohodu, ne součást TIL.
+
+Ekvivalentní zkratky můžeme využívat také v TILScriptu. Chceme-li specifikovat typ intenze, můžeme
+využít notační zkratku \lstinline{@tw}. Zkratku \lstinline{@wt} využijeme k extenzionalizaci
+intenze. Zkratka \lstinline{@wt} vždy extenzionalizuje za využití proměnných \lstinline{w} a
+\lstinline{t}. Proměnná \lstinline{w -> World} je součástí standardní knihovny, proměnnou
+\lstinline{t -> Time} musí uživatel definovat sám. Zkrácenou notaci nelze využít s proměnnými
+jiného názvu.
+
+\begin{lstlisting}[caption={Příklad využití zkrácené notace}]
+(Bool Indiv)@tw -- intenze typu (((Bool Indiv) Time) World)
+['Rektor@wt 'VSB] -- extenzionalizace funkce Rektor/(((Indiv Indiv) Time) World)
+                  -- a nasledna aplikace na argument VSB.
+\end{lstlisting}
 
 \subsection{Seznamy}
+
+Seznamy se v Transparentní intenzionální logice příliš neobjevují. Při strojové analýze a
+zpracování je však vhodné mít k dispozici způsob k vyjádření kolekce dat, proto TILScript seznamy
+obsahuje. Seznam představuje homogenní seřazenou kolekci potenciálně neomezené délky. Seznamy můžou
+obsahovat duplicity.
+
+% TODO: Lisp ref
+V této práci jsou všechny seznamy neměnné. Seznamy jsou definovány induktivně. Seznam (list) je buď
+prázdný list, nebo \textit{cons cell} skládající se z hlavičky (známé jako head nebo CAR listu
+z jiných jazyků) -- prvního prvku v seznamu, a z podseznamu reprezentujícího zbytek listu
+(tail, CDR). Z definice tedy vyplývá, že vytvoření nového seznamu vložením prvku na začátek lze
+provést v konstantním čase. Vytvoření nového seznamu přidáním prvku na konec jiného listu naopak
+bude lineární vzhledem k velikosti původního kolekce. Tato implementace listu je volena zejména
+proto, že umožňuje snadnou iteraci pomocí rekurzivních funkcí. Stejnou implementaci listů využíval
+již jazyk LISP.
+
+Typ seznamu denotujeme slovem \lstinline{List} následovaným kulatými závorkami, v nichž je uveden
+typ prvku ukládaného v seznamu.
+
+% TODO: Ref to stdlib documentation
+Standardní knihovna obsahuje řadu funkcí pro práci s listy. Tyto funkce jsou v této kapitole pouze
+nastíněny při ilustraci využití seznamů, podrobněji jsou však zdokumentovány v kapitole TODO: dodat
+referenci, až bude kapitola existovat.
+
+Dále interpreter implementuje syntaktický cukr pro jednodušší vytváření listů. Pro vytvoření
+seznamu stačí v kompozici aplikovat funkci \lstinline{ListOf} na nenulový, avšak shora neomezený
+počet argumentů. Během parsování bude tato kompozice korektně přepsána na sérii kompozic
+využívajících funkci \lstinline{Cons} k vytvoření \lstinline{cons cells}. K žádné aplikaci funkce
+na libovolný počet argumentů tedy nedochází. Při vytváření seznamu pomocí \lstinline{ListOf} musíme
+dodat alespoň jeden prvek listu, aby bylo možné správně dedukovat typ prvků ukládaných v seznamu.
+\lstinline{ListOf} je pouze syntaktický cukr překládaný při procesu parsování. Pokud bychom chtěli
+generovat konstrukce konstruující listy dynamicky za běhu programu, museli bychom zřetězit aplikace
+\lstinline{Cons}.
+
+\begin{lstlisting}[caption={Příklad využití seznamů}]
+['ListOf '1 '2 '3].                    -- vytvoreni listu
+['Cons '1 ['Cons '2 ['ListOfOne '3]]]. -- ekvivalent predchoziho radku a priklad prepisu ListOf
+['Head ['ListOf '1 '2 '3]]             -- 1
+['Tail ['ListOf '1 '2 '3]]             -- ['ListOf '2 '3]
+\end{lstlisting}
+
+\subsection{N-tice}
 
 \subsection{Symbolické hodnoty} \label{symbolic-values}
 
@@ -330,5 +390,7 @@ Nakonec je třeba uvést konstrukci, nad kterou provádíme abstrakci.
 \subsection{Typ \textit{Text}} \label{text-type}
 
 \subsection{Hodnota \textit{Nil}} \label{nil-value}
+
+\subsection{Struktury} \label{structs}
 
 \endinput
