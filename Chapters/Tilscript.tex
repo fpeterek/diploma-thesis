@@ -359,8 +359,8 @@ typ prvku ukládaného v seznamu.
 
 % TODO: Ref to stdlib documentation
 Standardní knihovna obsahuje řadu funkcí pro práci s listy. Tyto funkce jsou v této kapitole pouze
-nastíněny při ilustraci využití seznamů, podrobněji jsou však zdokumentovány v kapitole TODO: dodat
-referenci, až bude kapitola existovat.
+nastíněny při ilustraci využití seznamů, podrobněji jsou však zdokumentovány v kapitole popisující
+standardní knihovnu.
 
 Dále interpreter implementuje syntaktický cukr pro jednodušší vytváření listů. Pro vytvoření
 seznamu stačí v kompozici aplikovat funkci \lstinline{ListOf} na nenulový, avšak shora neomezený
@@ -381,7 +381,65 @@ generovat konstrukce konstruující listy dynamicky za běhu programu, museli by
 
 \subsection{N-tice}
 
+N-tice doznály oproti předchozím verzím TILScriptu změny. Dříve byly n-tice homogenní kolekce
+nespecifikované, avšak konečné délky. Roli homogenní kolekce však již zastává List, a v TILScriptu
+neexistoval způsob, jak seskupit více hodnot jiného typu dohromady.
+
+V matematice jsou n-tice například prvky kartézského součinu. N-tice lze definovat více způsoby,
+vždy jsou však uspořádané, konečné a můžou být heterogenní (například provádíme-li kartézský součin
+nad neidentickými množinami). Obdobnou roli plní n-tice i v TILScriptu. Délka n-tice je pevně daná,
+stejně jako typy hodnot v n-tici. Celý typ n-tice je tedy dán uspořádaným výčtem všech typů všech
+hodnot obsažených v této n-tici. Syntaktický zápis typu n-tice je podobný typu seznamu. Typ n-tice
+denotujeme slovem \lstinline{Tuple}, následovaným kulatými závorkami. V závorkách ovšem uvádíme
+výčet typů. Jednotlivé typy oddělujeme čárkami. Délka n-tice je určena počtem uvedených typů.
+
+Práce s n-ticemi je do jisté míry podobná práci s listy. N-tici vytvoříme aplikací variadické
+funkce \lstinline{MkTuple}. Stejně jako u funkce \lstinline{ListOf} se však jedná pouze o
+syntaktický cukr. Funkce \lstinline{MkTuple} skutečně existuje, je to ale funkce binární, nikoliv
+variadická, a vytváří dvojice z dodaných argumentů. Pokud ovšem funkci \lstinline{MkTuple} dodáme
+více než dva argumenty, parser aplikaci \lstinline{MkTuple} rozepíše na jednu aplikaci
+\lstinline{MkTuple} a následné řetězení funkce \lstinline{PrependToTuple}. Funkce pro práci
+s n-ticemi jsou podrobněji popsány v uživatelské dokumentaci.
+ 
+\begin{lstlisting}[caption={Příklad využití n-tic}]
+['MkTuple '1 '2.0 'True].                    -- vytvoreni n-tice
+['PrependToTuple '1 ['MkTuple '2.0 'True]].  -- ekvivalent predchoziho radku
+
+x -> Tuple(Int, Real, Int) := ['MkTuple '1 '3.14159 '10].
+\end{lstlisting}
+
 \subsection{Symbolické hodnoty} \label{symbolic-values}
+
+Název \textit{symbolické hodnoty} je v kontextu TILScriptu nový, jedná se však pouze o praktickou
+implementaci entit, které již v TILScriptu existovaly. Entitu lze specifikovat uvedením jejího
+názvu následovaného lomítkem a typem entity. Tímto byl názvu přiřazen typ, ale ne konkrétní
+hodnota. Název \textit{symbolické hodnoty} je opět inspirován jazykem Lisp, kde podobný koncept
+symbolů, tedy jmen bez hodnoty, již dlouhou dobu existuje.
+
+Symbolické hodnoty využíváme, když potřebujeme o daném objektu referovat jménem, a ne hodnotou.
+Jako příklad lze uvést například individua. Individua nemají žádnou inherentní hodnotu. Objekt
+typu $\iota$ je pouze identifikátorem, unikátním jménem. Vlastnosti jsou individuím přiřazeny
+intenzemi a závisí na čase a stavu světa, případně se jedná o triviální vlastnosti bez vypovídací
+hodnoty. Dále můžeme zmínit například číslo $\pi$. Číslo $\pi$ sice bezpochyby hodnotu má, jedná
+se o reálné číslo. Jelikož je však $\pi$ číslo iracionální, tedy číslo s nekonečným desetinným
+rozvojem, bohužel jej nemůžeme reprezentovat v počítači. V praktické implementaci se tak musíme
+spokojit pouze s aproximací čísla $\pi$, nebo právě se symbolickou reprezentací.
+
+Symbolické hodnoty nelze provést. Chceme-li je zmínit, musíme využít trivializaci. Dále nad nimi
+nelze provádět všechny operace, které jdou provádět s nesymbolickými konkrétními hodnotami.
+Například jak bychom mohli příčíst k jinému číslu číslo $\pi$, když neznáme přesnou hodnotu čísla
+$\pi$? Kde to však dává smysl, můžeme naprogramovat dodatečnou podporu pro symbolické hodnoty.
+Funkce \lstinline{Sin}, \lstinline{Cos} v matematické knihovně mají zabudovanou kontrolu, zda
+zda obdržely jako svůj argument symbol \lstinline{Pi/Real}. Pokud ano, funkce vrátí korektní
+hodnotu. Obdobně by například výsledkem přirozeného logaritmu mohlo být číslo 1 při aplikaci
+na symbol \lstinline{E/Real}.
+
+\begin{lstlisting}[caption={Příklad využití symbolických hodnot}]
+Pi/Real.
+['Sin 'Pi]. -- 0
+['Cos 'Pi]. -- -1
+['+ '1 'Pi]. -- Nil - vysledek existuje, na pocitaci jej vsak nelze spocitat
+\end{lstlisting}
 
 \section{Rozšíření TILScriptu}
 
