@@ -47,6 +47,15 @@ kompozicionality a vyžaduje aplikaci unární funkce na "nic," je zvolena jako 
 \lstinline{Improper/(o*_n)} definované v Průvodci čtenáře, a jako kompromis mezi dodržením
 principů TIL a umožněním zpracování chyb.
 
+\subsection{Okamžité vyhodnocování}
+
+Ačkoliv je TILScript funkcionální jazyk, vyhodnocování výrazů probíhá okamžitě
+(\textit{Eager evaluation}). Okamžité vyhodnocování je potřeba k zajištění respektování principu
+kompozicionality. Pokud by vyhodnocování bylo líné, uživatel by mohl jako argument funkce uvést
+$v$-nevlastní konstrukci, která by nikdy nebyla vyhodnocena, a došlo by tak k aplikaci funkce
+na chybějící argument. Tato situace by mohla nastat například v případě aplikace funkce, jež 
+některé své argumenty utilizuje pouze pokud je splněna určitá podmínka.
+
 \subsection{Neměnnost proměnných a symbolů (\textit{Immutability})}
 
 Jelikož je TILScript funkcionální jazyk, jsou hodnoty všech proměnných konstantní -- tedy
@@ -162,6 +171,16 @@ byl v této práci zvolen datový typ \lstinline{long}. Uživatel se sám může
 hodnoty interpretovat. Ve standardní knihovně lze však nalézt např. funkci \lstinline{Now}, jejíž
 aplikací získáme počet milisekund uplynulých od 1. ledna 1970.
 
+Typ konstrukcí, v TIL denotován $*$, byl v TILScriptu přejmenován na \lstinline{Construction}.
+V dřívějších verzích TILScriptu se pro typ konstrukcí také využíval znak $*$. Změna na
+\lstinline{Construction} byla provedena z důvodu zachování konzistence s ostatními typy, které
+v TILScriptu taktéž pojmenováváme anglickými slovy, a také z důvodu omezení ambiguity, aby se typ
+konstrukce nepletl s funkcí násobení. Zatímco typograficky korektní reprezentací násobení je
+využití znaku $\times$, na počítači násobení značíme $*$. Ačkoliv lze mezi funkcí násobení a
+typem konstrukcí odlišit na základě kontextu, v jakém se znak objevuje, odlišení již v názvu
+umožňuje uživateli jednoduše rozeznat typ konstrukce od násobení čísel okamžitě a bez bližšího
+zkoumání kontextu.
+
 Dále byl TILScript rozšířen o atomický typ sloužící k reprezentaci textu. Tento typ je podrobněji
 popsán v sekci o rozšířeních TILScriptu, viz \ref{text-type}.
 
@@ -239,6 +258,13 @@ Volné proměnné lze deklarovat bez přiřazení valuace, ale také definovat a
 hodnotu. Proměnné deklarujeme, pokud nás nezajímá konkrétní valuace. Přiřazení hodnoty využijeme
 například v případě, kdy si chceme uložit výsledek drahé operace (např. čtení z databáze), nebo
 si třeba jen chceme zkrátit zápis dlouhé konstrukce, a chceme pracovat s konkrétní valuací $v$.
+Je-li konstrukce, jejíž hodnotu přiřazujeme proměnné, $v$-nevlastní, a tedy nekonstruuje žádnou
+hodnotu, program skončí chybou. Vždy je třeba uvést typ hodnoty, kterou proměnná konstruuje.
+
+Syntax pro deklaraci proměnné již existovala. Syntax pro definici proměnné (přiřazení hodnoty)
+je nově zavedená. Deklarovat můžeme více proměnných najednou, za předpokladu, že se jedná o
+proměnné stejného typu, stačí názvy jednotlivých proměnných oddělit čárkou. Přiřazujeme-li však
+proměnné valuaci, můžeme uvést vždy pouze jednu proměnnou.
 
 \begin{lstlisting}[caption={Příklad využití proměnných}]
 x -> Int.               -- Deklarace proměnné v-konstruující hodnotu typu Int
@@ -248,10 +274,7 @@ pi -> Real := '3.1415.  -- Definice proměnné pi aproximující hodnotu $\pi$
 long_varName123 -> Int.
 \end{lstlisting}
 
-Název proměnné musí začínat malým písmenem. Je-li konstrukce, jejíž hodnotu přiřazujeme proměnné,
-nevlastní, a tedy nekonstruuje žádnou hodnotu, program skončí chybou. Vždy je třeba uvést typ
-hodnoty, kterou proměnná konstruuje.
-
+Název proměnné musí začínat malým písmenem. 
 \subsection{Provedení}
 
 Provedení se sémantikou opět nijak neliší od svého ekvivalentu v Transparentní intenzionální logice.
@@ -447,18 +470,118 @@ Tento oddíl nastiňuje nadstandardní rozšíření TILScriptu. Cílem těchto 
 z TILScriptu nástroj pro analýzu a práci s konstrukcemi Transparentní intenzionální logiky. Každá
 změna a rozšíření je zdůvodněna.
 
+\subsection{Komentáře}
+
+Komentáře v TILScriptu plní stejnou roli jako v jiných programovacích jazycích. Jedná se tedy
+o text, který je interpreterem ignorován. Komentáře tak můžeme využít například k popisu kódu.
+Komentáře existují pouze v jednořádkové podobě a denotujeme je, podobně jako v Haskellu nebo SQL,
+dvěma pomlčkami (\lstinline{--}). Všechny znaky za pomlčkami až po první znak odřádkování jsou
+překladačem automaticky ignorovány.
+
+\begin{lstlisting}[caption={Příklad využití komentářů}]
+-- The following construction computes the cosine of pi and prints the result
+['Print ['Cos 'Pi]]. -- Prints -1
+\end{lstlisting}
+
 \subsection{Definice pojmenovaných funkcí} \label{fn-definition}
 
 Syntax TILScriptu byla rozšířena o možnost definice pojmenovaných funkcí. Jedná se o způsob, jak
 funkci přiřadit jméno a následně na danou funkci odkazovat jménem, namísto uvádění stejného uzávěru
-vícekrát ve zdrojovém kódu. Definice pojmenovaných funkcí byla v TILScriptu již vícekrát přidána
-a vícekrát odstraněna.
+vícekrát ve zdrojovém kódu. Definice pojmenovaných funkcí byla v TILScriptu již několikrát přidána
+a vždy byla zase odstraněna. Dokud TILScript sloužil pouze jako notace pro zápis TIL konstrukcí,
+byl přínos této funkcionality diskutabilní. Pokud však chceme experimentovat s možnostmi využití
+TILScriptu také jako nástroje pro analýzu TIL konstrukcí, definice pojmenovaných funkcí je
+nezbytná.
 
-\subsection{Definice proměnných}
+Definici funkce denotujeme klíčovým slovem \lstinline{Defn}. Následuje hlavička funkce, symbol
+přiřazení (\lstinline{:=}), a nakonec konstrukce předepisující sémantiku funkce. Syntax je odlišná
+od notace pro zápis uzávěrů. Důvodem pro tento rozdíl je grafické odlišení hlavičky funkce
+specifikující název, argumenty a typ výsledku od těla funkce (konstrukce). Dále tato notace
+omezuje počet vnořených závorek a speciálních znaků v tělu funkce. Vazba argumentů funkce je
+samozřejmě ekvivalentní $\lambda$-vázaným proměnným.
+
+Název funkce musí začínat velkým písmenem. Dále může obsahovat malá i velká písmena, čísla
+a podtržítka. Povolena jsou všechna písmena české abecedy (tedy například české \textit{č} je
+povoleno, avšak katalánské \textit{\c{c}} povoleno není).
+
+\begin{lstlisting}[caption={Příklad definice funkcí}]
+-- Binary function
+Defn Add(x: Int, y: Int) -> Int := ['+ x y].
+
+-- Example of a recursive function
+Defn Sum(list: List(Int)) -> Int :=
+    ['If
+        ['IsEmpty list] '0
+        'True ['+ ['Head list] ['Sum ['Tail list]]]].
+\end{lstlisting}
 
 \subsection{Typ \textit{Text}} \label{text-type}
 
+Typ \lstinline{Text} slouží k reprezentaci textu. Opět se jedná o typ, který není příliš potřeba
+pro analýzu přirozeného jazyka, neboť v přirozené řeči často vypovídáme o individuích, málokdy však
+o samotných korpusech textu. V programovacím jazyku je však forma reprezentace textu nezbytná.
+Typ \lstinline{Text} využíváme jak k reprezentaci delších textů, tak k reprezentaci jednotlivých
+znaků. TILScript tedy nezná koncept typu pro samostatné znaky (jako např. \lstinline{Char} v jazyce
+Haskell), a \lstinline{Text} není \lstinline{List} znaků. Jedná se o atomický typ. Pomocí funkcí
+standardní knihovny však lze z textů extrahovat podřetězce (včetně jednotlivých znaků),
+konkatenovat řetězce, apod.
+
+Literály typu \lstinline{Text} uvozujeme dvojitými uvozovkami. Hodnoty typu text musíme
+trivializovat. V literálech textů můžeme používat escape sekvence. Texty podporují standard
+Unicode. Interně jsou reprezentovány objekty \lstinline{java.lang.String} a tudíž využívají
+kódování UTF-16 a jsou internovány.
+
+\begin{lstlisting}[caption={Příklad využití typu Text}]
+text -> Text := '"Můj text".
+text2 -> Text := '"Text na\ndva řádky".
+['Println '"Výpis textu"].
+\end{lstlisting}
+
+\subsection{Výrazy \textit{Import}}
+
+Výrazy \lstinline{Import} umožňují importovat symboly definované v jiném souboru nebo Java archivu
+(\textit{.jar} souboru). Výrazy \lstinline{Import} jsou vždy interpretovány jako první při
+interpretaci souboru. Každý soubor můžeme importovat nanejvýš jednou v rámci jednoho souboru.
+Obsahuje-li soubor se zdrojovým kódem TILScriptu více importů stejné závislosti, je daná závislost
+importována pouze jednou, následující importy jsou ignorovány.
+
+Každý soubor interpretován pouze jednou. Pokud tedy více souborů importuje jeden soubor, daný
+soubor bude interpretován pouze při první importu. Při první interpretaci si překladač uloží
+všechny symboly definované v daném souboru (symbolické hodnoty, funkce, proměnné). Při následných
+importech stejného souboru jsou poté pouze importovány tyto symboly. Tedy hodnoty proměnných jsou
+spočítány pouze jednou, poté dané zůstává stále stejná proměnná. Obsahuje-li importovaný skript
+konstrukce na nejvyšší úrovni v programu (tedy takové, že nejsou podkonstrukcí jiné konstrukce než
+sebe samotné), jsou dané konstrukce provedeny pouze při prvním importu programu. Při importu
+skriptu je nejprve interpretován celý skript, teprve poté jsou symboly definované v daném souboru
+importovány do kontextu skriptu, který na daném tomto souboru závisí.
+
+Pro import souboru uvedeme nejprve klíčové slovo \lstinline{Import}, následované cestou
+k požadovanému souboru. Cesta může být absolutní nebo relativní k umístění aktuálně překládaného
+souboru. Cesta musí být uvozena uvozovkami. Importy se můžou nacházet pouze na nejvyšší úrovni
+v programu, neboť se jedná o metavýrazy, ne konstrukce.
+
+Symboly můžeme importovat také z Java archivu. V takovém případě musí být daný Java archiv načten
+již při spouštění překladače společně s kódem překladače. Načítání \textit{.jar} souborů za běhu
+je z bezpečnostních důvodů velmi komplikované. Dále musí daný Java archiv obsahovat tzv.
+\textit{registrátor} symbolů konformující vůči předdefinovanému rozhraní. Pro import souborů
+za využití registrátoru stačí místo cesty k TILScript souboru uvést celý plně kvalifikovaný název
+třídy registrátoru s předponou \textit{class://}. Právě tato přepona značí, že se jedná o import
+z \textit{.jar} souboru. Překladač poté vytvoří instanci určeného registrátoru a naimportuje
+soubory definované tímto registrátorem. Rozhraní registrátorů je popsáno v uživatelské dokumentaci.
+
+Importy nejsou tranzitivní. Tedy importujeme-li soubor, který sám importuje jiné soubory, budou
+importovány pouze symboly definované v daném souboru, ne však symboly definované v jeho
+závislostech. Importy nesmí obsahovat konfliktní definice.
+
+\begin{lstlisting}[caption={Příklad využití výrazů Import}]
+Import "dependency.tils".
+Import "relative/path.tils".
+Import "class://org.fpeterek.tilscript.math.Registrar".
+\end{lstlisting}
+
 \subsection{Typ \textit{Type}} \label{nil-value}
+
+\subsection{Typ \textit{DeviceState}} \label{nil-value}
 
 \subsection{Hodnota \textit{Nil}} \label{nil-value}
 
