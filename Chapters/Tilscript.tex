@@ -196,6 +196,23 @@ Generické typy lze použít pouze v typech funkcí. Má-li více argumentů fun
 typ, tedy typ \lstinline{Any} se stejným indexem, interpreter při procesu typové kontroly zajistí,
 že argumenty, na něž je funkce za běhu aplikována, jsou stejného typu.
 
+\subsection{Výrazy \textit{TypeDef}}
+
+Výrazy \lstinline{TypeDef} umožňují přiřadit již existujícímu typu alternativní jméno.
+\lstinline{TypeDef} nevytváří nový typ, jedná se pouze o alternativní název. V průběhu typové
+kontroly jsou tyto jména rekurzivně přepisovány, dokud překladač nezjistí původní typ. Teprve poté
+porovnává původní typy. Typové aliasy můžeme využívat například pro zkrácení zápisu komplikovaných
+molekulárních typů. Obdobné zkratky v TIL využíváme běžně.
+
+Korektní syntaktický zápis \lstinline{TypeDef} výrazu začíná právě klíčovým slovem
+\lstinline{TypeDef}, následovaným novým názvem, operátorem přiřazení \lstinline{:=}, a nakonec
+původním typem. Nový název musí začínat velkým písmenem.
+
+\begin{lstlisting}[caption={Výraz TypeDef}]
+TypeDef Float := Real.
+TypeDef Property := (((Bool Indiv) Time) World).
+\end{lstlisting}
+
 \subsection{Funkce}
 
 V matematice známe funkce jako jednoznačné zobrazení z množiny možných argumentů (definiční obor)
@@ -388,7 +405,7 @@ standardní knihovnu.
 Dále interpreter implementuje syntaktický cukr pro jednodušší vytváření listů. Pro vytvoření
 seznamu stačí v kompozici aplikovat funkci \lstinline{ListOf} na nenulový, avšak shora neomezený
 počet argumentů. Během parsování bude tato kompozice korektně přepsána na sérii kompozic
-využívajících funkci \lstinline{Cons} k vytvoření \lstinline{cons cells}. K žádné aplikaci funkce
+využívajících funkci \lstinline{Cons} k vytvoření \textit{cons cells}. K žádné aplikaci funkce
 na libovolný počet argumentů tedy nedochází. Při vytváření seznamu pomocí \lstinline{ListOf} musíme
 dodat alespoň jeden prvek listu, aby bylo možné správně dedukovat typ prvků ukládaných v seznamu.
 \lstinline{ListOf} je pouze syntaktický cukr překládaný při procesu parsování. Pokud bychom chtěli
@@ -579,15 +596,132 @@ Import "relative/path.tils".
 Import "class://org.fpeterek.tilscript.math.Registrar".
 \end{lstlisting}
 
-\subsection{Typ \textit{Type}} \label{nil-value}
+\subsection{Typ \textit{Type}}
 
-\subsection{Typ \textit{DeviceState}} \label{nil-value}
+Typ \lstinline{Type} slouží k reprezentaci typů a je primárně metaprogramovacím prvkem. V tradiční
+Transparentní intenzionální logice o typech vypovídat nemůžeme. Typově polymorfní TIL není
+momentálně předmětem výzkumu. Pro účely metaprogramování je však možnost reprezentace typů
+nezbytná. Typ \lstinline{Type} umožňuje pracovat s typy jako s validními hodnotami jazyka
+TILScript. Typové reference, tedy hodnoty typu \lstinline{Type}, využijeme například k implementaci
+statické typové kontroly (překladač TILScriptu provádí typovou kontrolu pouze za běhu),
+ke generování validních TILScript programů, apod.
+
+Pokud by TILScript typ \lstinline{Text} neobsahoval, musel by být za účelem analýzy TILScriptu
+implementován parser TILScriptu v TILScriptu, nebo by uživatelé museli využívat jiné programovací
+jazyky. Proto tato práce navrhuje rozšíření TILScriptu o metaprogramovací prvky za účelem unifikace
+a zjednodušení nástrojů pro práci s Transparentní intenzionální logikou.
+
+S typovými referencemi pracujeme obdobně jako s objekty z bázových množin. Zodpovědností uživatele
+však je, aby typové reference využíval opatrně a vyhýbal se jim, bude-li TILScript používat pouze
+pro interpretaci TIL konstrukcí.
+
+\begin{lstlisting}[caption={Příklad využití typových referencí}]
+intType -> Type := Type.
+typeOf5 -> Type := ['TypeOf '5].
+\end{lstlisting}
+
+\subsection{Typ \textit{DeviceState}}
+
+Typ \lstinline{DeviceState} využíváme k označení funkcí závisejících na stavu zařízení, na němž
+běží překladač. Standardní knihovna definuje proměnnou \lstinline{deviceState -> DeviceState},
+kterou uživatel může využívat kdekoliv, kde je hodnota typu \lstinline{DeviceState} vyžadována.
+Hodnoty typu \lstinline{DeviceState} nemají žádnou inherentní hodnotu, obdobně jako objekty typu
+\lstinline{World}. Jako příklad funkcí závislých na stavu zařízení lze uvést například funkci
+\lstinline{Now} vracející aktuální čas, nebo funkci \lstinline{Random}, jejíž výsledkem je náhodné
+číslo (v aktuální implementaci číslo pseudonáhodné, nic však nebrání využití např. hardwarových
+generátorů náhodných čísel nebo \lstinline{/dev/random}, pokud je to na dané platformě možné).
+
+\begin{lstlisting}[caption={Příklad funkcí závislých na stavu zařízení}]
+['Now deviceState].
+['Random deviceState].
+RandFromDevRandom/(Int DeviceState).
+\end{lstlisting}
 
 \subsection{Hodnota \textit{Nil}} \label{nil-value}
 
+Hodnota \lstinline{Nil} slouží k reprezentaci chybového stavu, kdy konstrukce nekonstruuje žádnou
+hodnotu. Je-li jedním z argumentů funkce \lstinline{Nil}, je výsledek automaticky znovu
+\lstinline{Nil}. Pro vyvolání chybového stavu je možné \lstinline{Nil} zmínit přímo v TILScript
+konstrukci. Trivializace \lstinline{Nil} však není povolená gramatikou, neboť trivializace nemůžou
+být nevlastní.
+
+Specifikem implementace je, že hodnota \lstinline{Nil} obsahuje metadata popisující kde a proč
+došlo k selhání a konstrukce nezkonstruovala žádnou hodnotu. Pokud konstrukce na nejvyšší úrovni
+v programu nezkonstruuje hodnotu a výsledkem jejího provedení je \lstinline{Nil}, program skončí
+neúspěchem a uživateli je nahlášena chyba.
+
+\begin{lstlisting}[caption={Příklad využití Nil}]
+['If
+    ['= a '0] Nil
+    ['= b '0] Nil
+    'True ['* ['/ ['Log a] b]]].
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Příklad hlášení chyby}]
+(1, 17): ['* ['+ '1 '2] ['/ '6 '0]].
+                     ~~~ ^ ~~~
+         Division by zero
+** Error **
+(1, 17): ['* ['+ '1 '2] ['/ '6 '0]].
+                     ~~~ ^ ~~~
+         Nil constructed by a top level construction. Aborting execution.
+\end{lstlisting}
+
 \subsection{Struktury} \label{structs}
 
-\subsubsection{Konstruktory funkcí}
+Struktury, obdobně jako n-tice, umožňují shlukovat více hodnot různorodých typů. Narozdíl od n-tic,
+jejichž členy indexujeme číselně, atributy struktur jsou pojmenované a přistupujeme k nim jménem.
+Dále můžou být struktury definovány rekurzivně. Tato charakteristika umožňuje například
+reprezentovat grafy. Atribut struktury nemůže být \lstinline{Nil}.
+
+Během typové kontroly jsou porovnávany nejen typy atributů struktur, ale také názvy porovnávaných
+struktur. Liší-li se struktury názvem, ačkoliv jsou ve všech ostatních ohledech stejné, jsou
+považovány za rozdílné typy. Struktury nám tedy, narozdíl od n-tic, umožňují lépe využívat typového
+systému TIL.
+
+\subsubsection{Definice struktur}
+
+Strukturu definujeme klíčovým slovem \lstinline{Struct}. Dále uvedeme jméno struktury, a do
+složených závorek seznam atributů. Nejprve vždy uvedeme název atributu, za dvojtečku pak jeho typ.
+Jednotlivé atributy oddělujeme čárkami. Název struktury musí být validním názvem typu -- musí
+začínat velkým písmenem. Při pojmenovávání atributů se pak řídíme pravidly pro jména proměnných
+a začínáme vždy malým písmenem. Za posledním atributem může ale nemusí být čárka -- tzv.
+\textit{trailing comma}.
+
+\begin{lstlisting}[caption={Příklad definice struktury}]
+Struct Tree {
+    value: Int,
+    subtrees: List(Tree),
+}.
+\end{lstlisting}
+
+\subsubsection{Konstruktory struktur}
+
+Konstruktory struktur umožňují vytvářet objekty uživatelem definovaného typu -- struktury.
+Pro konstruktory byla vytvořena nová syntax. Do složených závorek uvedeme nejprve název struktury,
+následně pak uvádíme konstrukce, které budou provedeny jako konstituenty konstruktoru. Výsledky
+provedení poté budou přiřazeny jednotlivým atributům struktury. Argumenty konstruktoru musíme uvést
+v pořadí odpovídající definici struktury. Konstruktory nevyužívají typové reference, název
+konstruovaného typu tedy netrivializujeme, jedná se pouze o syntaktický prvek. Jinak jsou
+konstruktory ekvivalentní kompozicím -- pokud konstruktor neobdrží alespoň jeden z požadovaných
+argumentů, je konstruktor $v$-nevlastní, jinak konstruktor konstruuje hodnotu specifikovaného typu.
+
+Konstruktory můžeme využít také ke konstrukci prázdných listů. Konstrukce listů pomocí
+\lstinline{ListOf} využívá typovou inferenci pro určení typu seznamu. Prázdný list však pomocí
+kompozice nelze vytvořit. Dále využití konstruktorů pro konstrukci prázdných seznamů umožňuje
+vyhnout se využívání typových referencí. Neprázdný list pomocí konstruktoru vytvořit nelze.
+
+\begin{lstlisting}[caption={Příklad definice struktury}]
+{List(Tree)}. -- Konstrukce prazdneho listu
+{Tree '0 {List(Tree) }}. -- Konstrukce objektu typu Tree
+
+myTree -> Tree := {Tree
+    '1
+    ['ListOf 
+        {Tree '2 {List(Tree) }}
+        {Tree '3 ['ListOf {Tree '4 {List(Tree) } }]}]}.
+
+\end{lstlisting}
 
 \subsubsection{Přístup k atributům}
 
