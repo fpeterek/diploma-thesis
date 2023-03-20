@@ -672,7 +672,7 @@ neúspěchem a uživateli je nahlášena chyba.
 Struktury, obdobně jako n-tice, umožňují shlukovat více hodnot různorodých typů. Narozdíl od n-tic,
 jejichž členy indexujeme číselně, atributy struktur jsou pojmenované a přistupujeme k nim jménem.
 Dále můžou být struktury definovány rekurzivně. Tato charakteristika umožňuje například
-reprezentovat grafy. Atribut struktury nemůže být \lstinline{Nil}.
+reprezentovat grafy. Atributu struktury nemůže být přiřazena hodnota \lstinline{Nil}.
 
 Během typové kontroly jsou porovnávany nejen typy atributů struktur, ale také názvy porovnávaných
 struktur. Liší-li se struktury názvem, ačkoliv jsou ve všech ostatních ohledech stejné, jsou
@@ -720,9 +720,24 @@ myTree -> Tree := {Tree
     ['ListOf 
         {Tree '2 {List(Tree) }}
         {Tree '3 ['ListOf {Tree '4 {List(Tree) } }]}]}.
-
 \end{lstlisting}
 
 \subsubsection{Přístup k atributům}
+
+Za účelem přístupu k atributům byl přidán syntaktický konstrukt \lstinline{::}. Za název objektu,
+k jehož atributu přistupujeme, zapíšeme \lstinline{::} následované názvem požadovaného atributu.
+Přístupy k atributům lze řetězit, potřebujeme-li přistoupit k atributu atributu. Přístup k atributu
+má vyšší prioritu než trivializace -- tedy trivializací trivializujeme celý přístup k atributu,
+nepřistupujeme k atributu trivializace.
+
+Reálně je však atribut pouze proměnná, ačkoliv se jedná o proměnnou ve strukturovaném shluku.
+Proto i sémantika provedení atributu je stejná jako sémantika provedení proměnné. Přístup
+k neexistujícímu atributu je chybou. Provedení existujícího atributu (proměnné) vždy zkonstruuje
+hodnotu, neboť atributy nemůžou být nevlastní.
+
+\begin{lstlisting}[caption={Příklad přístupu k atributům objektu}]
+tree::subtrees.
+['Println struct::nested::attributes].
+\end{lstlisting}
 
 \endinput
