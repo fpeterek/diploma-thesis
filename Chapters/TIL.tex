@@ -18,15 +18,17 @@ způsobem program spočítal výsledek, dokud jej spočítal správně.
 
 Naopak Transparentní intenzionální logika je hyperintenzionálním kalkulem, který nám umožňuje
 vytvářet konstrukce vypovídající o jiných konstrukcích. TIL vychází z myšlenky, že výraz
-přirozeného jazyka sice označuje denotát -- konkrétní individuum, významem výrazu ovšem není
-samotný denotát, který ani nemusí nutně existovat. Význam výrazu je abstraktní a lze jej zachytit
-konstrukcí. Daná konstrukce poté při provedení zkonstruuje denotát výrazu. Jako příklad lze uvést
-například výraz "francouzský král." V době psaní této práce Francie krále nemá. Výraz nemá žádný
-denotát, neuvádí žádné konkrétní individuum. Přesto výrazu "francouzský král" rozumíme, výraz má
-svůj význam, jen v současné době neuvádí žádnou osobu. A budeme-li chtít o významu výrazu
-"francouzský král" něco vypovědět, například že francouzský král je monarchou v čele Francie,
-daný monarcha nemusí existovat. Dále lze uvést například rozdíl mezi výrazy "logaritmus 1024
-o základě 2" a "5 + 5". Denotátem obou výrazů je 10. Zadáme-li do interpreteru Haskellu výrazy
+přirozeného jazyka sice označuje denotát -- konkrétní objekt (např. individuum, číslo, konstrukci),
+významem výrazu ovšem není samotný denotát, který ani nemusí nutně existovat. Význam výrazu je
+abstraktní a lze jej zachytit konstrukcí. Daná konstrukce poté při provedení zkonstruuje denotát
+výrazu. Jako příklad lze uvést například výraz "francouzský král." V době psaní této práce Francie
+krále nemá. Výraz nemá žádný denotát, neuvádí žádné konkrétní individuum. Přesto výrazu
+"francouzský král" rozumíme, výraz má svůj význam, jen v současné době neuvádí žádnou osobu.
+A budeme-li chtít o významu výrazu "francouzský král" něco vypovědět, například že francouzský král
+je monarchou v čele Francie, daný monarcha nemusí existovat. Dále lze uvést například rozdíl mezi
+výrazy "logaritmus 1024 o základě 2" a "5 + 5". Denotátem obou výrazů je 10. Zadáme-li do
+interpreteru Haskellu výrazy
+
 \lstset{language=Haskell}
 \lstinline{logBase 2 1024} a \lstinline{5 + 5}, získáme v obou případech stejný výsledek.
 V přirozeném jazyce ovšem chápeme značný rozdíl mezi oběma výrazy, ačkoliv mají stejný denotát.
@@ -59,20 +61,15 @@ Jak již bylo zmíněno, Transparentní intenzionální logika vychází z typov
 také každý objekt musí mít svůj typ. Pro správné pochopení TILu, a tedy i této práce, je tak nutné 
 znát typovou hierarchii TIL.
 
-\section{Báze}
+\section{Objektová báze}
 
-Báze je kolekce vzájemně disjunktních neprázdných množin, které dohromady definují s jakými objekty
-budeme pracovat. Tyto množiny definují atomické objekty. Každá množina dále objektům určuje určitá
-základní kritéria (např. pokud jako jednu z množin báze zvolíme množinu $\mathbb{N}$, víme, že
-všechny objekty z této množiny budou čísla). Vždy se ovšem jedná pouze o nejnutnější
-a nejzákladnější vlastnosti. Báze například nemá žádný vliv na vlastnosti proměnlivé v čase.
+Objektová báze je kolekce vzájemně disjunktních neprázdných množin, které dohromady vymezují
+nulární funkce, se kterými budeme pracovat. Bázi volíme dle potřeb konkrétní aplikace a univerza
+diskurzu. Například používáme-li TIL k logické analýze matematických vět, jako bázi lze zvolit
+například množinu celých čísel, množinu reálných čísel, a množinu pravdivostních hodnot. Musíme
+však vzít v potaz, že tato báze neobsahuje čísla komplexní.
 
-Bázi volíme dle potřeb konkrétní aplikace a univerza diskurzu. Například používáme-li TIL k logické
-analýze matematických vět, jako bázi lze zvolit například množinu celých čísel, množinu reálných
-čísel, a množinu pravdivostních hodnot. Musíme však vzít v potaz, že tato báze neobsahuje čísla
-komplexní.
-
-Patří-li objekt x do množiny $\alpha$ z báze, říkáme, že se jedná o objekt typu $\alpha$.
+Patří-li objekt $x$ do množiny $\alpha$ z báze, říkáme, že se jedná o objekt typu $\alpha$.
 K explicitnímu uvedení typu objektu \textit{x} využíváme zápis $x/\alpha$. Množinám tvořícím bázi
 lze přirozeně říkat typy.
 
@@ -98,15 +95,20 @@ $\tau$, $\omega$}. Tyto typy jsou podrobněji popsány v tabulce \ref{tab:defaul
 
 \section{Funkce}
 
-V matematice se jako základní molekulární typ využívají relace. Funkce je poté speciální typ relace,
-který je zprava jednoznačný. V TIL je však základním molekulárním typem funkce. Chceme-li v TIL
-vyjádřit $n$-ární relaci nad množinou $\alpha_1 \times ... \times \alpha_n$, lze tak samozřejmě
-udělat definicí $n$-ární funkce z $\alpha_1 \times ... \times \alpha_n$ do $o$, která každému prvku
+V některých logických systémech, například v predikátové logice, se jako základní molekulární typ
+využívají relace. Funkce je poté speciální typ relace, která je zprava jednoznačná. V TIL je však
+základním molekulárním typem funkce. Chceme-li v TIL vyjádřit $n$-ární relaci nad množinou
+$\alpha_1 \times ... \times \alpha_n$, lze tak samozřejmě udělat definicí $n$-ární funkce
+z $\alpha_1 \times ... \times \alpha_n$ do $o$, která každému prvku
 z $\alpha_1 \times ... \times \alpha_n$ přiřadí pravdivostní hodnotu na základě toho, zda prvek
 do relace patří, nebo ne.
 
-Narozdíl od tradičního lambda kalkulu, kde jsou funkce pouze nulární nebo unární, v Transparentní
-intenzionální logice není arita funkce omezena. Dále můžeme v TIL pracovat s funkcemi parciálními.
+% TODO: https://www.phil.muni.cz/~raclavsky/texty/partiality_til.pdf
+Narozdíl od tradičního lambda kalkulu je Transparentní intenzionální logika kalkulem parciálních
+funkcí. Z parciality funkcí poté vyplývá další vlastnost TIL -- arita funkcí není shora omezená.
+V lambda kalkulech totálních funkcí lze využít Sch{\"o}nfinkelovu redukci k redukci funkcí
+$n$-árních na unární za využití skládání funkcí. Tato redukce však není ekvivalentní, pracujeme-li
+s funkcemi parciálními.
 
 \subsection{Intenze a extenze}
 
@@ -122,18 +124,18 @@ objektů typu $\alpha$.
 
 Konstrukce v Transparentní intenzionální logice jsou abstraktní procedury. Tyto procedury jsou
 strukturované -- nejedná se o množiny, mají pevně danou strukturu, a na uspořádání případných
-podprocedur záleží. Tyto konstrukce lze podle definovaných pravidel provést. Provedením konstrukce,
+podprocedur záleží. Tyto konstrukce lze podle definovaných pravidel provést. Provedením konstrukce
 získáme výstup, případně nezískáme nic. Konstrukce, které nekonstruují žádný výstup, nazýváme
 \textit{nevlastní} (anglicky \textit{improper}). V TIL pracujeme s šesti druhy konstrukcí.
 
 Jak již bylo zmíněno, konstrukce můžou v TIL operovat nejen nad objekty, které nejsou konstrukcemi,
-tedy nad objekty z báze, ale také nad jinými konstrukce. Konstrukce však může operovat pouze nad
-konstrukcemi nižšího řádu, než je konstrukce samotná, viz \ref{type-order}. Každou podkonstrukci,
-kterou musíme provést při provedení konstrukce, nazýváme \textit{konstituentem}. V TIL existuje
-šest různých druhů konstrukcí. Dvě atomické -- mají pouze jeden konstituent, a to sebe samotné,
-a čtyři molekulární. Atomickými konstrukcemi jsou \textit{trivializace} a \textit{proměnné}. Mezi
-molekulární konstrukce poté řadíme \textit{kompozice}, \textit{uzávěry}, \textit{provedení} a
-\textit{dvojí provedení}.
+tedy nad objekty z báze a funkcemi, ale také nad jinými konstrukce. Konstrukce však může operovat
+pouze nad konstrukcemi nižšího řádu, než je konstrukce samotná, viz \ref{type-order}. Každou
+podkonstrukci, kterou musíme provést při provedení konstrukce, nazýváme \textit{konstituentem}.
+V TIL existuje šest různých druhů konstrukcí. Dvě atomické -- mají pouze jeden konstituent, a to
+sebe samotné, a čtyři molekulární. Atomickými konstrukcemi jsou \textit{Trivializace} a
+\textit{proměnné}. Mezi molekulární konstrukce poté řadíme \textit{Kompozice}, \textit{Uzávěry},
+\textit{Provedení} a \textit{Dvojí Provedení}.
 
 \textit{Proměnné} jsou konstrukce, které na základě valuace \textit{v} \textit{v}-konstruují
 objekty. Skutečnost, že proměnná $x$ \textit{v}-konstruuje hodnotu typu $\alpha$ značíme
@@ -144,18 +146,23 @@ $x \rightarrow_v \alpha$.
 Konstrukce je v Transparentní intenzionální logice potřebná, neboť výchozím módem pro konstrukce
 je provedení. Samotná konstrukce \textit{X} by tak byla automaticky provedena, a místo konstrukce
 \textit{X} bychom dostali pouze její denotát. Pokud bychom chtěli zkonstruovat konstrukci
-\textit{X}, musíme ji trivializovat. Tím se provede pouze konstrukce trivializace. A protože
-trivializace nemá jiný konstituent, než sebe samotnou, konstrukce \textit{X} se tak neprovede.
-V literatuře se trivializace \textit{X} tradičně značí ${}^0X$. Obzvlášť se používá také zápis
-$'X$. Tento zápis je poté využit i v jazyce TILScript. Trivializaci lze považovat za ekvivalent
+\textit{X}, musíme ji trivializovat. Tím se provede pouze konstrukce Trivializace. A protože
+Trivializace nemá jiný konstituent, než sebe samotnou, konstrukce \textit{X} se tak neprovede.
+V literatuře se Trivializace \textit{X} tradičně značí ${}^0X$. Alternativně se používá také zápis
+$'X$. Tento zápis je poté využit i v jazyce TIL-Script. Trivializaci lze považovat za ekvivalent
 funkce \lstinline{QUOTE} z jazyka Lisp. Trivializace taktéž bývá využívána ke konstruování hodnot,
 které nelze provést (objekty z báze, funkce) a tudíž je nelze zmínit netrivializované.
+\footnote{
+    V jazyce Lisp čísla konstruují sebe samotné, tedy provedením čísla získáme zpět prováděné
+    číslo. \lstinline{1} a \lstinline{'1} jsou tedy v Lispu ekvivalentní výrazy. V TIL však není
+    možné, aby objekt konstruoval sám sebe, viz rozvětvená hierarchie typů \ref{type-order}.
+}
 
-\textit{Kompozice} je využívána k aplikaci funkcí. Kompozice $[X Y_1...Y_m]$ značí aplikaci funkce
-konstruované konstrukcí $X$ na argumenty zkonstruované konstrukcemi $Y_1,...,Y_m$. Pokud konstrukce
-$X$ konstruuje funkci $f$, všechny podkonstrukce $Y_1,...,Y_m$ konstruují hodnotu, a je-li funkce
-$f$ na daných argumentech definovaná, kompozice $v$-konstruuje funkční hodnotu na těchto
-argumentech. V opačném případě je kompozice nevlastní.
+\textit{Kompozice} je procedura aplikace funkce na argumenty. Kompozice $[X Y_1...Y_m]$ značí
+aplikaci funkce konstruované konstrukcí $X$ na argumenty zkonstruované konstrukcemi $Y_1,...,Y_m$.
+Pokud konstrukce $X$ $v$-konstruuje funkci $f$, všechny podkonstrukce $Y_1,...,Y_m$ $v$-konstruují
+hodnotu, a je-li funkce $f$ na daných argumentech definovaná, kompozice $v$-konstruuje funkční
+hodnotu na těchto argumentech. V opačném případě je kompozice $v$-nevlastní.
 
 \textit{Uzávěr} $\lambda x_1...x_m Y$ je konstrukce $v$-konstruující funkci. $x_1,...x_m$ musí
 být navzájem různé proměnné, $Y$ musí být konstrukcí. Konstruce uzávěru je velmi podobná abstrakci
@@ -177,8 +184,8 @@ Jiné konstrukce v Transparentní intenzionální logice neexistují.
 
 \subsection{Princip kompozicionality} 
 
-Princip kompozicionality je důležitým rysem Transparentní intenzionální logiky. Princip
-kompozicionality uvádí, že je-li libovolný konstituent konstrukce $X$ $v$-nevlastní a v dané
+Princip kompozicionality je důležitým rysem Transparentní intenzionální logiky. Z principu
+kompozicionality vyplývá, že je-li libovolný konstituent konstrukce $X$ $v$-nevlastní a v dané
 valuaci nekonstruuje žádnou hodnotu, pak je $v$-nevlastní i konstrukce $X$.
 
 \section{Typy 1. řádu} \label{fst-order}
@@ -202,7 +209,7 @@ Nechť \textit{B} je báze. Pak:
 \section{Rozvětvěná hierarchie typů} \label{type-order}
 
 %TODO: Doplnit citaci
-Definice je opět skoro slovo od slova převzata z.
+Definice je opět skoro slovo od slova převzata z Průvodce.
 
 Nechť \textit{B} je báze. Pak:
 
@@ -211,16 +218,17 @@ Viz sekce \ref{fst-order}.
 
 \subsection{$C_n$ (konstrukce řádu n)}
 
+% TODO: Keep fixing
 \begin{enumerate}[i)]
     \item Nechť $x$ je proměnná $v$-konstruující objekt typu řádu $n$. Pak $x$ je
-        \textit{kontrukce řádu n nad b}.
+        \textit{kontrukce řádu n nad B}.
     \item Nechť $X$ je prvek typu řádu $n$. Pak trivializace ${}^0X$, provedení ${}^1X$ a dvojí
-        provedení ${}^2X$ jsou \textit{konstrukcemi řádu n nad b}.
+        provedení ${}^2X$ jsou \textit{konstrukcemi řádu n nad B}.
     \item Nechť $X, Y_1, ... Y_m$ jsou konstrukce řádu $n$ nad \textit{B}. Pak kompozice 
-        $[X Y_1...Y_m]$ je \textit{konstrukce řádu n nad b}.
+        $[X Y_1...Y_m]$ je \textit{konstrukce řádu n nad B}.
     \item Nechť $x_1,...,x_m$ jsou vzájemně různé proměnné a $X$ je konstrukce řádu $n$
-        nad \textit{B}. Pak uzávěr $[\lambda x_1 ... x_m X]$ je \textit{konstrukce řádu n nad b}.
-    \item Nic jiného není konstrukcí řádu $n$ nad bází \textit{B}.
+        nad \textit{B}. Pak uzávěr $[\lambda x_1 ... x_m X]$ je \textit{konstrukce řádu n nad B}.
+    \item Nic jiného než i)-v) není konstrukcí řádu $n$ nad bází \textit{B}.
 \end{enumerate}
 
 \subsection{$T_{n+1}$ (typy řádu n+1)}

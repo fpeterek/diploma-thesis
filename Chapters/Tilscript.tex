@@ -1,19 +1,19 @@
-\chapter{TILScript}
+\chapter{TIL-Script}
 
-Nyní konečně přišel čas představit TILScript. TILScript je interpretovaný funkcionální programovací
-jazyk, do znatelné míry inspirovaný jazyky jako Haskell nebo Lisp. Syntax TILScriptu by měla co
+Nyní konečně přišel čas představit TIL-Script. TIL-Script je interpretovaný funkcionální programovací
+jazyk, do znatelné míry inspirovaný jazyky jako Haskell nebo Lisp. Syntax TIL-Scriptu by měla co
 nejvíce připomínat syntaktické prvky Transparentní intenzionální logiky, aby pouhá znalost TILu
-stačila k okamžitému pochopení TILScriptu. Sémantika by poté měla být stejná.
+stačila k okamžitému pochopení TIL-Scriptu. Sémantika by poté měla být stejná.
 
 Tato kapitola je rozdělena do tří sekcí. V první sekci jsou popsány důležité základní rysy
-TILScriptu. Druhá sekce popisuje již existující prvky TILScriptu, a případně dokumentuje změny
-oproti předchozím verzím TILScriptu. Poslední sekce se věnuje navrhovaným rozšířením jazyka
-TILScript.
+TIL-Scriptu. Druhá sekce popisuje již existující prvky TIL-Scriptu, a případně dokumentuje změny
+oproti předchozím verzím TIL-Scriptu. Poslední sekce se věnuje navrhovaným rozšířením jazyka
+TIL-Script.
 
-\section{Charakteristické rysy TILScriptu}
+\section{Charakteristické rysy TIL-Scriptu}
 
-Tato sekce popisuje charakteristické rysy TILScriptu v takové podobě, jakou nabývá v této práci.
-Pokud se v některém bodě TILScript neshoduje s TILem či předchozími verzemi TILScriptu, je rozdíl
+Tato sekce popisuje charakteristické rysy TIL-Scriptu v takové podobě, jakou nabývá v této práci.
+Pokud se v některém bodě TIL-Script neshoduje s TILem či předchozími verzemi TIL-Scriptu, je rozdíl
 náležitě popsán a vysvětlen.
 
 \subsection{Lambda kalkul parciálních funkcí}
@@ -23,17 +23,17 @@ náležitě popsán a vysvětlen.
 % TODO: Ozdrojovat currying asi? Idk, lambda kalkul
 
 Narozdíl od lambda kalkulu ve své tradiční podobě, nebo například jazyka Haskell, v Transparentní
-intezionální logice není arita funkce shora omezená. TILScript musí tento fakt reflektovat. Proto
+intezionální logice není arita funkce shora omezená. TIL-Script musí tento fakt reflektovat. Proto
 tento jazyk umožňuje definici i aplikaci funkcí libovolné (samozřejmě nezáporné) arity. Také zde
 neexistuje rozvíjení funkcí (anglicky \textit{currying}). Zatímco např. v Haskellu jsou funkce
 arity dvě nebo vyšší automaticky rozvinuty na sérií několika unárních funkcí, jejichž oborem hodnot
-jsou unární nebo nulární funkce, a jedné nulární funkce která vrací žádaný výsledek, v TILScriptu
+jsou unární nebo nulární funkce, a jedné nulární funkce která vrací žádaný výsledek, v TIL-Scriptu
 není arita nijak omezená.
 
 \subsubsection{Parciální funkce a respektování principu kompozicionality}
 
-Jelikož v TIL můžou být funkce parciální, musí i TILScript počítat s parcialitou funkcí. Dále musí
-TILScript respektovat princip kompozicionality, základní rys Transparentní intenzionální logiky.
+Jelikož v TIL můžou být funkce parciální, musí i TIL-Script počítat s parcialitou funkcí. Dále musí
+TIL-Script respektovat princip kompozicionality, základní rys Transparentní intenzionální logiky.
 Jedním z důsledků principu kompozicionality je, že konstrukce, jejíž přinejmenším jeden konstituent
 je nevlastní, bude také nutně nevlastní. Reprezentaci stavu, kdy parciální funkce je aplikována
 na argumenty, na kterých není definována, se věnuje podsekce \textit{Hodnota Nil} \ref{nil-value}
@@ -49,7 +49,7 @@ principů TIL a umožněním zpracování chyb.
 
 \subsection{Okamžité vyhodnocování}
 
-Ačkoliv je TILScript funkcionální jazyk, vyhodnocování výrazů probíhá okamžitě
+Ačkoliv je TIL-Script funkcionální jazyk, vyhodnocování výrazů probíhá okamžitě
 (\textit{Eager evaluation}). Okamžité vyhodnocování je potřeba k zajištění respektování principu
 kompozicionality. Pokud by vyhodnocování bylo líné, uživatel by mohl jako argument funkce uvést
 $v$-nevlastní konstrukci, která by nikdy nebyla vyhodnocena, a došlo by tak k aplikaci funkce
@@ -58,7 +58,7 @@ některé své argumenty utilizuje pouze pokud je splněna určitá podmínka.
 
 \subsection{Neměnnost proměnných a symbolů (\textit{Immutability})}
 
-Jelikož je TILScript funkcionální jazyk, jsou hodnoty všech proměnných konstantní -- tedy
+Jelikož je TIL-Script funkcionální jazyk, jsou hodnoty všech proměnných konstantní -- tedy
 jakmile je proměnné jednou přiřazena valuace, nelze její hodnotu změnit. Dále nelze proměnnou
 zastínit (angl. \textit{to shadow, shadowing}) v rámci oblasti platnosti (angl. \textit{scope}),
 ve které byla definována. Proměnnou lze zastínit vytvořením nové oblasti platnosti (tedy například
@@ -68,7 +68,7 @@ Obdobně nelze redefinovat funkce nebo změnit typ symbolické hodnoty (viz \ref
 
 \subsection{Definice a deklarace symbolů}
 
-TILScript nově rozlišuje mezi deklaracemi a definicemi proměnných a funkcí. Deklarace pouze
+TIL-Script nově rozlišuje mezi deklaracemi a definicemi proměnných a funkcí. Deklarace pouze
 uvědomí překladač o existenci proměnné nebo funkce, nijak ale nedefinuje valuaci proměnné nebo
 sémantiku funkce. Deklarace umožňuje funkci či proměnnou zmínit (např. v trivializaci, v uzávěru),
 neumožňuje nám však proměnnou provést nebo funkci aplikovat -- jak také, když neznáme hodnotu
@@ -122,47 +122,47 @@ hodnotu. Počet deklarací je shora neomezený, zato definice může existovat n
 nedefinovaného symbolu není chybou, ovšem snaha nedefinovaný symbol využít (např. volání funkce,
 přístup k proměnné) vyústí v chybu při procesu linkování.
 
-\section{TILScript jako výpočetní varianta TILu}
+\section{TIL-Script jako výpočetní varianta TILu}
 
-Tato sekce popisuje základní výrazy a konstrukce TILScriptu, které existovaly již v předchozích
+Tato sekce popisuje základní výrazy a konstrukce TIL-Scriptu, které existovaly již v předchozích
 verzích jazyka. Pokud práce tyto výrazy nějakým způsobem upravuje, je úprava náležitě popsána
 a zdůvodněna.
 
-\subsection{Věty TILScriptu}
+\subsection{Věty TIL-Scriptu}
 
-V TILScriptu za věty (\textit{sentence}) považuje výrazy na nejvyšší úrovni v programu. Větou je
+V TIL-Scriptu za věty (\textit{sentence}) považuje výrazy na nejvyšší úrovni v programu. Větou je
 tedy například konstrukce taková, že není podkonstrukcí jiného výrazu než sebe samotné, ale také
 definice funkce, proměnné, typu, apod. Každá věta musí být ukončena terminátorem. Roli terminátoru
-v TILScriptu zastává znak \lstinline{.} (ASCII tečka).
+v TIL-Scriptu zastává znak \lstinline{.} (ASCII tečka).
 
 \subsection{Atomické datové typy}
 
-Atomické datové typy v TILScriptu vycházejí z výchozí báze využívané v Transparentní intenzionální
-logice k analýze přirozeného jazyka, tedy množinám ${o, \iota, \tau, \omega}$. TILScript ovšem
+Atomické datové typy v TIL-Scriptu vycházejí z výchozí báze využívané v Transparentní intenzionální
+logice k analýze přirozeného jazyka, tedy množinám ${o, \iota, \tau, \omega}$. TIL-Script ovšem
 rozlišuje mezi časy a reálnými čísly, a pro tyto hodnoty definuje dva nekompatibilní typy, mezi
-kterými neexistuje implicitní konverze. Dále TILScript využívá datový typ $\nu$ představující celá
-čísla. Nakonec TILScript pro názvy typů nevyužívá řecká písmena, která nelze prakticky a jednoduše
+kterými neexistuje implicitní konverze. Dále TIL-Script využívá datový typ $\nu$ představující celá
+čísla. Nakonec TIL-Script pro názvy typů nevyužívá řecká písmena, která nelze prakticky a jednoduše
 zapisovat na spoustě rozložení klávesnic, ale anglická slova nebo zkratky. Názvy typů vždy začínají
 velkým písmenem.
 
-Typ $o$ představující pravdivostní hodnoty TILScript pojmenovává \lstinline{Bool} a může nabývat
+Typ $o$ představující pravdivostní hodnoty TIL-Script pojmenovává \lstinline{Bool} a může nabývat
 hodnot \lstinline{True} a \lstinline{False}.
 
-Typ $\iota$, v TILScriptu \lstinline{Indiv}, označujeme jako množinu individuí. Individua
+Typ $\iota$, v TIL-Scriptu \lstinline{Indiv}, označujeme jako množinu individuí. Individua
 v Transparentní intenzionální logice považujeme za "holá" -- žádnou netriviální vlastnost nemají
 nutně. Všechny netriviální vlastnosti individuí jsou určeny stavem světa. Individuum samotné nemá
 žádnou inherentní valuaci. Slouží pouze jako unikátní indentifikátor. Obdobně hodnoty
-\lstinline{Indiv} v jazyce TILScript nemají žádnou konkrétní reprezentaci. Typ \lstinline{Indiv}
-je využíván v konjunkci se symbolickými hodnotami, viz \ref{symbolic-values}. Tímto TILScript
+\lstinline{Indiv} v jazyce TIL-Script nemají žádnou konkrétní reprezentaci. Typ \lstinline{Indiv}
+je využíván v konjunkci se symbolickými hodnotami, viz \ref{symbolic-values}. Tímto TIL-Script
 umožňuje uživateli referovat na konkrétní individuum pouze pomocí symbolického identifikátoru,
 aniž by individuím musely být přiřazeny arbitrárně zvolené konkrétní hodnoty.
 
-Reálná čísla TILScript reprezentuje typem \lstinline{Real}. V implementaci překladače vytvořeném
-v rámci této práce jsou reálná čísla interně reprezentována typem \lstinline{double}. TILScript
+Reálná čísla TIL-Script reprezentuje typem \lstinline{Real}. V implementaci překladače vytvořeném
+v rámci této práce jsou reálná čísla interně reprezentována typem \lstinline{double}. TIL-Script
 samotný žádné omezení na reprezentaci reálných čísel nestanovuje, prakticky však reálná čísla
 v současné implementaci reprezentujeme pomocí 64bitové reprezentace dle IEEE 754.
 
-Celá čísla TILScript reprezentuje typem \lstinline{Int}. Obdobně jako u typu \lstinline{Real}
+Celá čísla TIL-Script reprezentuje typem \lstinline{Int}. Obdobně jako u typu \lstinline{Real}
 neexistuje omezení pro reprezentaci celých čísel. Interně je využíván datový typ \lstinline{long},
 jedná se tedy o 64bitové znaménkové číslo reprezentované dvojkovým doplňkem.
 
@@ -171,24 +171,24 @@ byl v této práci zvolen datový typ \lstinline{long}. Uživatel se sám může
 hodnoty interpretovat. Ve standardní knihovně lze však nalézt např. funkci \lstinline{Now}, jejíž
 aplikací získáme počet milisekund uplynulých od 1. ledna 1970.
 
-Typ konstrukcí, v TIL denotován $*$, byl v TILScriptu přejmenován na \lstinline{Construction}.
-V dřívějších verzích TILScriptu se pro typ konstrukcí také využíval znak $*$. Změna na
+Typ konstrukcí, v TIL denotován $*$, byl v TIL-Scriptu přejmenován na \lstinline{Construction}.
+V dřívějších verzích TIL-Scriptu se pro typ konstrukcí také využíval znak $*$. Změna na
 \lstinline{Construction} byla provedena z důvodu zachování konzistence s ostatními typy, které
-v TILScriptu taktéž pojmenováváme anglickými slovy, a také z důvodu omezení ambiguity, aby se typ
+v TIL-Scriptu taktéž pojmenováváme anglickými slovy, a také z důvodu omezení ambiguity, aby se typ
 konstrukce nepletl s funkcí násobení. Zatímco typograficky korektní reprezentací násobení je
 využití znaku $\times$, na počítači násobení značíme $*$. Ačkoliv lze mezi funkcí násobení a
 typem konstrukcí odlišit na základě kontextu, v jakém se znak objevuje, odlišení již v názvu
 umožňuje uživateli jednoduše rozeznat typ konstrukce od násobení čísel okamžitě a bez bližšího
 zkoumání kontextu.
 
-Dále byl TILScript rozšířen o atomický typ sloužící k reprezentaci textu. Tento typ je podrobněji
-popsán v sekci o rozšířeních TILScriptu, viz \ref{text-type}.
+Dále byl TIL-Script rozšířen o atomický typ sloužící k reprezentaci textu. Tento typ je podrobněji
+popsán v sekci o rozšířeních TIL-Scriptu, viz \ref{text-type}.
 
 \subsection{Generický typ \textit{Any}}
 
 V Transparentní intenzionální logice není neobvyklé definovat typově polymorfní funkce. Zvykem je
-označovat předem neznámé typy řeckým písmenem $\alpha$. Obdobně TILScript umožňuje definici
-typově polymorfních funkcí. Generické typy v TILScriptu značíme slovem \lstinline{Any}, okamžitě
+označovat předem neznámé typy řeckým písmenem $\alpha$. Obdobně TIL-Script umožňuje definici
+typově polymorfních funkcí. Generické typy v TIL-Scriptu značíme slovem \lstinline{Any}, okamžitě
 následovaným indexem polymorfního typu. Index je libovolné číslo z rozsahu
 $\bigl \langle 0; 2^{32}-1 \bigr \rangle$. Nenulové indexy nesmí začínat číslem 0.
 
@@ -221,11 +221,11 @@ do množiny možných obrazů (obor hodnot). V programovacích jazycích konstru
 být ani zobrazením (nevrací žádnou hodnotu, v takovém případě většinou modifikují stav světa,
 jako příklad lze uvést funkce s návratovou hodnotou \lstinline{void} v jazyce C).
 
-V jazyce TILScript, obdobně jako v TIL, jsou funkce vždy zobrazením do určitého oboru hodnot. Díky
+V jazyce TIL-Script, obdobně jako v TIL, jsou funkce vždy zobrazením do určitého oboru hodnot. Díky
 parcialitě může být funkce degenerovaná, a v takovém případě nebude vracet hodnotu pro žádnou
 kombinaci argumentů. V takovém případě se však jedná o určitou formu chybového stavu, spíše než
-záměr, jak by tomu bylo v případě např. jazyka C. V čem se ovšem TILScript od Transparentní
-intenzionální logiky liší, je možnost modifikovat stav světa. TILScript je funkcionální jazyk,
+záměr, jak by tomu bylo v případě např. jazyka C. V čem se ovšem TIL-Script od Transparentní
+intenzionální logiky liší, je možnost modifikovat stav světa. TIL-Script je funkcionální jazyk,
 proto je na nejlepším uvážení uživatele, aby takovéto funkce nedefinoval, a jejich využívání omezil
 na nutné minimum. Příkladem funkcí s vedlejšími efekty (tedy modifikujících stav světa) můžou
 být například funkce \lstinline{Print}, \lstinline{Println} ze standardní knihovny, funkce
@@ -234,7 +234,7 @@ pro zápis do databáze, apod. Arita funkce musí být vždy alespoň jedna.
 Pro zápis typu funkce využíváme podobnou notaci jako v Transparentní intenzionální logice.
 Typy funkcí denotujeme kulatými závorkami. Uvnitř závorek uvedeme nejprve obor hodnot funkce,
 poté uvádíme postupně typy argumentů. Jediný rozdíl oproti TIL spočívá v nutnosti zapsat mezeru
-mezi názvy jednotlivých typů. Tedy ekvivalentem k typu $(o\nu\tau)$ by v TILScriptu byl typ
+mezi názvy jednotlivých typů. Tedy ekvivalentem k typu $(o\nu\tau)$ by v TIL-Scriptu byl typ
 \lstinline{(Bool Int Real)}.
 
 Funkce lze deklarovat uvedením názvu funkce následovaným lomítkem a jejím typem. Deklarujeme-li
@@ -247,7 +247,7 @@ Add, Sub, Mult, Div/(Int Int Int).
 
 \subsection{Literály}
 
-Názvosloví \textit{literál} je přejato z jiných programovacích jazyků. V TILScriptu literály
+Názvosloví \textit{literál} je přejato z jiných programovacích jazyků. V TIL-Scriptu literály
 myslíme ne-funkce, tedy členy množin tvořícíh bázi. Literály lze uvádět celá i reálná čísla,
 pravdivostní hodnoty, a také text (viz oddíl \ref{text-type} věnující se typu \lstinline{Text}).
 Individua pomocí symbolických hodnot, viz Symbolické hodnoty \ref{symbolic-values}. Literály ovšem
@@ -255,7 +255,7 @@ nesmíme zapomenout trivializovat.
 
 \subsection{Trivializace}
 
-Trivializace v TILScriptu slouží ke stejnému účelu jako v Transparentní intezionální logice.
+Trivializace v TIL-Scriptu slouží ke stejnému účelu jako v Transparentní intezionální logice.
 Narozdíl od TIL ovšem trivializaci denotujeme jednoduchým apostrofem namísto nuly zapsané jako
 levý horní index.
 
@@ -267,7 +267,7 @@ levý horní index.
 
 \subsection{Proměnné}
 
-Proměnné v TILScriptu opět slouží stejném účelu jako proměnné v TIL, tedy $v$-konstruují hodnotu
+Proměnné v TIL-Scriptu opět slouží stejném účelu jako proměnné v TIL, tedy $v$-konstruují hodnotu
 v závislosti na valuaci $v$. Každé proměnné lze přiřadit hodnotu pouze jednou -- pro volné proměnné
 při definici, pro $\lambda$-vázané proměnné při aplikaci funkce.
 
@@ -297,7 +297,7 @@ Název proměnné musí začínat malým písmenem.
 Provedení se sémantikou opět nijak neliší od svého ekvivalentu v Transparentní intenzionální logice.
 Syntax ovšem musela být kvůli praktičnosti upravena, a proto bylo upuštěno od pravých horních
 indexů. Provedení denotujeme \lstinline{^1}. Pro dvojí provedení poté využíváme \lstinline{^2}.
-Dřívejší verze TILScriptu definovaly i trojí až deváté provedení. Protože však trojí a vícenásobné
+Dřívejší verze TIL-Scriptu definovaly i trojí až deváté provedení. Protože však trojí a vícenásobné
 provedení není v praxi skoro vůbec potřeba (dle Průvodce TIL taková potřeba nenastala), a protože
 limit devátého provedení byl poněkud arbitrární (proč ne například desetinásobné provedení), je
 tato práce konzervativní a drží se definice provedení z Průvodce.
@@ -326,16 +326,16 @@ nemáme argumenty, na které bychom funkci aplikovali, a kompozice je tak nevlas
 \subsection{Uzávěry}
 
 Sémantika uzávěrů je opět stejná jako v Transparentní intenzionální logice, syntax ovšem byla
-upravena. Zatímco v TIL často vypouštíme hranaté závorky, v TILScriptu musíme závorky zapsat vždy.
-Řecké písmeno lambda nahrazuje v TILScriptu znak zpětného lomítka.
+upravena. Zatímco v TIL často vypouštíme hranaté závorky, v TIL-Scriptu musíme závorky zapsat vždy.
+Řecké písmeno lambda nahrazuje v TIL-Scriptu znak zpětného lomítka.
 
 Zpětné lomítko následuje seznam argumentů funkce konstruované uzávěrem. V dřívějších verzí
-TILScriptu bylo možné typ argumentu v některých případech vynechat -- existovala-li volná proměnná
+TIL-Scriptu bylo možné typ argumentu v některých případech vynechat -- existovala-li volná proměnná
 se stejným názvem jako $\lambda$-vázaná proměnná v uzávěru, a nebyl-li typ $\lambda$-vázané
 proměnné uveden explicitně, byl typ $\lambda$-vázané proměnné automaticky dedukován podle typu
 stejnojmenné volné proměnné. Tato práce však od této automatické dedukce upouští. Jelikož byly
-do TILScriptu přidány výrazy \lstinline{import} umožňující importovat volné proměnné z jiného
-souboru, uživatel TILScriptu by se mohl dostat do situace, kdy musí procházet několik importovaných
+do TIL-Scriptu přidány výrazy \lstinline{import} umožňující importovat volné proměnné z jiného
+souboru, uživatel TIL-Scriptu by se mohl dostat do situace, kdy musí procházet několik importovaných
 souborů, jen aby zjistil typ $\lambda$-vázané proměnné. V případě, kdy máme více $\lambda$-vázaných
 proměnných, použijeme čárku pro jejich oddělení.
 
@@ -364,7 +364,7 @@ $a_{wt}$ ekvivalentnímu konstrukci $[[a w] t]$, kde $a$ je konstrukce konstruuj
 (většinou se jedná o trivializaci), a $w \rightarrow_v \omega$, $t \rightarrow_v \tau$. Jedná
 se však pouze o notační zkratku -- o dohodu, ne součást TIL.
 
-Ekvivalentní zkratky můžeme využívat také v TILScriptu. Chceme-li specifikovat typ intenze, můžeme
+Ekvivalentní zkratky můžeme využívat také v TIL-Scriptu. Chceme-li specifikovat typ intenze, můžeme
 využít notační zkratku \lstinline{@tw}. Zkratku \lstinline{@wt} využijeme k extenzionalizaci
 intenze. Zkratka \lstinline{@wt} vždy extenzionalizuje za využití proměnných \lstinline{w} a
 \lstinline{t}. Proměnná \lstinline{w -> World} je součástí standardní knihovny, proměnnou
@@ -380,7 +380,7 @@ jiného názvu.
 \subsection{Seznamy}
 
 Seznamy se v Transparentní intenzionální logice příliš neobjevují. Při strojové analýze a
-zpracování je však vhodné mít k dispozici způsob k vyjádření kolekce dat, proto TILScript seznamy
+zpracování je však vhodné mít k dispozici způsob k vyjádření kolekce dat, proto TIL-Script seznamy
 obsahuje. Seznam představuje homogenní seřazenou kolekci potenciálně neomezené délky. Seznamy můžou
 obsahovat duplicity.
 
@@ -421,13 +421,13 @@ generovat konstrukce konstruující listy dynamicky za běhu programu, museli by
 
 \subsection{N-tice}
 
-N-tice doznály oproti předchozím verzím TILScriptu změny. Dříve byly n-tice homogenní kolekce
-nespecifikované, avšak konečné délky. Roli homogenní kolekce však již zastává List, a v TILScriptu
+N-tice doznály oproti předchozím verzím TIL-Scriptu změny. Dříve byly n-tice homogenní kolekce
+nespecifikované, avšak konečné délky. Roli homogenní kolekce však již zastává List, a v TIL-Scriptu
 neexistoval způsob, jak seskupit více hodnot jiného typu dohromady.
 
 V matematice jsou n-tice například prvky kartézského součinu. N-tice lze definovat více způsoby,
 vždy jsou však uspořádané, konečné a můžou být heterogenní (například provádíme-li kartézský součin
-nad neidentickými množinami). Obdobnou roli plní n-tice i v TILScriptu. Délka n-tice je pevně daná,
+nad neidentickými množinami). Obdobnou roli plní n-tice i v TIL-Scriptu. Délka n-tice je pevně daná,
 stejně jako typy hodnot v n-tici. Celý typ n-tice je tedy dán uspořádaným výčtem všech typů všech
 hodnot obsažených v této n-tici. Syntaktický zápis typu n-tice je podobný typu seznamu. Typ n-tice
 denotujeme slovem \lstinline{Tuple}, následovaným kulatými závorkami. V závorkách ovšem uvádíme
@@ -450,8 +450,8 @@ x -> Tuple(Int, Real, Int) := ['MkTuple '1 '3.14159 '10].
 
 \subsection{Symbolické hodnoty} \label{symbolic-values}
 
-Název \textit{symbolické hodnoty} je v kontextu TILScriptu nový, jedná se však pouze o praktickou
-implementaci entit, které již v TILScriptu existovaly. Entitu lze specifikovat uvedením jejího
+Název \textit{symbolické hodnoty} je v kontextu TIL-Scriptu nový, jedná se však pouze o praktickou
+implementaci entit, které již v TIL-Scriptu existovaly. Entitu lze specifikovat uvedením jejího
 názvu následovaného lomítkem a typem entity. Tímto byl názvu přiřazen typ, ale ne konkrétní
 hodnota. Název \textit{symbolické hodnoty} je opět inspirován jazykem Lisp, kde podobný koncept
 symbolů, tedy jmen bez hodnoty, již dlouhou dobu existuje.
@@ -481,15 +481,15 @@ Pi/Real.
 ['+ '1 'Pi]. -- Nil - vysledek existuje, na pocitaci jej vsak nelze spocitat
 \end{lstlisting}
 
-\section{Rozšíření TILScriptu}
+\section{Rozšíření TIL-Scriptu}
 
-Tento oddíl nastiňuje nadstandardní rozšíření TILScriptu. Cílem těchto rozšíření je udělat
-z TILScriptu nástroj pro analýzu a práci s konstrukcemi Transparentní intenzionální logiky. Každá
+Tento oddíl nastiňuje nadstandardní rozšíření TIL-Scriptu. Cílem těchto rozšíření je udělat
+z TIL-Scriptu nástroj pro analýzu a práci s konstrukcemi Transparentní intenzionální logiky. Každá
 změna a rozšíření je zdůvodněna.
 
 \subsection{Komentáře}
 
-Komentáře v TILScriptu plní stejnou roli jako v jiných programovacích jazycích. Jedná se tedy
+Komentáře v TIL-Scriptu plní stejnou roli jako v jiných programovacích jazycích. Jedná se tedy
 o text, který je interpreterem ignorován. Komentáře tak můžeme využít například k popisu kódu.
 Komentáře existují pouze v jednořádkové podobě a denotujeme je, podobně jako v Haskellu nebo SQL,
 dvěma pomlčkami (\lstinline{--}). Všechny znaky za pomlčkami až po první znak odřádkování jsou
@@ -502,12 +502,12 @@ překladačem automaticky ignorovány.
 
 \subsection{Definice pojmenovaných funkcí} \label{fn-definition}
 
-Syntax TILScriptu byla rozšířena o možnost definice pojmenovaných funkcí. Jedná se o způsob, jak
+Syntax TIL-Scriptu byla rozšířena o možnost definice pojmenovaných funkcí. Jedná se o způsob, jak
 funkci přiřadit jméno a následně na danou funkci odkazovat jménem, namísto uvádění stejného uzávěru
-vícekrát ve zdrojovém kódu. Definice pojmenovaných funkcí byla v TILScriptu již několikrát přidána
-a vždy byla zase odstraněna. Dokud TILScript sloužil pouze jako notace pro zápis TIL konstrukcí,
+vícekrát ve zdrojovém kódu. Definice pojmenovaných funkcí byla v TIL-Scriptu již několikrát přidána
+a vždy byla zase odstraněna. Dokud TIL-Script sloužil pouze jako notace pro zápis TIL konstrukcí,
 byl přínos této funkcionality diskutabilní. Pokud však chceme experimentovat s možnostmi využití
-TILScriptu také jako nástroje pro analýzu TIL konstrukcí, definice pojmenovaných funkcí je
+TIL-Scriptu také jako nástroje pro analýzu TIL konstrukcí, definice pojmenovaných funkcí je
 nezbytná.
 
 Definici funkce denotujeme klíčovým slovem \lstinline{Defn}. Následuje hlavička funkce, symbol
@@ -538,7 +538,7 @@ Typ \lstinline{Text} slouží k reprezentaci textu. Opět se jedná o typ, kter�
 pro analýzu přirozeného jazyka, neboť v přirozené řeči často vypovídáme o individuích, málokdy však
 o samotných korpusech textu. V programovacím jazyku je však forma reprezentace textu nezbytná.
 Typ \lstinline{Text} využíváme jak k reprezentaci delších textů, tak k reprezentaci jednotlivých
-znaků. TILScript tedy nezná koncept typu pro samostatné znaky (jako např. \lstinline{Char} v jazyce
+znaků. TIL-Script tedy nezná koncept typu pro samostatné znaky (jako např. \lstinline{Char} v jazyce
 Haskell), a \lstinline{Text} není \lstinline{List} znaků. Jedná se o atomický typ. Pomocí funkcí
 standardní knihovny však lze z textů extrahovat podřetězce (včetně jednotlivých znaků),
 konkatenovat řetězce, apod.
@@ -559,7 +559,7 @@ text2 -> Text := '"Text na\ndva řádky".
 Výrazy \lstinline{Import} umožňují importovat symboly definované v jiném souboru nebo Java archivu
 (\textit{.jar} souboru). Výrazy \lstinline{Import} jsou vždy interpretovány jako první při
 interpretaci souboru. Každý soubor můžeme importovat nanejvýš jednou v rámci jednoho souboru.
-Obsahuje-li soubor se zdrojovým kódem TILScriptu více importů stejné závislosti, je daná závislost
+Obsahuje-li soubor se zdrojovým kódem TIL-Scriptu více importů stejné závislosti, je daná závislost
 importována pouze jednou, následující importy jsou ignorovány.
 
 Každý soubor interpretován pouze jednou. Pokud tedy více souborů importuje jeden soubor, daný
@@ -581,7 +581,7 @@ Symboly můžeme importovat také z Java archivu. V takovém případě musí b�
 již při spouštění překladače společně s kódem překladače. Načítání \textit{.jar} souborů za běhu
 je z bezpečnostních důvodů velmi komplikované. Dále musí daný Java archiv obsahovat tzv.
 \textit{registrátor} symbolů konformující vůči předdefinovanému rozhraní. Pro import souborů
-za využití registrátoru stačí místo cesty k TILScript souboru uvést celý plně kvalifikovaný název
+za využití registrátoru stačí místo cesty k TIL-Script souboru uvést celý plně kvalifikovaný název
 třídy registrátoru s předponou \textit{class://}. Právě tato přepona značí, že se jedná o import
 z \textit{.jar} souboru. Překladač poté vytvoří instanci určeného registrátoru a naimportuje
 soubory definované tímto registrátorem. Rozhraní registrátorů je popsáno v uživatelské dokumentaci.
@@ -602,17 +602,17 @@ Typ \lstinline{Type} slouží k reprezentaci typů a je primárně metaprogramov
 Transparentní intenzionální logice o typech vypovídat nemůžeme. Typově polymorfní TIL není
 momentálně předmětem výzkumu. Pro účely metaprogramování je však možnost reprezentace typů
 nezbytná. Typ \lstinline{Type} umožňuje pracovat s typy jako s validními hodnotami jazyka
-TILScript. Typové reference, tedy hodnoty typu \lstinline{Type}, využijeme například k implementaci
-statické typové kontroly (překladač TILScriptu provádí typovou kontrolu pouze za běhu),
-ke generování validních TILScript programů, apod.
+TIL-Script. Typové reference, tedy hodnoty typu \lstinline{Type}, využijeme například k implementaci
+statické typové kontroly (překladač TIL-Scriptu provádí typovou kontrolu pouze za běhu),
+ke generování validních TIL-Script programů, apod.
 
-Pokud by TILScript typ \lstinline{Text} neobsahoval, musel by být za účelem analýzy TILScriptu
-implementován parser TILScriptu v TILScriptu, nebo by uživatelé museli využívat jiné programovací
-jazyky. Proto tato práce navrhuje rozšíření TILScriptu o metaprogramovací prvky za účelem unifikace
+Pokud by TIL-Script typ \lstinline{Text} neobsahoval, musel by být za účelem analýzy TIL-Scriptu
+implementován parser TIL-Scriptu v TIL-Scriptu, nebo by uživatelé museli využívat jiné programovací
+jazyky. Proto tato práce navrhuje rozšíření TIL-Scriptu o metaprogramovací prvky za účelem unifikace
 a zjednodušení nástrojů pro práci s Transparentní intenzionální logikou.
 
 S typovými referencemi pracujeme obdobně jako s objekty z bázových množin. Zodpovědností uživatele
-však je, aby typové reference využíval opatrně a vyhýbal se jim, bude-li TILScript používat pouze
+však je, aby typové reference využíval opatrně a vyhýbal se jim, bude-li TIL-Script používat pouze
 pro interpretaci TIL konstrukcí.
 
 \begin{lstlisting}[caption={Příklad využití typových referencí}]
@@ -641,7 +641,7 @@ RandFromDevRandom/(Int DeviceState).
 
 Hodnota \lstinline{Nil} slouží k reprezentaci chybového stavu, kdy konstrukce nekonstruuje žádnou
 hodnotu. Je-li jedním z argumentů funkce \lstinline{Nil}, je výsledek automaticky znovu
-\lstinline{Nil}. Pro vyvolání chybového stavu je možné \lstinline{Nil} zmínit přímo v TILScript
+\lstinline{Nil}. Pro vyvolání chybového stavu je možné \lstinline{Nil} zmínit přímo v TIL-Script
 konstrukci. Trivializace \lstinline{Nil} však není povolená gramatikou, neboť trivializace nemůžou
 být nevlastní.
 
