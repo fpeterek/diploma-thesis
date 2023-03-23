@@ -3,12 +3,12 @@
 Nyní konečně přišel čas představit TIL-Script. TIL-Script je interpretovaný funkcionální programovací
 jazyk, do znatelné míry inspirovaný jazyky jako Haskell nebo Lisp. Syntax TIL-Scriptu by měla co
 nejvíce připomínat syntaktické prvky Transparentní intenzionální logiky, aby pouhá znalost TILu
-stačila k okamžitému pochopení TIL-Scriptu. Sémantika by poté měla být stejná.
+stačila k okamžitému pochopení TIL-Scriptu. Sémantika TIL-Script konstrukcí poté musí odpovídat
+sémantice TIL.
 
 Tato kapitola je rozdělena do tří sekcí. V první sekci jsou popsány důležité základní rysy
-TIL-Scriptu. Druhá sekce popisuje již existující prvky TIL-Scriptu, a případně dokumentuje změny
-oproti předchozím verzím TIL-Scriptu. Poslední sekce se věnuje navrhovaným rozšířením jazyka
-TIL-Script.
+TIL-Scriptu. Druhá sekce popisuje již existující prvky TIL-Scriptu, případně také dokumentuje změny
+oproti předchozím verzím TIL-Scriptu. Poslední sekce navrhuje rozšíření jazyka TIL-Script.
 
 \section{Charakteristické rysy TIL-Scriptu}
 
@@ -23,29 +23,30 @@ náležitě popsán a vysvětlen.
 % TODO: Ozdrojovat currying asi? Idk, lambda kalkul
 
 Narozdíl od lambda kalkulu ve své tradiční podobě, nebo například jazyka Haskell, v Transparentní
-intezionální logice není arita funkce shora omezená. TIL-Script musí tento fakt reflektovat. Proto
-tento jazyk umožňuje definici i aplikaci funkcí libovolné (samozřejmě nezáporné) arity. Také zde
-neexistuje rozvíjení funkcí (anglicky \textit{currying}). Zatímco např. v Haskellu jsou funkce
-arity dvě nebo vyšší automaticky rozvinuty na sérií několika unárních funkcí, jejichž oborem hodnot
-jsou unární nebo nulární funkce, a jedné nulární funkce která vrací žádaný výsledek, v TIL-Scriptu
-není arita nijak omezená.
+intezionální logice není arita funkce shora omezená, viz \peteref{fn-arity}. TIL-Script musí tento fakt
+reflektovat. Proto tento jazyk umožňuje definici i aplikaci funkcí libovolné (samozřejmě kladné)
+arity. Nevyužíváme zde tedy rozvíjení funkcí (anglicky \textit{currying}). Zatímco např. v Haskellu
+jsou funkce arity dvě nebo vyšší automaticky rozvinuty na sérií několika unárních funkcí, jejichž
+oborem hodnot jsou unární nebo nulární funkce, v TIL-Scriptu není arita nijak omezená.
 
 \subsubsection{Parciální funkce a respektování principu kompozicionality}
 
 Jelikož v TIL můžou být funkce parciální, musí i TIL-Script počítat s parcialitou funkcí. Dále musí
 TIL-Script respektovat princip kompozicionality, základní rys Transparentní intenzionální logiky.
 Jedním z důsledků principu kompozicionality je, že konstrukce, jejíž přinejmenším jeden konstituent
-je nevlastní, bude také nutně nevlastní. Reprezentaci stavu, kdy parciální funkce je aplikována
-na argumenty, na kterých není definována, se věnuje podsekce \textit{Hodnota Nil} \ref{nil-value}
+je $v$-nevlastní, bude také nutně $v$-nevlastní. Reprezentaci stavu, kdy je parciální funkce
+aplikována na argumenty, na kterých není definována, se věnuje podsekce \peteref{nil-value}
 této kapitoly. 
 
 %TODO: Ocitovat
 Jedinou výjimkou je funkce \lstinline{IsNil}, jež vrací pravdivostní hodnotu \lstinline{True},
 pokud je její jediný argument \lstinline{Nil}, v opačném případě je jejím výsledkem
 \lstinline{False}. Tato speciální sémantika funkce \lstinline{IsNil}, ačkoliv porušuje princip
-kompozicionality a vyžaduje aplikaci unární funkce na "nic," je zvolena jako doplněk k funkci
-\lstinline{Improper/(o*_n)} definované v Průvodci čtenáře, a jako kompromis mezi dodržením
-principů TIL a umožněním zpracování chyb.
+kompozicionality a vyžaduje aplikaci unární funkce na \textit{nic}, je zvolena jako doplněk
+k funkci \lstinline{Improper/(o*_n)} definované v Průvodci čtenáře, a jako kompromis mezi dodržením
+principů TIL a umožněním zpracování chybových stavů.
+
+%TODO: Pokračovat v kontrole
 
 \subsection{Okamžité vyhodnocování}
 
@@ -64,7 +65,7 @@ zastínit (angl. \textit{to shadow, shadowing}) v rámci oblasti platnosti (angl
 ve které byla definována. Proměnnou lze zastínit vytvořením nové oblasti platnosti (tedy například
 na novém rámci zásobníku, angl. \textit{stack frame}).
 
-Obdobně nelze redefinovat funkce nebo změnit typ symbolické hodnoty (viz \ref{symbolic-values}).
+Obdobně nelze redefinovat funkce nebo změnit typ symbolické hodnoty (viz \peteref{symbolic-values}).
 
 \subsection{Definice a deklarace symbolů}
 
@@ -94,7 +95,7 @@ a můžou tak být konstituentem prováděné konstrukce. Funkce s řádnou defi
 i proměnné lze definovat pouze jednou. Opakovaná definice je chybou a vyústí v předčasné ukončení
 programu.
 
-Symbolické hodnoty, viz \ref{symbolic-values}, lze pouze deklarovat.
+Symbolické hodnoty, viz \peteref{symbolic-values}, lze pouze deklarovat.
 
 Deklarace jsou automaticky odvozeny z definic. Proto, pokud je známa definice, není třeba dodávat
 také deklaraci. K interpretaci deklarací automaticky dochází před interpretací definic, aby byla
@@ -153,7 +154,7 @@ v Transparentní intenzionální logice považujeme za "holá" -- žádnou netri
 nutně. Všechny netriviální vlastnosti individuí jsou určeny stavem světa. Individuum samotné nemá
 žádnou inherentní valuaci. Slouží pouze jako unikátní indentifikátor. Obdobně hodnoty
 \lstinline{Indiv} v jazyce TIL-Script nemají žádnou konkrétní reprezentaci. Typ \lstinline{Indiv}
-je využíván v konjunkci se symbolickými hodnotami, viz \ref{symbolic-values}. Tímto TIL-Script
+je využíván v konjunkci se symbolickými hodnotami, viz \peteref{symbolic-values}. Tímto TIL-Script
 umožňuje uživateli referovat na konkrétní individuum pouze pomocí symbolického identifikátoru,
 aniž by individuím musely být přiřazeny arbitrárně zvolené konkrétní hodnoty.
 
@@ -182,7 +183,7 @@ umožňuje uživateli jednoduše rozeznat typ konstrukce od násobení čísel o
 zkoumání kontextu.
 
 Dále byl TIL-Script rozšířen o atomický typ sloužící k reprezentaci textu. Tento typ je podrobněji
-popsán v sekci o rozšířeních TIL-Scriptu, viz \ref{text-type}.
+popsán v sekci o rozšířeních TIL-Scriptu, viz \peteref{text-type}.
 
 \subsection{Generický typ \textit{Any}}
 
@@ -239,7 +240,7 @@ mezi názvy jednotlivých typů. Tedy ekvivalentem k typu $(o\nu\tau)$ by v TIL-
 
 Funkce lze deklarovat uvedením názvu funkce následovaným lomítkem a jejím typem. Deklarujeme-li
 více funkcí stejného typu, můžeme uvést více názvů oddělených čárkami. Pro definici funkce byla
-přidána nová syntax popsaná v sekci \ref{fn-definition}.
+přidána nová syntax popsaná v sekci \peteref{fn-definition}.
 
 \begin{lstlisting}[caption={Deklarace funkcí}]
 Add, Sub, Mult, Div/(Int Int Int).
@@ -249,8 +250,8 @@ Add, Sub, Mult, Div/(Int Int Int).
 
 Názvosloví \textit{literál} je přejato z jiných programovacích jazyků. V TIL-Scriptu literály
 myslíme ne-funkce, tedy členy množin tvořícíh bázi. Literály lze uvádět celá i reálná čísla,
-pravdivostní hodnoty, a také text (viz oddíl \ref{text-type} věnující se typu \lstinline{Text}).
-Individua pomocí symbolických hodnot, viz Symbolické hodnoty \ref{symbolic-values}. Literály ovšem
+pravdivostní hodnoty, a také text (viz oddíl \peteref{text-type} věnující se typu \lstinline{Text}).
+Individua pomocí symbolických hodnot, viz Symbolické hodnoty \peteref{symbolic-values}. Literály ovšem
 nesmíme zapomenout trivializovat.
 
 \subsection{Trivializace}

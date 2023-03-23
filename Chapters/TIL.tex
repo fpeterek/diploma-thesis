@@ -74,7 +74,7 @@ K explicitnímu uvedení typu objektu \textit{x} využíváme zápis $x/\alpha$.
 lze přirozeně říkat typy.
 
 Pro analýzu přirozeného jazyka se většinou volí objektová báze skládající se z typů {$o$, $\iota$,
-$\tau$, $\omega$}. Tyto typy jsou podrobněji popsány v tabulce \ref{tab:default-base}.
+$\tau$, $\omega$}. Tyto typy jsou podrobněji popsány v tabulce \peteref{tab:default-base}.
 
 \begin{table}
     \caption{Výchozí báze pro analýzu přirozeného jazyka}
@@ -93,7 +93,7 @@ $\tau$, $\omega$}. Tyto typy jsou podrobněji popsány v tabulce \ref{tab:defaul
     \end{tabular}
 \end{table}
 
-\section{Funkce}
+\section{Funkce} \label{fn-arity}
 
 V některých logických systémech, například v predikátové logice, se jako základní molekulární typ
 využívají relace. Funkce je poté speciální typ relace, která je zprava jednoznačná. V TIL je však
@@ -130,7 +130,7 @@ získáme výstup, případně nezískáme nic. Konstrukce, které nekonstruují
 
 Jak již bylo zmíněno, konstrukce můžou v TIL operovat nejen nad objekty, které nejsou konstrukcemi,
 tedy nad objekty z báze a funkcemi, ale také nad jinými konstrukce. Konstrukce však může operovat
-pouze nad konstrukcemi nižšího řádu, než je konstrukce samotná, viz \ref{type-order}. Každou
+pouze nad konstrukcemi nižšího řádu, než je konstrukce samotná, viz \peteref{type-order}. Každou
 podkonstrukci, kterou musíme provést při provedení konstrukce, nazýváme \textit{konstituentem}.
 V TIL existuje šest různých druhů konstrukcí. Dvě atomické -- mají pouze jeden konstituent, a to
 sebe samotné, a čtyři molekulární. Atomickými konstrukcemi jsou \textit{Trivializace} a
@@ -155,7 +155,7 @@ které nelze provést (objekty z báze, funkce) a tudíž je nelze zmínit netri
 \footnote{
     V jazyce Lisp čísla konstruují sebe samotné, tedy provedením čísla získáme zpět prováděné
     číslo. \lstinline{1} a \lstinline{'1} jsou tedy v Lispu ekvivalentní výrazy. V TIL však není
-    možné, aby objekt konstruoval sám sebe, viz rozvětvená hierarchie typů \ref{type-order}.
+    možné, aby objekt konstruoval sám sebe, viz rozvětvená hierarchie typů \peteref{type-order}.
 }
 
 \textit{Kompozice} je procedura aplikace funkce na argumenty. Kompozice $[X Y_1...Y_m]$ značí
@@ -214,7 +214,7 @@ Definice je opět skoro slovo od slova převzata z Průvodce.
 Nechť \textit{B} je báze. Pak:
 
 \subsection{$T_1$ (typy řádu 1)}
-Viz sekce \ref{fst-order}.
+Viz sekce \peteref{fst-order}.
 
 \subsection{$C_n$ (konstrukce řádu n)}
 
