@@ -1,10 +1,10 @@
 \chapter{TIL-Script}
 
-Nyní konečně přišel čas představit TIL-Script. TIL-Script je interpretovaný funkcionální programovací
-jazyk, do znatelné míry inspirovaný jazyky jako Haskell nebo Lisp. Syntax TIL-Scriptu by měla co
-nejvíce připomínat syntaktické prvky Transparentní intenzionální logiky, aby pouhá znalost TILu
-stačila k okamžitému pochopení TIL-Scriptu. Sémantika TIL-Script konstrukcí poté musí odpovídat
-sémantice TIL.
+Nyní konečně přišel čas představit TIL-Script. TIL-Script je interpretovaný funkcionální
+programovací jazyk, do znatelné míry inspirovaný jazyky jako Haskell nebo Lisp. Syntax TIL-Scriptu
+by měla co nejvíce připomínat syntaktické prvky Transparentní intenzionální logiky, aby pouhá
+znalost TILu stačila k okamžitému pochopení TIL-Scriptu. Sémantika TIL-Script konstrukcí poté musí
+odpovídat sémantice TIL.
 
 Tato kapitola je rozdělena do tří sekcí. V první sekci jsou popsány důležité základní rysy
 TIL-Scriptu. Druhá sekce popisuje již existující prvky TIL-Scriptu, případně také dokumentuje změny
@@ -23,11 +23,12 @@ náležitě popsán a vysvětlen.
 % TODO: Ozdrojovat currying asi? Idk, lambda kalkul
 
 Narozdíl od lambda kalkulu ve své tradiční podobě, nebo například jazyka Haskell, v Transparentní
-intezionální logice není arita funkce shora omezená, viz \peteref{fn-arity}. TIL-Script musí tento fakt
-reflektovat. Proto tento jazyk umožňuje definici i aplikaci funkcí libovolné (samozřejmě kladné)
-arity. Nevyužíváme zde tedy rozvíjení funkcí (anglicky \textit{currying}). Zatímco např. v Haskellu
-jsou funkce arity dvě nebo vyšší automaticky rozvinuty na sérií několika unárních funkcí, jejichž
-oborem hodnot jsou unární nebo nulární funkce, v TIL-Scriptu není arita nijak omezená.
+intezionální logice není arita funkce shora omezená, viz \peteref{fn-arity}. TIL-Script musí tento
+fakt reflektovat. Proto tento jazyk umožňuje definici i aplikaci funkcí libovolné (samozřejmě
+kladné) arity. Nevyužíváme zde tedy rozvíjení funkcí (anglicky \textit{currying}). Zatímco např.
+v Haskellu jsou funkce arity dvě nebo vyšší automaticky rozvinuty na sérií několika unárních
+funkcí, jejichž oborem hodnot jsou unární nebo nulární funkce, v TIL-Scriptu není arita nijak
+omezená.
 
 \subsubsection{Parciální funkce a respektování principu kompozicionality}
 
@@ -65,7 +66,8 @@ zastínit (angl. \textit{to shadow, shadowing}) v rámci oblasti platnosti (angl
 ve které byla definována. Proměnnou lze zastínit vytvořením nové oblasti platnosti (tedy například
 na novém rámci zásobníku -- \textit{stack frame}).
 
-Obdobně nelze redefinovat funkce nebo změnit typ symbolické hodnoty (viz \peteref{symbolic-values}).
+Obdobně nelze redefinovat funkce nebo změnit typ symbolické hodnoty
+(viz \peteref{symbolic-values}).
 
 \subsection{Definice a deklarace symbolů}
 
@@ -277,9 +279,10 @@ Volné proměnné lze deklarovat bez přiřazení valuace, ale je lze také defi
 konkrétní hodnotu. Proměnné deklarujeme, pokud nás nezajímá konkrétní valuace. Přiřazení hodnoty
 využijeme například v případě, kdy si chceme uložit výsledek drahé operace (např. čtení
 z databáze), nebo si třeba jen chceme zkrátit zápis dlouhé konstrukce, a chceme pracovat
-s konkrétní valuací $v$. Je-li konstrukce, jejíž hodnotu přiřazujeme proměnné, $v$-nevlastní,
-a tedy nekonstruuje žádnou hodnotu, program skončí chybou. Vždy je třeba uvést typ hodnoty, kterou
-proměnná konstruuje.
+s konkrétní valuací $v$. Vždy je třeba uvést typ hodnoty, kterou proměnná konstruuje.
+
+% Je-li konstrukce, jejíž hodnotu přiřazujeme proměnné, $v$-nevlastní,
+% a tedy nekonstruuje žádnou hodnotu, program skončí chybou.
 
 Syntax pro deklaraci proměnné již existovala. Syntax pro definici proměnné (přiřazení hodnoty)
 je nově zavedená. Deklarovat můžeme více proměnných najednou, za předpokladu, že se jedná o
@@ -298,13 +301,13 @@ long_varName123 -> Int.
 
 \subsection{Provedení}
 
-Provedení se sémantikou opět nijak neliší od svého ekvivalentu v Transparentní intenzionální logice.
-Syntax ovšem musela být kvůli praktičnosti upravena, a proto bylo upuštěno od pravých horních
-indexů. Provedení denotujeme \lstinline{^1}. Pro Dvojí Provedení poté využíváme \lstinline{^2}.
-Dřívejší verze TIL-Scriptu definovaly i trojí až deváté Provedení. Protože však trojí a vícenásobné
-provedení není v praxi skoro vůbec potřeba (dle Průvodce TIL taková potřeba nenastala), a protože
-limit devátého Provedení byl poněkud arbitrární (proč ne například desetinásobné Provedení), je
-tato práce konzervativní a drží se definice Provedení z Průvodce.
+Provedení se sémantikou opět nijak neliší od svého ekvivalentu v Transparentní intenzionální
+logice. Syntax ovšem musela být kvůli praktičnosti upravena, a proto bylo upuštěno od pravých
+horních indexů. Provedení denotujeme \lstinline{^1}. Pro Dvojí Provedení poté využíváme
+\lstinline{^2}. Dřívejší verze TIL-Scriptu definovaly i trojí až deváté Provedení. Protože však
+trojí a vícenásobné provedení není v praxi skoro vůbec potřeba (dle Průvodce TIL taková potřeba
+nenastala), a protože limit devátého Provedení byl poněkud arbitrární (proč ne například
+desetinásobné Provedení), je tato práce konzervativní a drží se definice Provedení z Průvodce.
 
 Jelikož jsou všechny konstrukce standardně v módu Provedení, není třeba explicitní Provedení
 využívat příliš často. Většinou tedy budeme používat Dvojí Provedení.
@@ -536,9 +539,9 @@ Defn Add(x: Int, y: Int) -> Int := ['+ x y].
 
 -- Příklad definice rekurzivní funkce
 Defn Sum(list: List(Int)) -> Int :=
-    ['If
-        ['IsEmpty list] '0
-        'True ['+ ['Head list] ['Sum ['Tail list]]]].
+    ['If ['IsEmpty list]
+        '0
+        ['+ ['Head list] ['Sum ['Tail list]]]].
 \end{lstlisting}
 
 \subsection{Typ \textit{Text}} \label{text-type}
@@ -662,10 +665,10 @@ v programu nezkonstruuje hodnotu a výsledkem jejího provedení je \lstinline{N
 neúspěchem a uživateli je nahlášena chyba.
 
 \begin{lstlisting}[caption={Příklad využití Nil}]
-['If
+['Cond
     ['= a '0] Nil
     ['= b '0] Nil
-    'True ['/ ['Log a] b] ].
+    'True     ['/ ['Log a] b] ].
 \end{lstlisting}
 
 \begin{lstlisting}[caption={Příklad hlášení chyby}]
@@ -692,18 +695,21 @@ systému TIL.
 
 Pro představu uveďme následující příklad. Potřebujeme v TIL-Scriptu reprezentovat souřadnice.
 Dále pracujeme s dvěma typy souřadnic -- s kartézskými a s polárními souřadnicemi. Využijeme-li
-typ \lstinline{Tuple(Real Real)} k implementaci souřadnic, může jednoduše dojít k záměně
-kartézských a polárních souřadnic. Pokud ale definujeme za účelem struktury, viz
-\ref{lst:coord-structs}, nechtěnné záměně souřadnic dokáže překladač zabránit pomocí typové kontroly.
+typ \lstinline{Tuple(Real Real)} k reprezentaci souřadnic, může jednoduše dojít k záměně
+kartézských a polárních souřadnic. Pokud ale definujeme za účelem struktury, viz ukázka
+\ref{lst:coord-structs}, nechtěnné záměně souřadnic dokáže překladač zabránit během typové
+kontroly.
 
-\begin{lstlisting}[caption={Definice struktur reprezentujících souřadnice}, label=lst:coord-structs]
+\begin{lstlisting}[
+    caption={Definice struktur reprezentujících souřadnice},
+    label=lst:coord-structs]
 Struct Cart {
     x: Real,
     y: Real,
 }.
 
 Struct Polar {
-    dist: Real,
+    distance: Real,
     angle: Real,
 }.
 \end{lstlisting}
