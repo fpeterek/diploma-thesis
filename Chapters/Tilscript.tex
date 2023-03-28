@@ -58,13 +58,17 @@ uvést $v$-nevlastní konstrukci, která by nikdy nebyla vyhodnocena, a došlo b
 na chybějící argument. Tato situace by mohla nastat například v případě aplikace funkce, jež 
 některé své argumenty utilizuje pouze pokud je splněna určitá podmínka.
 
-\subsection{Neměnnost proměnných a symbolů (\textit{Immutability})}
+\subsection{Neměnnost argumentů funkcí a objektů (\textit{Immutability})}
 
-Jelikož je TIL-Script funkcionální jazyk, jsou hodnoty všech proměnných konstantní -- tedy
-jakmile je proměnné jednou přiřazena valuace, nelze její hodnotu změnit. Dále nelze proměnnou
-zastínit (angl. \textit{to shadow, shadowing}) v rámci oblasti platnosti (angl. \textit{scope}),
-ve které byla definována. Proměnnou lze zastínit vytvořením nové oblasti platnosti (tedy například
-na novém rámci zásobníku -- \textit{stack frame}).
+Jelikož je TIL-Script funkcionální jazyk, jsou objekty a argumenty funkcí neměnné
+(\textit{immutable}). Zatímco v imperativních jazycích, jako je třeba jazyk C++, není problém
+v těle funkce modifikovat argument, který funkce obdržela, v TIL-Script samozřejmě nic takového
+provést nemůžeme. Dále například nemůžeme modifikovat existující seznam. Pokud chceme transformovat
+již existující seznam, musíme vytvořit nový seznam a požadované hodnoty uložit v novém seznamu.
+Podobně nemůžeme změnit hodnoty n-tice, můžeme však vytvořit novou n-tici.
+
+Hodnotu volné proměnné změnit lze, abychom mohli zkoumat konstrukce při různých valuacích $v$.
+Typ proměnné však změnit nelze.
 
 Obdobně nelze redefinovat funkce nebo změnit typ symbolické hodnoty
 (viz \peteref{symbolic-values}).
@@ -272,10 +276,9 @@ index.
 \subsection{Proměnné}
 
 Proměnné v TIL-Scriptu opět slouží stejném účelu jako proměnné v TIL, tedy $v$-konstruují hodnotu
-v závislosti na valuaci $v$. Každé proměnné lze přiřadit hodnotu pouze jednou -- pro volné proměnné
-při definici, pro $\lambda$-vázané proměnné při aplikaci funkce.
+v závislosti na valuaci $v$. 
 
-Volné proměnné lze deklarovat bez přiřazení valuace, ale je lze také definovat a přiřadit jim
+Volné proměnné lze deklarovat bez přiřazení valuace, ale lze je také definovat a přiřadit jim
 konkrétní hodnotu. Proměnné deklarujeme, pokud nás nezajímá konkrétní valuace. Přiřazení hodnoty
 využijeme například v případě, kdy si chceme uložit výsledek drahé operace (např. čtení
 z databáze), nebo si třeba jen chceme zkrátit zápis dlouhé konstrukce, a chceme pracovat
@@ -288,6 +291,10 @@ Syntax pro deklaraci proměnné již existovala. Syntax pro definici proměnné 
 je nově zavedená. Deklarovat můžeme více proměnných najednou, za předpokladu, že se jedná o
 proměnné stejného typu, stačí názvy jednotlivých proměnných oddělit čárkou. Přiřazujeme-li však
 proměnné valuaci, můžeme uvést vždy pouze jednu proměnnou.
+
+Pro změnu hodnoty volné proměnné použijeme stejnou syntax jako při úvodním přiřazení hodnoty.
+Přiřazení hodnoty proměnné však není konstrukce, ale metavýraz, proto lze hodnotu proměnné vždy
+změnit pouze na nejvyšší úrovni v programu. Typ proměnné změnit nelze.
 
 Název proměnné musí začínat malým písmenem. 
 
