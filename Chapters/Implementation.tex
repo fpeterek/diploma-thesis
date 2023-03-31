@@ -1,0 +1,66 @@
+\chapter{Implementace}
+
+V této kapitole nastíníme implementační detaily interpreteru. Nejprve zmíníme
+využité technologie, poté popíšeme architekturu projektu, nakonec pak uvedeme
+zajímavější problémy, které se objevily při implementaci překladače, a jejich
+řešení.
+
+\section{Zvolené technologie}
+
+Celý projekt je implementován v jazyce \textbf{Kotlin}. Jazyk Kotlin je staticky
+typovaný, multiparadigmatický jazyk kompilovaný do \textbf{JVM} bytekódu.
+Kotlin je vytvářen jako alternativa k jazyku Java, a nabízí plnou kompatibilitu
+s Javou. Využití Kotlinu umožňuje využívat veškeré výhody Java ekosystému,
+včetně knihoven psaných v Javě, ale také psát expresivnější kód, než by bylo
+možné v Javě. Pro spuštění překladače je samozřejmě nutné mít na počítači
+nainstalované JRE.
+
+Jako build systém byl zvolen projekt \textbf{Gradle}. Důvodem této volby je
+relativní jednoduchost konfigurace i využití systému Gradle, ale také přístup
+k Maven repozitáři s Java knihovnami. Dále využíváme několik Gradle pluginů
+nutných k sestavení projektu.
+
+Parser generujeme za pomoci technologie \textbf{Antlr} ve verzi 4. Antlr je
+open-source generátor parserů podporující tvorbu parserů v řadě jazycích.
+V našem případě využíváme jako cílový jazyk Javu.
+
+Interpreter využívá knihovnu \lstinline{org.apache.commons:commons-text}
+pro zpracování escape sekvencí. Tím výčet využitých technologií končí.
+
+\section{Architektura projektu}
+
+Celý projekt je rozdělen do čtyř komponent -- společné knihovny
+(\lstinline{common}), standardní knihovny (\lstinline{stdlib}), překladače
+(\lstinline{interpreter}) a matematické knihovny (\lstinline{math}). Schéma
+projektu je znázorněno v obrázku \ref{fig:project-structure}, který vyjadřuje,
+jak na sobě jednotlivé komponenty projektu závisí.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \node[draw, fit={(0, 0) (2, 1)},              xshift=3cm, inner sep=0pt, label=center:common] (A) {};
+        \node[draw, fit={(0, 0) (2, 1)}, yshift=-2.5cm, xshift=3cm, inner sep=0pt, label=center:stdlib] (B) {};
+
+        \node[draw, fit={(0, 0) (2, 1)}, yshift=-4cm, xshift=6cm, inner sep=0pt, label=center:math] (C) {};
+        \node[draw, fit={(0, 0) (2, 1)}, yshift=-4cm, xshift=0cm, inner sep=0pt, label=center:interpreter] (D) {};
+
+        \draw [-latex]          (A)--(B);
+        \draw [-latex]          (A)--(C);
+        \draw [-latex]          (A)--(D);
+        \draw [-latex]          (B)--(C);
+        \draw [-latex]          (B)--(D);
+    \end{tikzpicture}
+    \caption{Komponenty projektu}
+    \label{fig:project-structure}
+\end{figure}
+
+\subsection{Společná knihovna \lstinline{common}}
+
+Knihovna \lstinline{common} obsahuje kód společný pro zbytek projektu. Jedná
+se například o implementace tříd reprezentujících TIL konstrukce, definice
+společných rozhraní, reprezentaci typů, nebo drobné utility. Knihovna nemá
+žádné externí závislosti.
+
+\subsection{Standardní knihovna \lstinline{stdlib}}
+
+\endinput

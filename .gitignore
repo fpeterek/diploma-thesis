@@ -10,6 +10,7 @@
 *.lof
 *.lol
 *.lot
+.auctex-auto
 
 .DS_Store
 *.py[co]
