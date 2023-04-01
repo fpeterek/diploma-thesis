@@ -12,8 +12,9 @@ typovaný, multiparadigmatický jazyk kompilovaný do \textbf{JVM} bytekódu.
 Kotlin je vytvářen jako alternativa k jazyku Java, a nabízí plnou kompatibilitu
 s Javou. Využití Kotlinu umožňuje využívat veškeré výhody Java ekosystému,
 včetně knihoven psaných v Javě, ale také psát expresivnější kód, než by bylo
-možné v Javě. Pro spuštění překladače je samozřejmě nutné mít na počítači
-nainstalované JRE.
+možné v Javě. Null-safety a jazyková podpora pro algebraické datové typy pak
+umožňují psát bezpečnešjí kód, než je možné v jazyce Java. Pro spuštění
+překladače je samozřejmě nutné mít na počítači nainstalované JRE.
 
 Jako build systém byl zvolen projekt \textbf{Gradle}. Důvodem této volby je
 relativní jednoduchost konfigurace i využití systému Gradle, ale také přístup
@@ -38,11 +39,11 @@ jak na sobě jednotlivé komponenty projektu závisí.
 \begin{figure}
     \centering
     \begin{tikzpicture}
-        \node[draw, fit={(0, 0) (2, 1)},              xshift=3cm, inner sep=0pt, label=center:common] (A) {};
+        \node[draw, fit={(0, 0) (2, 1)},                xshift=3cm, inner sep=0pt, label=center:common] (A) {};
         \node[draw, fit={(0, 0) (2, 1)}, yshift=-2.5cm, xshift=3cm, inner sep=0pt, label=center:stdlib] (B) {};
 
-        \node[draw, fit={(0, 0) (2, 1)}, yshift=-4cm, xshift=6cm, inner sep=0pt, label=center:math] (C) {};
-        \node[draw, fit={(0, 0) (2, 1)}, yshift=-4cm, xshift=0cm, inner sep=0pt, label=center:interpreter] (D) {};
+        \node[draw, fit={(0, 0) (2, 1)}, yshift=-4cm,   xshift=6cm, inner sep=0pt, label=center:math] (C) {};
+        \node[draw, fit={(0, 0) (2, 1)}, yshift=-4cm,   xshift=0cm, inner sep=0pt, label=center:interpreter] (D) {};
 
         \draw [-latex]          (A)--(B);
         \draw [-latex]          (A)--(C);
@@ -58,9 +59,70 @@ jak na sobě jednotlivé komponenty projektu závisí.
 
 Knihovna \lstinline{common} obsahuje kód společný pro zbytek projektu. Jedná
 se například o implementace tříd reprezentujících TIL konstrukce, definice
-společných rozhraní, reprezentaci typů, nebo drobné utility. Knihovna nemá
-žádné externí závislosti.
+společných rozhraní, reprezentaci typů, nebo drobné utility. Knihovna neobsahuje
+definice TIL-Script objektů, slouží ke sdílení kódu napříč jednotlivými
+komponentami. Využít ji tak může například programátor implementující novou
+TIL-Script knihovnu, konečného uživatele se však existence \lstinline{common}
+nijak netýká.
+
+Knihovna nemá žádné externí závislosti.
 
 \subsection{Standardní knihovna \lstinline{stdlib}}
+
+Knihovna \lstinline{stdlib} obsahuje implementaci standardní knihovny.
+\lstinline{stdlib} nekonformuje vůči rozhraní, kterému musí konformovat
+TIL-Script knihovny implementované jako Java knihovny a distribuované jako Java
+archivy. Standardní knihovnu překladač automaticky importuje v každém souboru.
+Není tedy třeba ji importovat explicitně.
+
+Standardní knihovna je nezávislá na použitém překladači TIL-Scriptu.
+Interpreter, jenž je součástí projektu, můžeme klidně nahradit novým interpreter
+(za předpokladu, že daný interpreter implementuje potřebná rozhraní, např.
+\lstinline{InterpreterInterface} definované v knihovně \lstinline{common}).
+Interpreter samotný však na standardní knihovně závisí. Kvůli syntaktickému
+cukru (funkce \lstinline{Cond}, \lstinline{ListOf}, atd.), funkci
+\lstinline{If}, jež musí být vyhodnocována líně, apod., musí překladač obsahovat
+speciální podporu pro standardní knihovnu.
+
+Standardní knihovna definuje základní množinu funkcí, hodnot, typů a proměnných
+potřebnou pro práci s TIL-Scriptem.
+
+\subsection{Matematická knihovna \lstinline{math}}
+
+Matematická knihovna \lstinline{math} slouží jako ukázková implementace
+TIL-Script knihovny v Kotlinu, případně v Javě. Dále je využívána k testování
+funkčnosti importování Java knihoven. Narozdíl od standardní knihovny, překladač
+je naprosto nezávislý na knihovně \lstinline{math}. \lstinline{math} je třeba
+importovat explicitně pomocí výrazu \lstinline{Import}.
+
+Knihovnu nelze označit za extenzivní, obsahuje pouze malé množství funkcí,
+definice symbolických hodnot \lstinline{E}, \lstinline{Pi} a proměnných
+\lstinline{e}, \lstinline{pi} aproximujících eulerovo číslo a číslo $\pi$.
+
+\subsection{Interpreter}
+
+Narozdíl od předchozích komponent, které byly čistě Java knihovnami, Interpreter
+je spustitelný Java program (tedy program s korektně definovanou funkcí
+\lstinline{main}). Jedná se o referenční implementaci překladače jazyka
+TIL-Script. Překladač podporuje TIL-Script v takové podobě, v jaké je definován
+touto prací. Obsahuje základní nástroje pro hlášení chyb, aby ulehčil práci
+s TIL-Scriptem. Typovou kontrolu provádí pouze za běhu programu.
+
+\section{Implementace překladače}
+
+\subsubsection{Nezávislost knihoven na překladači}
+
+Projekt je koncipován tak, aby byly TIL-Script knihovny nezávislé na intepreteru,
+který uživatel použije. Implementovaný překladač je plně funkční, díky časovým
+omezením ovšem překladači chybí některé nutné prvky, jako třeba optimalizace
+koncového volání (TCO), jež je ve funkcionálních jazycích nezbytná, či překlad
+do bytekódu umožňující efektivnější překlad. V budoucnu se může stát, že bude
+potřeba nahradit současný překladač efektivnější implementací. V takovém případě
+ovšem není žádoucí, aby nastala potřeba přepsat nebo upravit také všechny již
+existující TIL-Script knihovny, standardní knihovnu, apod. Pro implementaci
+TIL-Script knihovny je však potřeba, aby např. TIL-Script funkce implementované
+v Javě měly určitý přístup k interpreteru, nebo alespoň kontextu, ve kterém jsou
+volány. Jinak by tyto funkce nemohly přistupovat např. k proměnným, k jiným
+funkcím, apod.
 
 \endinput
