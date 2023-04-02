@@ -296,6 +296,12 @@ Pro změnu hodnoty volné proměnné použijeme stejnou syntax jako při úvodn�
 Přiřazení hodnoty proměnné však není konstrukce, ale metavýraz, proto lze hodnotu proměnné vždy
 změnit pouze na nejvyšší úrovni v programu. Typ proměnné změnit nelze.
 
+Deklarace proměnných jsou vždy provedeny hned po spuštění programu, nezávisle na tom, kde v programu
+jsou uvedeny. Přiřazení hodnot proměnným není prováděno přednostně, aby byla umožněna korektní
+redefinice proměnné. Hodnota proměnné je tehdy změněna pouze a přesně na místě, kde je tak uvedeno
+v programu. Deklarace jsou však z definic vždy dedukovány automaticky -- proměnná je přednostně
+deklarována při spuštění programu, i když její deklarace není uvedena explicitně.
+
 Název proměnné musí začínat malým písmenem. 
 
 \begin{lstlisting}[caption={Příklad využití proměnných}]
