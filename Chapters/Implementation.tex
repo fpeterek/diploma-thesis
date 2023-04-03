@@ -172,17 +172,17 @@ ve zdrojovém programu.
 
 \subsection{Detaily implementace}
 
-Tato podsekce popisuje detaily implementace, které můžou být důležité nebo zajímavé. Cílem je
+Tato podsekce popisuje detaily implementace, které mohou být důležité nebo zajímavé. Cílem je
 vyzdvihnout řešení, které jsou důležité z hlediska budoucího rozvoje, řešení zajímavých problémů,
 ale také řešení, které jsou suboptimální a zasloužily by si další vývoj.
 
-\subsubsection{Interpretace konstrukcí a operace nad AST}
+\subsubsection{Interpretace konstrukcí, správa paměti a operace nad AST}
 
 Velkým designovým rozhodnutím, a zároveň nedostatkem, je rozhodnutí operovat přímo nad abstraktním
 syntaktickým stromem a interpretovat přímo TIL-Script konstrukce reprezentované Java objekty. Kód
 není překládán do bytekódu, který by byl následně interpretován.
 
-Tento přístup k interpretaci má velkou výhodu -- nízkou náročnost na implementaci. Překlad
+Tento přístup k interpretaci má jednu velkou výhodu -- nízkou náročnost na implementaci. Překlad
 do bytekódu by s sebou nesl značnou přidanou komplexitu. V první řadě by bylo potřeba implementovat
 vlastní mechanismus zásobníku. V současné době TIL-Script sdílí zásobník s interpreterem. Aplikace
 funkcí je řešena rekurzivně. Při aplikaci TIL-Script funkce volá interpreter interně vlastní metodu,
@@ -190,29 +190,62 @@ která aplikaci provede. S voláním metody na JVM je samozřejmě vytvořen nov
 Na tomto rámci se poté uloží kontext aplikované TIL-Script funkce (argumenty funkce, apod.).
 Po dokončení interpretace TIL-Script funkce se interpreter vrací z metody zpět na místo, odkud byla
 metoda zavolána. S návratem je přirozeně spojena destrukce rámce na zásobníku -- destrukce, která
-v současné implementaci obsahuje také zapomenutí kontextu funkce. Ten je poté uvolněn garbage
-collectorem během reklamačního cyklu.
+v současné implementaci obsahuje také zapomenutí kontextu funkce. Paměť využitá kontextem funkce
+je poté uvolněna garbage collectorem během reklamačního cyklu.
 
 Právě garbage collector je druhou výhodou současného přístupu. Interpretace AST a využití mechanismu
 zásobníku z JVM nám umožňuje využít také garbage collector z JVM pro automatickou správu paměti.
 Pokud bychom implementovali vlastní zásobník nezávislý na JVM, museli bychom naprogramovat také
 vlastní garbage collector.
 
-Ve své podstatě však mechanismus stacku ani jednoduchý mark-and-sweep algoritmus\footnote{Myšleno
+Ve své podstatě však mechanismus stacku ani mark-and-sweep algoritmus\footnote{Alespoň tedy
   mark-and-sweep algoritmus ve své nejjednodušší podobě. Mark-and-sweep algoritmus se používal již
   v padesátých letech minulého století, a používá se dodnes, v moderních jazycích je však silně
   optimalizován.} není složité naprogramovat.
 
-Podstatně složitějším problémem by byla definice bytekódu, a také řešení oboustranného překladu mezi
-bytekódem a JVM objekty.
+Podstatně složitějším problémem by byla definice bytekódu, a také řešení obousměrného překladu mezi
+bytekódem a JVM objekty. Ve většině programovacích jazyků stačí implementovat překlad AST
+do interpretovatelného bytekódu. Dále poté překladač pouze interpretuje daný bytekód. TIL-Script
+ovšem umožňuje definovat funkce nejen pomocí konstrukcí Transparentní intenzionální logiky, ale také
+jako Java funkce. Tyto funkce psané v Javě přirozeně jako své arugmenty očekávají JVM objekty.
+Pokud bychom však překládali zdrojový kód do bytekódu, museli bychom před voláním Java funkce
+převést všechny její argumenty z bytekódu zpět na JVM objekty.
 
-% TODO: Continue
+V závislosti na definici bytekódu a implementaci interpreteru by také mohlo být třeba implementovat
+vlastní haldu a alokátor paměti, neboť by nemuselo být možné využít haldu a alokátory JVM, které
+využívá současná implementace.
+
+Největší nevýhodou současné implementace ovšem je chybějící optimalizace koncového volání (TCO).
+Optimalizací koncového volání rozumíme opakované využití jednoho rámce zásobníku pro více
+rekurzivních volání funkce. Tradičně při musíme při volání funkce vytvořit nový rámec na zásobníku.
+Moderní překladače ovšem dokážou v určitých situacích rekurzi zoptimalizovat, využít stejný rámec
+pro více po sobě jdoucích volání, a efektivně tak nahradit rekurzi cyklem. Tuto optimalizaci lze
+provést pouze pokud k rekurzivnímu volání dojde při opouštění funkce (proto \textit{koncové}
+volání). Ačkoliv TCO implementuje také řada překladačů imperativních jazyků (např. GCC, Clang),
+nejčastěji se s touto optimalizací setkáváme právě ve funkcionálních jazycích, ve kterých nelze
+implementovat cyklus, a proto jsme odkázání čistě na rekurzi. V jazyku bez optimalizace koncové
+rekurze bohužel dojde velmi rychle k přetečení zásobníku.\footnote{
+  Zásobník JVM lze zvětšit pomocí vlajky \lstinline{-Xss}. Zvětšením zásobníku problém s jeho
+  přetékáním můžeme částečně omezit.
+}
+
+Z časových omezení se bohužel optimalizaci koncové rekurze, ani vše, co by s její implementací bylo
+nutně spojeno (vlastní zásobník, správu paměti, překladač a interpreter bytekódu), nepodařilo
+implementovat. Čas byl věnován především rozvoji jazyka TIL-Script a možností jeho interpretace.
+Implementaci TCO je ovšem třeba do budoucna zvážit, a tato sekce tak může posloužit alespoň jako
+návod, jak pokračovat v rozvoji TIL-Scriptu.
+
+\subsubsection{Java objekty jako TIL-Script funkce}
+
+\subsubsection{Typová kontrola}
+
+\subsubsection{Uzávěry a $\lambda$-vázané proměnné}
 
 \subsubsection{Nezávislost knihoven na překladači}
 
 Projekt je koncipován tak, aby byly TIL-Script knihovny nezávislé na intepreteru, který uživatel
 použije. Implementovaný překladač je plně funkční, díky časovým omezením ovšem překladači chybí
-některé nutné prvky, jako třeba optimalizace koncového volání (TCO), jež je ve funkcionálních
+některé nutné prvky, jako třeba optimalizace koncového volání, jež je ve funkcionálních
 jazycích nezbytná, či překlad do bytekódu umožňující efektivnější překlad. V budoucnu se může stát,
 že bude potřeba nahradit současný překladač efektivnější implementací. V takovém případě ovšem není
 žádoucí, aby nastala potřeba přepsat nebo upravit také všechny již existující TIL-Script knihovny,
