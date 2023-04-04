@@ -237,7 +237,37 @@ návod, jak pokračovat v rozvoji TIL-Scriptu.
 
 \subsubsection{Java objekty jako TIL-Script funkce}
 
+TIL-Script nabízí uživatelům dva způsoby definice funkce. Prvním způsobem je abstrakce
+nad konstrukcí, ať už pomocí uzávěru, nebo pomocí syntaxe pro definici pojmenované funkce. Druhým
+způsobem je již dříve zmiňovaná definice funkce pomocí Java objektu.
+
+Aby byl JVM objekt použitelný jako funkce jazyka TIL-Script, musí být daný objekt instancí třídy
+\lstinline{DefaultFunction}. Daný objekt poté musí definovat jméno a typ funkce, a současně metodu
+\lstinline{apply} volanou právě při aplikaci dané funkce. Argumenty této metody jsou instance
+\lstinline{InterpreterInterface}, představující aktuálně používaný interpreter, seznam všech
+argumentů funkce, a také kontext aplikace funkce. Kontext aplikace obsahuje pozici ve zdrojovém
+kódu, kde k aplikaci funkce došlo, a slouží především k hlášení chyb. Návratovou hodnotou metody
+\lstinline{apply} je výsledek aplikace funkce na dané argumenty.
+
+Metoda \lstinline{apply} může vrátit \lstinline{Nil}, nikdy však \lstinline{Nil} nemůže obdržet
+jako jeden ze svých argumentů -- pokud by alespoň jeden argument měl hodnotu \lstinline{Nil},
+k aplikaci funkce, a tedy ani volání metody \lstinline{apply}, nikdy nedojde.
+
+Definice TIL-Script funkcí pomocí Java objektů umožňuje využívat v jazyce TIL-Script již existující
+Java knihovny. Například místo implementace volání funkcí systému (tzv. \textit{syscall}),
+a následné implementace komunikace po síti přímo nad operačním systémem v jazyce TIL-Script lze
+využít již existující knihovny napsané v jazyce Java. Pro komunikaci s databází by tedy stačilo
+využít již napsanou knihovnu pro platformu JVM, a pouze nad ní vytvořit jednoduché TIL-Script
+rozhraní.
+
+Takto reprezentovanou funkci poté stačí importovat v TIL-Script programu za využití registrátoru.
+Registrátory jsou popsány hned v následující podsekci \peteref{java-import}.
+
+\subsubsection{Import symbolů z Java archivu}\label{java-import}
+
 \subsubsection{Typová kontrola}
+
+\subsubsection{Mechanismus zásobníku}
 
 \subsubsection{Uzávěry a $\lambda$-vázané proměnné}
 
