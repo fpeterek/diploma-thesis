@@ -265,6 +265,39 @@ Registrátory jsou popsány hned v následující podsekci \peteref{java-import}
 
 \subsubsection{Import symbolů z Java archivu}\label{java-import}
 
+Výhody umožnění implementace TIL-Script funkcí pomocí Java objektů již byly popsány. Výrazy
+\lstinline{Import} byly popsány v sekci \peteref{import-statement}. Nyní se budeme věnovat způsobu,
+jakým jsou symboly importovány z Java archivů.
+
+Abychom vůbec mohli importovat definice z Java archivů, musí být daný JAR soubor načtený již při
+spouštění JRE. Java runtime ve snaze zabránit kyberútokům (například RCE útokům) značně ztěžuje
+načítání kódu za běhu. Způsoby neomezeného načítání kódu existují, liší se však napříč verzemi
+platformy Java, ale hlavně představuje potenciální velký bezpečnostní problém.
+
+Abychom mohli bezpečně načíst kód za běhu, museli bychom znát nejen název třídy, jež potřebujeme
+načíst, ale také cestu k JAR souboru, ve kterém se třída nachází. Pokud bychom po uživateli jazyka
+TIL-Script chtěli, ať uvádí i Java archiv i plně kvalifikovaný název registrátoru, byly by
+\lstinline{Import} výrazy příliš složité. Uvést pouze Java archiv nestačí, neboť nemusíme znát obsah
+daného archivu. Abychom mohli uvést pouze registrátor, musíme znát JAR soubor dopředu. Poslední
+verze se zdá pro konečného uživatele jazyka TIL-Script nejjednodušší.
+
+Zvolený způsob importu Java objektů dále obsahuje ještě jednu výhodu -- umožňuje definovat více
+registrátorů v jednom JAR souboru, ale podle potřeby načítat a využívat pouze konkrétní registrátor.
+Není tedy třeba importovat více názvů, než je nezbytně nutné.
+
+Nyní popíšeme implementaci samotného vytvoření instance registrátoru a importu symbolů. Překladač
+interpretuje výrazy \lstinline{Import} přednostně hned při spuštění programu. Narazí-li na výraz
+\lstinline{Import}. Nejprve zkontroluje, zda parametr výrazu obsahuje předponu \lstinline{class://}.
+Pokud ne, překladač automaticky považuje daný parametr za cestu k TIL-Script souboru (nezávisle
+na příponě, konvencí je však používat příponu \textit{.tils}). Pokud parametr začíná požadovanou
+přeponou, překladač přeponu odstraní a pokusí se načíst specifikanou třídu. Následně vytvoří
+instanci této třídy pomocí konstruktoru bez parametrů (všechny registrátory tedy musí tento
+konstruktor definovat). Dále již překladač s vytvořenou instancí pracuje jako s objektem typu
+\lstinline{SymbolRegistrar}. Všechny registrátory proto musí toto rozhraní implementovat.
+
+% TODO: Continue
+
+
 \subsubsection{Typová kontrola}
 
 \subsubsection{Mechanismus zásobníku}
@@ -286,8 +319,9 @@ apod.
 
 Za účelem odstranění závislosti na konkrétním překladači definuje knihovna \lstinline{common}
 rozhraní \lstinline{InterpreterInterface}. Toto rozhraní specifikuje základní funkce, které
-překladač TIL-Scriptu musí implementovat. Při volání TIL-Script funkcí definovaných pomocí Java
-objektů je danému objektu předána instance překladače jako potomek \lstinline{InterpreterInterface}.
+překladač jazyka TIL-Script musí implementovat. Při volání TIL-Script funkcí definovaných pomocí
+Java objektů je danému objektu předána instance překladače jako potomek
+\lstinline{InterpreterInterface}.
 
 Tento princip je v softwarovém inženýrství velmi známý, je však nutné, aby na modularitu systému
 bylo myšleno již od počátku a aby byl dobře zdokumentován. Tato práce umožňuje, aby bylo v budoucnu
