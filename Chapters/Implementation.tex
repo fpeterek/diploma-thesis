@@ -287,18 +287,75 @@ Není tedy třeba importovat více názvů, než je nezbytně nutné.
 
 Nyní popíšeme implementaci samotného vytvoření instance registrátoru a importu symbolů. Překladač
 interpretuje výrazy \lstinline{Import} přednostně hned při spuštění programu. Narazí-li na výraz
-\lstinline{Import}. Nejprve zkontroluje, zda parametr výrazu obsahuje předponu \lstinline{class://}.
+\lstinline{Import}, nejprve zkontroluje, zda parametr výrazu obsahuje předponu \lstinline{class://}.
 Pokud ne, překladač automaticky považuje daný parametr za cestu k TIL-Script souboru (nezávisle
-na příponě, konvencí je však používat příponu \textit{.tils}). Pokud parametr začíná požadovanou
-přeponou, překladač přeponu odstraní a pokusí se načíst specifikanou třídu. Následně vytvoří
+na příponě, konvencí však je používat příponu \textit{.tils}). Pokud parametr začíná požadovanou
+přeponou, překladač přeponu odstraní a pokusí se načíst specifikovanou třídu. Následně vytvoří
 instanci této třídy pomocí konstruktoru bez parametrů (všechny registrátory tedy musí tento
 konstruktor definovat). Dále již překladač s vytvořenou instancí pracuje jako s objektem typu
 \lstinline{SymbolRegistrar}. Všechny registrátory proto musí toto rozhraní implementovat.
 
-% TODO: Continue
+Rozhraní \lstinline{SymbolRegistrar} definuje šest metod -- \textit{getterů} vracejících Java
+seznamy funkcí (jeden getter využíváme pro deklarace, druhý getter pro definice -- funkce
+s implementací), typových aliasů, definic symbolických hodnot, struktur, a proměnných.\footnote{
+  V Kotlinu samozřejmě můžeme používat syntaktický cukr pro Java gettery.}.
+Třídy implementující rozhraní \lstinline{SymbolRegistrar} musí implementovat všech šest metod,
+jednotlivé metody ale můžou vracet prázdné seznamy.
 
+Překladač při importu pomocí registrátoru zavolá všech šest metod definovaných rozhraním
+\lstinline{SymbolRegistrar}. A v nespecifikovaném pořadí importuje všechna jména definovaná
+registrátorem. Pořadí je nespecifikované, neboť na něm nezáleží při importu pomocí registrátoru.
+
+Po dokončení importu si překladač uloží plně kvalifikovaný název registrátoru do kontextu skriptu,
+ve kterém byl registrátor využit, aby se import symbolů pomocí jednoho registrátoru neprovedl
+zbytečně vícekrát.
 
 \subsubsection{Typová kontrola}
+
+Transparentní intenzionální logika je typovaným kalkulem, proto i v jazyce TIL-Script musíme
+zajistit typovou koherenci za využití typové kontroly. Typová kontrola probíhá pouze během provedení
+konstrukce, neprobíhá tedy například hned při spuštění skriptu, ještě před provedením první
+konstrukce, nebo nad konstrukcemi, které nejsou nikdy provedeny. Narazí-li překladač během typové
+kontroly na typově inkoherentní výraz (např. konstrukci, přiřazení proměnné), program okamžitě
+končí chybou.
+
+\begin{lstlisting}[caption={Příklad hlášení chyby}]
+  ** Error **
+(2, 2): ['CatS '1 '"text"].
+     ~~~ ^ ~~~
+        Invalid argument type in application of function 'CatS' (expected: Text, received: Int)
+\end{lstlisting}
+
+Typová kontrola probíhá během provedení konstruktoru struktury, přiřazení hodnoty proměnné, při
+deklaraci funkce, symbolické hodnoty i proměnné, při definici typového aliasu, a také před i
+po aplikaci funkce.
+
+Typová kontrola při provádění konstruktoru struktury zajistí, že jsou atributům struktury přiřazeny
+objekty správného typu. Obdobně pomocí typové kontroly zajistíme, že je proměnné přiřazena hodnota
+korektního typu. Při interpretaci definicí typových aliasů a struktur, ale také při interpretaci
+deklarací, potřebujeme zajistit, aby nebylo možné poskytnout konfliktní deklarace nebo definice
+-- tedy deklarace, případně definice, které se shodují názvem, ale liší typem. Před aplikací funkce
+překladač provádí typovou kontrolu proto, aby zajistil, že funkce obdrží argumenty správného typu.
+Po aplikaci funkce provede překladač typovou kontrolu znova, a to za účelem zajištění, že funkce
+vrátila objekt správného typu.
+
+Typová kontrola při přiřazení hodnoty proměnné, případně při detekci konfliktních deklarací nebo
+definicí typových aliasů, vyžaduje pouze porovnání dvou konkrétních negenerických typů.
+
+Kontrola konfliktních definic struktur obsahuje kontrolu na úrovni atributů. Při porovnávání
+atributů jsou porovnávány názvy i typy $i$-tého atributu obou z porovnávaných struktur. Pokud se
+atribut liší v názvu nebo v typu, jsou struktury automaticky považovány za rozdílné typy.
+K porovnání atributů vůbec nedojde, pokud se počet atributů liší, nebo pokud se struktury liší
+v názvu. Z popisu typové kontroly struktur vyplývá, že záleží na pořadí atributů -- ačkoliv by to
+ve vysokoúrovňovém skriptovacím jazyku nemuselo být třeba (např. protože neřešíme padding), cílem
+této volby je přinutit uživatele nevytvářet zbytečné definice struktur, zamezit případům, kdy
+se špatně navrhnutá struktura využívá k účelům, ke kterým nebyla zamyšlena, a také zjednodušení
+implementace.
+
+Při typové kontrole argumentů a výsledků funkcí již není porovnávání jednotlivých typů nezávislé,
+neboť funkce můžou být typově polymorfní.
+
+% TODO: Functions, describe matching of types
 
 \subsubsection{Mechanismus zásobníku}
 
@@ -325,6 +382,6 @@ Java objektů je danému objektu předána instance překladače jako potomek
 
 Tento princip je v softwarovém inženýrství velmi známý, je však nutné, aby na modularitu systému
 bylo myšleno již od počátku a aby byl dobře zdokumentován. Tato práce umožňuje, aby bylo v budoucnu
-možno vytvořit drop-in náhradu za konkrétní překladač bez jakékoliv úpravy existujícího kódu.
+možno vytvořit drop-in náhradu za současný překladač bez jakékoliv úpravy existujícího kódu.
 
 \endinput
