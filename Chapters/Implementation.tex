@@ -176,7 +176,8 @@ Tato podsekce popisuje detaily implementace, které mohou být důležité nebo 
 vyzdvihnout řešení, které jsou důležité z hlediska budoucího rozvoje, řešení zajímavých problémů,
 ale také řešení, které jsou suboptimální a zasloužily by si další vývoj.
 
-\subsubsection{Interpretace konstrukcí, správa paměti a operace nad AST}
+\subsubsection{
+  Interpretace konstrukcí, správa paměti a operace nad AST}\label{interpretation-of-constructions}
 
 Velkým designovým rozhodnutím, a zároveň nedostatkem, je rozhodnutí operovat přímo nad abstraktním
 syntaktickým stromem a interpretovat přímo TIL-Script konstrukce reprezentované Java objekty. Kód
@@ -186,12 +187,16 @@ Tento přístup k interpretaci má jednu velkou výhodu -- nízkou náročnost n
 do bytekódu by s sebou nesl značnou přidanou komplexitu. V první řadě by bylo potřeba implementovat
 vlastní mechanismus zásobníku. V současné době TIL-Script sdílí zásobník s interpreterem. Aplikace
 funkcí je řešena rekurzivně. Při aplikaci TIL-Script funkce volá interpreter interně vlastní metodu,
-která aplikaci provede. S voláním metody na JVM je samozřejmě vytvořen nový rámec na zásobníku.
+která aplikaci provede. S voláním metody na JVM je vždy vytvořen nový rámec na zásobníku\footnote{
+  Tzv. \textit{inlining funkcí} zde nebereme v potaz. Při aplikaci TIL-Script funkcí navíc musí
+  překladač vždy zavolat virtuální metodu objektu, jenž funkci reprezentuje. Inlining virtuálních
+  metod je možný, avšak složitější, a na podstatu řešení TIL-Script interpreteru nemá žádný vliv.
+}.
 Na tomto rámci se poté uloží kontext aplikované TIL-Script funkce (argumenty funkce, apod.).
 Po dokončení interpretace TIL-Script funkce se interpreter vrací z metody zpět na místo, odkud byla
-metoda zavolána. S návratem je přirozeně spojena destrukce rámce na zásobníku -- destrukce, která
+metoda zavolána. S návratem z funkce je spojena destrukce rámce na zásobníku -- destrukce, která
 v současné implementaci obsahuje také zapomenutí kontextu funkce. Paměť využitá kontextem funkce
-je poté uvolněna garbage collectorem během reklamačního cyklu.
+je v případě potřeby uvolněna garbage collectorem během reklamačního cyklu.
 
 Právě garbage collector je druhou výhodou současného přístupu. Interpretace AST a využití mechanismu
 zásobníku z JVM nám umožňuje využít také garbage collector z JVM pro automatickou správu paměti.
@@ -285,7 +290,7 @@ Zvolený způsob importu Java objektů dále obsahuje ještě jednu výhodu -- u
 registrátorů v jednom JAR souboru, ale podle potřeby načítat a využívat pouze konkrétní registrátor.
 Není tedy třeba importovat více názvů, než je nezbytně nutné.
 
-Nyní popíšeme implementaci samotného vytvoření instance registrátoru a importu symbolů. Překladač
+Vytvoření instance registrátoru a import symbolů jsou implementovány následovně. Překladač
 interpretuje výrazy \lstinline{Import} přednostně hned při spuštění programu. Narazí-li na výraz
 \lstinline{Import}, nejprve zkontroluje, zda parametr výrazu obsahuje předponu \lstinline{class://}.
 Pokud ne, překladač automaticky považuje daný parametr za cestu k TIL-Script souboru (nezávisle
@@ -353,13 +358,86 @@ se špatně navrhnutá struktura využívá k účelům, ke kterým nebyla zamy�
 implementace.
 
 Při typové kontrole argumentů a výsledků funkcí již není porovnávání jednotlivých typů nezávislé,
-neboť funkce můžou být typově polymorfní.
+neboť funkce můžou být typově polymorfní. Typová kontrola probíhá nejprve na argumentech funkce.
+Při porovnávání typů argumentů je postupováno po jednotlivých argumentech. Pokud funkce pro daný
+argument očekává objekt konkrétního typu, je pouze porovnán typ argumentu s požadovaným typem.
+Pokud však funkce pro daný argument neočekává konkrétní typ, můžou nastat dva případy. První případ
+nastane, narazíme-li na generický typ $\alpha_{i}$\footnote{V kontextu jazyka TIL-Script zde myslíme typ
+  \lstinline{Any}. TIL konvence je zde využita z důvodu úspornosti a jednodušší
+  indexace} s indexem $i$ poprvé v kontextu aplikace funkce. V takovém případě si překladač uloží
+k indexu $i$ typ dodaného argumentu, k žádnému porovnání typů však nedochází -- nemáme co porovnat.
+Druhý případ poté představuje situaci, kdy narazíme na generický typ $\alpha_{i}$, ale generickému typu
+$\alpha_{i}$ jsme již přiřadili konkrétní typ v kontextu současné aplikace. Tehdy již dojde k porovnání
+očekávaného typu s typem dodaným. Po úspěšné aplikaci funkce je ještě zkontrolován typ objektu, jež
+funkce vrátila, aby překladač zajistil, že funkce vrátila objekt správného typu.
 
-% TODO: Functions, describe matching of types
+Při porovnávání jednotlivých typů jsou nejprve generické typy přepsány na typy konkrétní a typové
+aliasy jsou rekurzivně expandovány, dokud nezískáme původní typ, na který se alias odkazuje.
+Atomické typy následně stačí porovnat podle názvu. Molekulární typy (v TIL funkce, v TIL-Scriptu
+navíc seznamy, n-tice a struktury), jsou porovnávány podle typů, z nichž se skládají. Struktury
+jsou navíc porovnávány podle názvu struktury i jejich atributů (viz dřívější odstavec této sekce).
+Pokud se dva molekulární typy skládají z různého počtu typů, k porovnávání jednotlivých typů
+samozřejmě nedochází.
 
 \subsubsection{Mechanismus zásobníku}
 
-\subsubsection{Uzávěry a $\lambda$-vázané proměnné}
+Mechanismus sdíleného zásobníku (\textit{callstacku}) byl nastíněn v oddílu
+\peteref{interpretation-of-constructions}, zde se mu však budeme věnovat o trochu podrobněji.
+Pochopení tohoto mechanismu je navíc potřeba k pochopení implementace uzávěrů a uzávěrem
+konstruovaných funkcí.
+
+Nezávisle na JVM zásobníku si interpreter udržuje vlastní zásobník. Jednotlivé rámce zásobníku
+lze využít k ukládání proměnných. Dále pak má každý rámec nanejvýš jeden rodičovský rámec.
+Při provádění proměnné překladač zkontroluje nejprve rámec na vrcholu zásobníku. Pokud daný rámec
+neobsahuje požadovanou proměnnou, postupuje překladač rekurzivně a prohledává rodičovský rámec.
+Pokud rámec žádného rodiče nemá a proměnná nebyla nalezena, program končí chybou.
+
+První rámec je vytvořen při spuštění skriptu. Na tomto rámci jsou ukládány proměnné definované
+na nejvyšší úrovni programu -- proměnné, které budeme využívat jako volné proměnné v konstrukcích.
+Tento rámec nemá žádného rodiče.
+
+Nový rámec zásobníku je vytvořen vždy při aplikaci funkce. Na tento rámec jsou umístěny
+všechny $\lambda$-vázané proměnné -- argumenty funkce. Rodičem rámce pojmenované funkce je vždy rámec
+na začátku zásobníku, tedy rámec reprezentující globální stav.
+
+Pokud však funkci konstruujeme pomocí uzávěru, situace se komplikuje. Takové funkce mají přístup
+nejen k vlastním argumentům a proměnným definovaným na nejvyšší úrovni v programu, ale také
+k $\lambda$-vázaným argumentům funkce, v níž byl uzávěr proveden a funkce zkonstruována, pokud je uzávěr
+proveden při aplikaci funkce. V takovém případě je k funkci konstruované uzávěrem uložen také
+rodičovský rámec zásobníku -- rámec, na kterém byla daná funkce vytvořena. Při aplikaci uzávěrem
+vytvořené funkce je poté jako rodič rámce zásobníku nastaven právě rámec, na kterém byla funkce
+zkonstruována, ne nutně nejnižší rámec zásobníku. Rámec na spodku zásobníku je nastaven jako
+rodičovský pouze pokud uzávěr nebyl proveden ve funkci, ale na nejvyšší úrovni v programu.
+
+Pro znázornění si představme následující konstrukci. Konstrukce konstruuje funkci následníka.
+
+\begin{lstlisting}[caption={Funkce následníka pomocí vnořených uzávěrů}]
+[[\x: Int -> (Int Int) [\y: Int -> Int ['+ x y]]] '1]
+\end{lstlisting}
+
+Funkci následníka získáme aplikací Sch{\"o}nfinkelovy redukce (\textit{currying}) na funkci sčítání.
+Operace sčítání je na celých číslech totální funkcí, proto tuto redukci můžeme aplikovat.
+
+\begin{lstlisting}[caption={Vnější uzávěr}]
+[\x: Int -> (Int Int) [\y: Int -> Int ['+ x y]]]
+\end{lstlisting}
+
+Volná proměnná \lstinline{x} je konstituentem vnitřního uzávěru. Zde chceme, aby proměnná
+\lstinline{x} konstruovala hodnotu \lstinline{1/Int}.
+
+\begin{lstlisting}[caption={Vnitřní uzávěr}]
+[\y: Int -> Int ['+ x y]]
+\end{lstlisting}
+
+Během konstruování funkce následníka nejprve provedeme vnější uzávěr. Tento uzávěr zkonstruuje
+unární funkci, jejímž oborem hodnot jsou unární funkce typu \lstinline{(Int Int)}. Aplikací této
+funkce na argument \lstinline{1} získáme funkci následníka. Aby volná proměnná \lstinline{x}
+korektně konstruovala hodnotu \lstinline{1}, musíme funkci následníka jako rodičovský rámec
+zásobníku nastavit právě rámec, na kterém byla daná funkce vytvořena.
+
+Po aplikaci funkce je rámec odstraněn ze zásobníku. Pokud se na rámec neodkazuje již žádný ukazatel,
+může být rámec smazán garbage collectorem. Pokud však na konkrétní rámec odkazuje funkce, pro niž
+je tento rámec rodičovský, rámec bude udržován v paměti společně s danou funkcí.
 
 \subsubsection{Nezávislost knihoven na překladači}
 
