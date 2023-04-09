@@ -17,33 +17,33 @@ přirozených jazyků lze přistoupit také pomocí logiky. Mezi průkopníky to
 Transparentní intenzionální logika (dále také TIL) je logický systém založený na typovaném lambda
 kalkulu. TIL umožňuje modelovat a analyzovat výrazy přirozeného jazyka za pomocí logiky. Jako
 doplněk TILu poté vznikl také funkcionální programovací jazyk TIL-Script, sloužící k interpretaci
-konstrukcí Transparentní intenzionální logiky. Syntax i sémantika TIL-Scriptu jsou silně inspirovány
-TILem, ovšem přirozeně s určitými úpravami tak, aby byl TIL-Script rozumně zapisovatelný
+konstrukcí Transparentní intenzionální logiky. Syntax i sémantika jazyka TIL-Script jsou silně
+inspirovány TILem, ovšem přirozeně s určitými úpravami tak, aby byl TIL-Script rozumně zapisovatelný
 a interpretovatelný na počítači.
 
-A právě interpretací TIL-Scriptu se zabývá tento text. Součástí práce tak je navázání
-na předcházející vývoj jazyka TIL-Script, rozšíření gramatiky TIL-Scriptu nutné pro akomodaci nových
+A právě interpretací jazyka TIL-Script se zabývá tento text. Součástí práce tak je navázání
+na předcházející vývoj jazyka TIL-Script, rozšíření gramatiky nutné pro akomodaci nových
 prvků jazyka (např. výraz \textit{Import} sloužící k importu symbolů definovaných v jiném
 souboru), nebo také samotná interpretace jazyka TIL-Script, společně s kontrolou typové koherence.
 Dále práce navrhuje způsob, jak volat funkce platformy JVM. Tento přístup otevírá jazyku TIL-Script
-celý ekosystém platformy JVM. Zatímco tedy práce nijak neřeší a neimplementuje získávání informací
+celý ekosystém platformy JVM. Práce tedy nijak neřeší a neimplementuje získávání informací
 z již existující databáze, soustředí se spíše na zjednodušení přístupu k existujícím knihovnám, aby
 do budoucna nebyl problém rychle a jednoduše naprogramovat přístup k libovolnému zdroji dat.
 
 Nakonec se práce snaží navrhnout určitou nadmnožinu jazyka TIL-Script tak, aby TIL-Script mohl
 sloužit nejen k interpretaci konstrukcí TIL, ale také k jejich tvorbě a analýze. V současné době
-pro analýzu a práci s konstrukcemi TIL-Scriptu existují nástroje psané v jazyce Java. Existuje-li
-však v současné době programovací jazyk vytvořený přímo pro logiky pracující s TILem, není důvod
-tento jazyk nevyužít a nerozšířit také o nástroje pro analýzu, tvorbu i transformaci TIL-Script
-konstrukcí. Pro pokročilejší práci s TIL-Scriptem by tak nebylo třeba učit se jiný programovací
-jazyk (Java), nebo využívat externí nástroje, ale naopak by byl k dispozici již familiérní nástroj,
-jehož základy jsou již příznivům Transparentní intenzionální logiky dobře známy. Cílem této
-nadmnožiny ovšem není předefinovat TIL, či nějak výrazně měnit jádro TIL-Scriptu, jinak by se
-ostatně také nemohlo jednat o nadmnožinu. Tyto nové prvky jsou od jádra TIL-Scriptu, které slouží
-převážně jako výpočetní varianta TIL, jednoduše oddělitelné. Při práci s interpreterem, jehož
-implementace je součástí této práce, není problém se této nadmnožině vyhnout a nevyužívat ji.
-Také lze, na základě tohoto textu, implementovat interpreter samotného TIL-Scriptu bez jakýchkoliv
-rozšíření.
+pro analýzu a práci s konstrukcemi jazyka TIL-Script existují nástroje psané v jazyce Java.
+Existuje-li však v současné době programovací jazyk vytvořený přímo pro logiky pracující s TILem,
+není důvod tento jazyk nevyužít a nerozšířit také o nástroje pro analýzu, tvorbu i transformaci
+TIL-Script konstrukcí. Pro pokročilejší práci s jazykem TIL-Script by tak nebylo třeba učit se jiný
+programovací jazyk (Java), nebo využívat externí nástroje, ale naopak by byl k dispozici již
+familiérní nástroj, jehož základy jsou již příznivcům Transparentní intenzionální logiky dobře
+známy. Cílem této nadmnožiny ovšem není předefinovat TIL, či nějak výrazně měnit jádro jazyka
+TIL-Script, jinak by se ostatně také nemohlo jednat o nadmnožinu. Tyto nové prvky jsou od jádra
+jazyka TIL-Script, které slouží převážně jako výpočetní varianta TIL, jednoduše oddělitelné. Při
+práci s interpreterem, jehož implementace je součástí této práce, není problém se této nadmnožině
+vyhnout a nevyužívat ji. Také lze, na základě tohoto textu, implementovat interpreter jazyka
+TIL-Script bez jakýchkoliv navrhovaných rozšíření.
 
 Práce se do znatelné míry inspiruje výzkumem amerického profesora Johna McCarthyho a programovacím
 jazykem Lisp. Jelikož Lisp vychází z lambda kalkulu, pracuje s parciálními funkcemi, a nerozlišuje

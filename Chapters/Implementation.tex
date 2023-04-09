@@ -9,7 +9,8 @@ při implementaci překladače, a jejich řešení.
 Celý projekt je implementován v jazyce \textbf{Kotlin} \footnote{Přestože je projekt psaný
   v Kotlinu, v práci často zmiňujeme např. \textit{Java knihovny}, \textit{Java objekty}, apod.
   Většinou tím myslíme Javu jako platformu. V takových případech poté nezáleží, zda
-  používáme jazyk Java, Kotlin, nebo libovolný jiný jazyk kompilovaný pro platformu JVM.}.
+  používáme jazyk Java, Kotlin, nebo libovolný jiný jazyk kompilovaný pro platformu JVM.
+  Mezi jazyky Kotlin a Java navíc existuje plná interoperabilita}.
 Jazyk Kotlin je staticky typovaný, multiparadigmatický jazyk kompilovaný do \textbf{JVM} bytekódu.
 Kotlin je vytvářen jako alternativa k jazyku Java, a nabízí plnou kompatibilitu s Javou. Využití
 Kotlinu umožňuje využívat veškeré výhody Java ekosystému, včetně knihoven psaných v Javě, ale také
@@ -71,21 +72,21 @@ nekonformuje vůči rozhraní, kterému musí konformovat TIL-Script knihovny im
 knihovny a distribuované jako Java archivy. Standardní knihovnu překladač automaticky importuje
 v každém souboru. Není tedy třeba ji importovat explicitně.
 
-Standardní knihovna je nezávislá na použitém překladači TIL-Scriptu. Interpreter, jenž je součástí
-projektu, můžeme klidně nahradit novým interpreter (za předpokladu, že daný interpreter implementuje
-potřebná rozhraní, např. \lstinline{InterpreterInterface} definované v knihovně \lstinline{common}).
-Interpreter samotný však na standardní knihovně závisí. Kvůli syntaktickému cukru
-(funkce \lstinline{Cond}, \lstinline{ListOf}, atd.), funkci \lstinline{If}, jež musí být
+Standardní knihovna je nezávislá na použitém překladači jazyka TIL-Script. Interpreter, jenž je
+součástí projektu, můžeme klidně nahradit novým interpreter (za předpokladu, že daný interpreter
+implementuje potřebná rozhraní, např. \lstinline{InterpreterInterface} definované v knihovně
+\lstinline{common}). Interpreter samotný však na standardní knihovně závisí. Kvůli syntaktickému
+cukru (funkce \lstinline{Cond}, \lstinline{ListOf}, atd.), funkci \lstinline{If}, jež musí být
 vyhodnocována líně, apod., musí překladač obsahovat speciální podporu pro standardní knihovnu.
 
 Standardní knihovna definuje základní množinu funkcí, hodnot, typů a proměnných potřebnou pro práci
-s TIL-Scriptem.
+s jazykem TIL-Script.
 
 \subsection{Matematická knihovna \lstinline{math}}
 
 Matematická knihovna \lstinline{math} slouží jako ukázková implementace TIL-Script knihovny
 v Kotlinu, případně v Javě. Dále je využívána k testování funkčnosti importování Java knihoven.
-Narozdíl od standardní knihovny, překladač je naprosto nezávislý na knihovně \lstinline{math}.
+Na rozdíl od standardní knihovny, překladač je naprosto nezávislý na knihovně \lstinline{math}.
 \lstinline{math} je třeba importovat explicitně pomocí výrazu \lstinline{Import}.
 
 Knihovnu nelze označit za extenzivní, obsahuje pouze malé množství funkcí, definice symbolických
@@ -94,11 +95,11 @@ eulerovo číslo a číslo $\pi$.
 
 \subsection{Interpreter}
 
-Narozdíl od předchozích komponent, které byly čistě Java knihovnami, Interpreter je spustitelný Java
-program (tedy program s korektně definovanou funkcí \lstinline{main}). Jedná se o referenční
+Na rozdíl od předchozích komponent, které byly čistě Java knihovnami, Interpreter je spustitelný
+Java program (tedy program s korektně definovanou funkcí \lstinline{main}). Jedná se o referenční
 implementaci překladače jazyka TIL-Script. Překladač podporuje TIL-Script v takové podobě, v jaké je
 definován touto prací. Obsahuje základní nástroje pro hlášení chyb, aby ulehčil práci
-s TIL-Scriptem. Typovou kontrolu provádí pouze za běhu programu.
+s jazykem TIL-Script. Typovou kontrolu provádí pouze za běhu programu.
 
 \section{Implementace překladače}
 
@@ -238,7 +239,7 @@ Z časových omezení se bohužel optimalizaci koncové rekurze, ani vše, co by
 nutně spojeno (vlastní zásobník, správu paměti, překladač a interpreter bytekódu), nepodařilo
 implementovat. Čas byl věnován především rozvoji jazyka TIL-Script a možností jeho interpretace.
 Implementaci TCO je ovšem třeba do budoucna zvážit, a tato sekce tak může posloužit alespoň jako
-návod, jak pokračovat v rozvoji TIL-Scriptu.
+návod, jak pokračovat v rozvoji jazyka TIL-Script.
 
 \subsubsection{Java objekty jako TIL-Script funkce}
 
@@ -303,7 +304,7 @@ konstruktor definovat). Dále již překladač s vytvořenou instancí pracuje j
 Rozhraní \lstinline{SymbolRegistrar} definuje šest metod -- \textit{getterů} vracejících Java
 seznamy funkcí (jeden getter využíváme pro deklarace, druhý getter pro definice -- funkce
 s implementací), typových aliasů, definic symbolických hodnot, struktur, a proměnných.\footnote{
-  V Kotlinu samozřejmě můžeme používat syntaktický cukr pro Java gettery.}.
+  V Kotlinu můžeme používat syntaktický cukr pro Java gettery.}.
 Třídy implementující rozhraní \lstinline{SymbolRegistrar} musí implementovat všech šest metod,
 jednotlivé metody ale můžou vracet prázdné seznamy.
 
@@ -373,10 +374,10 @@ funkce vrátila, aby překladač zajistil, že funkce vrátila objekt správnéh
 
 Při porovnávání jednotlivých typů jsou nejprve generické typy přepsány na typy konkrétní a typové
 aliasy jsou rekurzivně expandovány, dokud nezískáme původní typ, na který se alias odkazuje.
-Atomické typy následně stačí porovnat podle názvu. Molekulární typy (v TIL funkce, v TIL-Scriptu
-navíc seznamy, n-tice a struktury), jsou porovnávány podle typů, z nichž se skládají. Struktury
-jsou navíc porovnávány podle názvu struktury i jejich atributů (viz dřívější odstavec této sekce).
-Pokud se dva molekulární typy skládají z různého počtu typů, k porovnávání jednotlivých typů
+Atomické typy následně stačí porovnat podle názvu. Molekulární typy (v TIL funkce, v jazyce
+TIL-Script navíc seznamy, n-tice a struktury), jsou porovnávány podle typů, z nichž se skládají.
+Struktury jsou navíc porovnávány podle názvu struktury i jejich atributů (viz dřívější odstavec této
+sekce). Pokud se dva molekulární typy skládají z různého počtu typů, k porovnávání jednotlivých typů
 samozřejmě nedochází.
 
 \subsubsection{Mechanismus zásobníku}

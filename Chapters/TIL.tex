@@ -20,20 +20,20 @@ Naopak Transparentní intenzionální logika je hyperintenzionálním kalkulem, 
 vytvářet konstrukce vypovídající o jiných konstrukcích. TIL vychází z myšlenky, že výraz
 přirozeného jazyka sice označuje denotát -- konkrétní objekt (např. individuum, číslo, konstrukci),
 významem výrazu ovšem není samotný denotát, který ani nemusí nutně existovat. Význam výrazu je
-abstraktní a lze jej zachytit konstrukcí. Daná konstrukce poté při provedení zkonstruuje denotát
-výrazu. Jako příklad lze uvést například výraz "francouzský král." V době psaní této práce Francie
-krále nemá. Výraz nemá žádný denotát, neuvádí žádné konkrétní individuum. Přesto výrazu
-"francouzský král" rozumíme, výraz má svůj význam, jen v současné době neuvádí žádnou osobu.
-A budeme-li chtít o významu výrazu "francouzský král" něco vypovědět, například že francouzský král
+abstraktní procedura a lze jej zachytit konstrukcí. Daná konstrukce poté při provedení zkonstruuje
+denotát výrazu. Jako příklad lze uvést například výraz ``francouzský král.'' V době psaní této práce
+Francie krále nemá. Denotátem výrazu je tak neobsazená individuová role -- výraz tedy neoznačuje
+žádné individuum. Přesto výrazu ``francouzský král'' rozumíme, výraz má svůj význam, jen v současné době neuvádí žádnou osobu.
+A budeme-li chtít o významu výrazu ``francouzský král'' něco vypovědět, například že francouzský král
 je monarchou v čele Francie, daný monarcha nemusí existovat. Dále lze uvést například rozdíl mezi
-výrazy "logaritmus 1024 o základě 2" a "5 + 5". Denotátem obou výrazů je 10. Zadáme-li do
+výrazy ``logaritmus 1024 o základě 2'' a ``5 + 5''. Denotátem obou výrazů je 10. Zadáme-li do
 interpreteru Haskellu výrazy
 
 \lstset{language=Haskell}
 \lstinline{logBase 2 1024} a \lstinline{5 + 5}, získáme v obou případech stejný výsledek.
 V přirozeném jazyce ovšem chápeme značný rozdíl mezi oběma výrazy, ačkoliv mají stejný denotát.
-"Logaritmus 1024 o základě 2" vyjadřuje číslo, kterým musíme umocnit dvojku, abychom získali 1024.
-Výraz "5 + 5" očividně vyjadřuje úplně jinou matematickou operaci a jeho výsledek spočítáme jiným
+``Logaritmus 1024 o základě 2'' vyjadřuje číslo, kterým musíme umocnit dvojku, abychom získali 1024.
+Výraz ``5 + 5'' očividně vyjadřuje úplně jinou matematickou operaci a jeho výsledek spočítáme jiným
 postupem.
 
 \begin{figure}
@@ -51,8 +51,7 @@ postupem.
         \draw [-latex] [dashed] (A)--(ac)--(C);
         \draw [-latex]          (B)--(bc)--(C);
     \end{tikzpicture}
-    \caption{Schéma procedurální sémantiky TIL}
-    \label{fig:til-semantics}
+    \caption{Schéma procedurální sémantiky TIL}\label{fig:til-semantics}
 \end{figure}
 
 Denotátem výrazu může být nejen objekt z báze, ale i konstrukce nebo funkce.
@@ -77,8 +76,7 @@ Pro analýzu přirozeného jazyka se většinou volí objektová báze skládaj�
 $\tau$, $\omega$}. Tyto typy jsou podrobněji popsány v tabulce \peteref{tab:default-base}.
 
 \begin{table}
-    \caption{Výchozí báze pro analýzu přirozeného jazyka}
-    \label{tab:default-base}
+    \caption{Výchozí báze pro analýzu přirozeného jazyka}\label{tab:default-base}
     \centering
 
     \begin{tabular} { | l l | }
@@ -93,7 +91,7 @@ $\tau$, $\omega$}. Tyto typy jsou podrobněji popsány v tabulce \peteref{tab:de
     \end{tabular}
 \end{table}
 
-\section{Funkce} \label{fn-arity}
+\section{Funkce}\label{fn-arity}
 
 V některých logických systémech, například v predikátové logice, se jako základní molekulární typ
 využívají relace. Funkce je poté speciální typ relace, která je zprava jednoznačná. V TIL je však
@@ -129,7 +127,7 @@ získáme výstup, případně nezískáme nic. Konstrukce, které nekonstruují
 \textit{nevlastní} (anglicky \textit{improper}). V TIL pracujeme s šesti druhy konstrukcí.
 
 Jak již bylo zmíněno, konstrukce můžou v TIL operovat nejen nad objekty, které nejsou konstrukcemi,
-tedy nad objekty z báze a funkcemi, ale také nad jinými konstrukce. Konstrukce však může operovat
+tedy nad objekty z báze a funkcemi, ale také nad jinými konstrukcemi. Konstrukce však může operovat
 pouze nad konstrukcemi nižšího řádu, než je konstrukce samotná, viz \peteref{type-order}. Každou
 podkonstrukci, kterou musíme provést při provedení konstrukce, nazýváme \textit{konstituentem}.
 V TIL existuje šest různých druhů konstrukcí. Dvě atomické -- mají pouze jeden konstituent, a to
@@ -185,10 +183,10 @@ Jiné konstrukce v Transparentní intenzionální logice neexistují.
 \subsection{Princip kompozicionality} 
 
 Princip kompozicionality je důležitým rysem Transparentní intenzionální logiky. Z principu
-kompozicionality vyplývá, že je-li libovolný konstituent konstrukce $X$ $v$-nevlastní a v dané
-valuaci nekonstruuje žádnou hodnotu, pak je $v$-nevlastní i konstrukce $X$.
+kompozicionality vyplývá, že je-li libovolný konstituent konstrukce $X$ $v$-nevlastní a pro danou
+valuaci $v$ nekonstruuje žádnou hodnotu, pak je $v$-nevlastní i konstrukce $X$.
 
-\section{Typy 1. řádu} \label{fst-order}
+\section{Typy 1. řádu}\label{fst-order}
 
 % TODO: Doplnit citaci
 Definice je skoro slovo od slova převzata z knihy
@@ -206,7 +204,7 @@ Nechť \textit{B} je báze. Pak:
     \item Nic jiného není typem řádu 1 nad bází \textit{B}.
 \end{enumerate}
 
-\section{Rozvětvěná hierarchie typů} \label{type-order}
+\section{Rozvětvěná hierarchie typů}\label{type-order}
 
 %TODO: Doplnit citaci
 Definice je opět skoro slovo od slova převzata z Průvodce.
@@ -263,7 +261,7 @@ Výrazy přirozeného jazyka lze dělit na dva typy výrazů, a to empirické a 
 
 Analytické výrazy jsou výrazy takové, které označují extenze nebo konstantní intenze. Jedná se
 například o matematické věty nebo věty vyjadřující relaci rekvizity mezi vlastnostmi (např. věta
-"Všechny velryby jsou savci" je analytická a nutně pravdivá nezávisle na stavu světa, neboť
+``Všechny velryby jsou savci'' je analytická a nutně pravdivá nezávisle na stavu světa, neboť
 existuje-li individuum, které je velrybou, pak bude vždy také savcem.)
 
 Empirické výrazy naopak označují intenze, jejichž hodnota na stavu světa závisí. Abychom určili
