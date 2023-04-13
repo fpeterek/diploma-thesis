@@ -6,6 +6,50 @@ a nakonec také ukázka jednoduchého TIL-Script programu.
 
 \section{Překlad programu}
 
+Překladač byl psán pro platformu Java, proto pro spuštění překladače jazyka TIL-Script musíme mít
+nainstalované Java prostředí (JRE). Máme-li JRE nainstalované, překladač můžeme spustit ručně, nebo
+pomocí přiloženého pomocného skriptu.
+
+Překladač spouštíme vždy z příkazové řádky, neboť pro něj momentálně neexistuje grafické rozhraní.
+
+Při ručním spuštění je třeba manuálně spustit Java prostředí a specifikovat JAR soubor obsahující
+kód TIL-Script překladače. Překladači je potřeba předat jako argument název souborů, které chceme
+přeložit. Pokud je interpret TIL-Scriptu jediný Java archiv, který načítáme, není třeba specifikovat
+tzv. \textit{Main Class}, tedy třídu obsahující statickou metodu \lstinline{void main()} (neboť
+specifikace této třídy je součástí souboru \lstinline{manifest} obsaženém v archivu).
+
+\begin{lstlisting}[caption={Spuštění překladače}]
+java -jar tilscript.jar script.tils
+\end{lstlisting}
+
+Pokud chceme kromě překladače načíst také TIL-Script knihovny, musíme uvést nejen všechny archivy,
+jenž potřebuje Java prostředí načíst, ale také hlavní třídu.
+
+\begin{lstlisting}[caption={Spuštění překladače s načtením knihoven}]
+java -cp tilscript.jar:libs/math.jar org.fpeterek.tilscript.interpreter.MainKt script.tils
+\end{lstlisting}
+
+\subsection{tilscript.sh}
+
+Nejjednodušší způsob, jak překladač jazyka TIL-Script spustit, je využít pomocný skript
+\lstinline{tilscript.sh}. Skript \lstinline{tilscript.sh} využívá pouze funkcionalitu definovanou
+standardem POSIX, proto by tento skript měl fungovat korektně na všech operačních systémech
+splňujících standard POSIX. Dále se standardu POSIX musí držet také shell, který bude tento pomocný
+skript interpretovat\footnote{Můžeme tedy používat například ZSH nebo Bash. Naopak shell Fish není
+kompatibilní se standardem POSIX, proto skript nebude fungovat korektně}.
+
+Skript \lstinline{tilscript.sh} předpokládá, že se nachází ve stejné složce jako soubor
+\lstinline{tilscript.jar}, tedy archiv obsahující přeložený kód překladače. Dále tento skript
+předpokládá existenci adresáře \lstinline{libs/}, opět ve stejné složce, jako skript samotný.
+Skript při spuštění automaticky načte všechny Java archivy ve složce \lstinline{libs/}, spustí
+Java prostředí, zajistí načtení všech knihoven i TIL-Script překladače a korektně uvede hlavní
+třídu překladače. Všechny argumenty, které skript obdrží, poté automaticky předá TIL-Script
+překladači.
+
+\begin{lstlisting}[caption={Spuštění překladače za využití pomocného skriptu}]
+./tilscript.sh script.tils
+\end{lstlisting}
+
 \section{Standardní knihovna}
 
 \section{Matematická knihovna}
