@@ -52,6 +52,45 @@ překladači.
 
 \section{Standardní knihovna}
 
+Standardní knihovna jazyka TIL-Script obsahuje základní funkce pro práci s objekty Transparentní
+intenzionální logiky. Dále obsahuje definice atomických typů a tří proměnných. Z důvodu náročnosti
+implementace některým funkcím chybí implementace, proto je můžeme pouze zmínit, nemůžeme však
+provést jejich aplikaci.
+
+Nakonec je třeba uvést, že současný stav nemusí reprezentovat také konečný stav standardní knihovny.
+Na základě zpětné vazby uživatelů lze standardní knihovnu v budoucnu rozšiřovat.
+
+\subsection{Funkce}
+
+\subsubsection{Deklarace}
+
+%TODO: Reformat
+\begin{table}
+    \begin{tabular}{ l l l }
+        \hline
+        Funkce  &  Typ  &  Popis \\
+        \hline
+        \lstinline|ForAll| & \lstinline|(Bool (Bool Any1))| & Všeobecný kvantifikátor \\
+        \lstinline|Exist|  & \lstinline|(Bool (Bool Any1))| & Existenční kvantifikátor \\
+        \lstinline|Sing|   & \lstinline|(Bool (Bool Any1))| & Singularizátor \\
+        \lstinline|Every|  & \lstinline|((Bool (Bool Any1)) (Bool Any1))| & Omezený kvantifikátor \\
+        \lstinline|Some|   & \lstinline|((Bool (Bool Any1)) (Bool Any1))| & Omezený kvantifikátor \\
+        \lstinline|No|     & \lstinline|((Bool (Bool Any1)) (Bool Any1))| & Omezený kvantifikátor \\
+        \lstinline|Sub|    & \lstinline|(Construction Construction Construction Construction)| &
+        Funkce \textit|Sub| substituční metody \\
+        \lstinline|TrueC|  & \lstinline|(Bool Construction)| & Pravdivost hodnoty konstruované konstrukcí \\
+        \lstinline|FalseC| & \lstinline|(Bool Construction)| & Nepravdivost hodnoty konstruované konstrucí \\
+        \lstinline|ImproperC|     & \lstinline|(Bool Construction)| & Je konstrukce $v$-nevlastní \\
+        \lstinline|TrueC|  & \lstinline|(Bool ((Bool Time) World))| & Pravdivost propozice \\
+        \lstinline|FalseC| & \lstinline|(Bool ((Bool Time) World))| & Nepravdivost propozice \\
+        \lstinline|TrueC|  & \lstinline|(Bool ((Bool Time) World))| & Je propozice $v$-nevlastní \\
+    \end{tabular}
+\end{table}
+
+\subsection{Typy}
+
+\subsection{Proměnné}
+
 \section{Matematická knihovna}
 
 \section{Implementace knihovny}
