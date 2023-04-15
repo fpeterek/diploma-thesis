@@ -64,32 +64,604 @@ Na základě zpětné vazby uživatelů lze standardní knihovnu v budoucnu roz�
 
 \subsubsection{Deklarace}
 
-%TODO: Reformat
-\begin{table}
-    \begin{tabular}{ l l l }
-        \hline
-        Funkce  &  Typ  &  Popis \\
-        \hline
-        \lstinline|ForAll| & \lstinline|(Bool (Bool Any1))| & Všeobecný kvantifikátor \\
-        \lstinline|Exist|  & \lstinline|(Bool (Bool Any1))| & Existenční kvantifikátor \\
-        \lstinline|Sing|   & \lstinline|(Bool (Bool Any1))| & Singularizátor \\
-        \lstinline|Every|  & \lstinline|((Bool (Bool Any1)) (Bool Any1))| & Omezený kvantifikátor \\
-        \lstinline|Some|   & \lstinline|((Bool (Bool Any1)) (Bool Any1))| & Omezený kvantifikátor \\
-        \lstinline|No|     & \lstinline|((Bool (Bool Any1)) (Bool Any1))| & Omezený kvantifikátor \\
-        \lstinline|Sub|    & \lstinline|(Construction Construction Construction Construction)| &
-        Funkce \textit|Sub| substituční metody \\
-        \lstinline|TrueC|  & \lstinline|(Bool Construction)| & Pravdivost hodnoty konstruované konstrukcí \\
-        \lstinline|FalseC| & \lstinline|(Bool Construction)| & Nepravdivost hodnoty konstruované konstrucí \\
-        \lstinline|ImproperC|     & \lstinline|(Bool Construction)| & Je konstrukce $v$-nevlastní \\
-        \lstinline|TrueC|  & \lstinline|(Bool ((Bool Time) World))| & Pravdivost propozice \\
-        \lstinline|FalseC| & \lstinline|(Bool ((Bool Time) World))| & Nepravdivost propozice \\
-        \lstinline|TrueC|  & \lstinline|(Bool ((Bool Time) World))| & Je propozice $v$-nevlastní \\
-    \end{tabular}
-\end{table}
+Zde uvedeným funkcím chybí implementace z důvodu její náročnosti a časové složitosti. Představme si
+například všeobecný kvantifikátor. Logickou pravdivost řady tvrzení či úsudků lze dokázat například
+pomocí důkazových kalkulů (rezoluční metoda, přirozená dedukce). Tyto metody dokazování jsou ovšem
+čistě syntaktické, nedokáží tedy dokázat pravdivost tvrzení jako například $\forall x[P(x)]$. V takových
+případech bychom se museli uchýlit k sémantické analýze predikátu $P$.
+Predikát ovšem může být netriviální a jeho analýza velmi složitá. Iterace přes celý obor hodnot
+predikátu je naopak nepraktická nebo nemožná. Pokud by predikát $P$ byla funkce typu $(o\tau)$
+(nezapomeňme, že v Transparentní intenzionální logice pracujeme pouze s funkcemi), iterovat přes
+obor hodnot by bylo nemožné, neboť množina reálných čísel je nespočetná. Množina všech validních
+hodnot 64-bitového čísla s plovoucí řádovou čárkou spočetná je, proto je možné přes tato čísla
+iterovat, není to však praktické, neboť by výpočet nemusel v skončit v rozumném čase.
+
+\subsubsection*{Funkce: \lstinline|ForAll|}
+Typ: \lstinline|(Bool (Bool Any1))|
+
+Všeobecný kvantifikátor
+
+\subsubsection*{Funkce: \lstinline|Exist|}
+Typ: \lstinline|(Bool (Bool Any1))|
+
+Existenční kvantifikátor
+
+\subsubsection*{Funkce: \lstinline|Sing|}
+Typ: \lstinline|(Bool (Bool Any1))|
+
+Singularizátor
+
+\subsubsection*{Funkce: \lstinline|Every|}
+Typ: \lstinline|((Bool (Bool Any1)) (Bool Any1))|
+
+Omezený kvantifikátor
+
+\subsubsection*{Funkce: \lstinline|Some|}
+Typ: \lstinline|((Bool (Bool Any1)) (Bool Any1))|
+
+Omezený kvantifikátor
+
+\subsubsection*{Funkce: \lstinline|No|}
+Typ: \lstinline|((Bool (Bool Any1)) (Bool Any1))|
+
+Omezený kvantifikátor
+
+\subsubsection*{Funkce: \lstinline|Sub|}
+Typ: \lstinline|(Construction Construction Construction Construction)|
+
+Funkce \textit{Sub} substituční metody
+
+\subsubsection*{Funkce: \lstinline|TrueC|}
+Typ: \lstinline|(Bool Construction)|
+
+Třída konstrukcí pravdivých ve všech valuacích $v$.
+
+\subsubsection*{Funkce: \lstinline|FalseC|}
+Typ: \lstinline|(Bool Construction)|
+
+Třída konstrukcí nepravdivých ve všech valuacích $v$.
+
+\subsubsection*{Funkce: \lstinline|ImproperC|}
+Typ: \lstinline|(Bool Construction)|
+
+Třída konstrukcí $v$-nevlastních pro všechny valuace $v$.
+
+\subsubsection*{Funkce: \lstinline|TrueC|}
+Typ: \lstinline|(Bool ((Bool Time) World))|
+
+Třída propozic pravdivých ve všech valuacích $v$.
+
+\subsubsection*{Funkce: \lstinline|FalseC|}
+Typ: \lstinline|(Bool ((Bool Time) World))|
+
+Třída propozic nepravdivých ve všech valuacích $v$.
+
+\subsubsection*{Funkce: \lstinline|TrueC|}
+Typ: \lstinline|(Bool ((Bool Time) World))|
+
+Třída propozic $v$-nevlastních ve všech valuacích $v$.
+
+\subsubsection{Definice}
+
+Následující funkce již jsou korektně definovány a lze provést jejich aplikaci na argumenty. Ke každé
+funkci je přiložena ukázka jejího využití.
+
+\subsubsection*{Funkce: \lstinline|ListOf|}
+
+\lstinline{ListOf} slouží pouze jako syntaktický cukr pro tvorbu seznamů. \lstinline{ListOf}
+aplikujeme na alespoň jeden argument, počet argumentů je ale shora neomezený. Jediným omezením je,
+že všechny argumenty musí být stejného typu. Parser jazyka TIL-Script poté aplikaci
+\lstinline{ListOf} převede na korektní sestavení seznamu pomocí funkce \lstinline{ListOfOne} a
+funkcí \lstinline{Cons}.
+
+
+\begin{lstlisting}[caption={Ukázka využití ListOf}]
+-- Následující dvě konstrukce jsou ekvivalentní
+['ListOf '1 '2 '3 '4].
+['Cons '1 ['Cons '2 ['Cons '3 ['ListOfOne '4]]]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline|ListOfOne|}
+Typ: \lstinline{(List(Any1) Any1)}
+
+Funkce \lstinline{ListOfOne} vytvoří seznam obsahující jediný prvek.
+
+\begin{lstlisting}[caption={Ukázka využití ListOfOne}]
+['ListOfOne 'Pi].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline|Cons|}
+Typ: \lstinline{(List(Any1) Any1 List(Any1))}
+
+Funkce \lstinline{Cons} vytvoří nový seznam vložením prvku na začátek již existujícího seznamu.
+Jelikož jsou seznamy definovány induktivně, a zároveň jsou neměnné, není třeba již existující seznam
+kopírovat. Proto lze tuto operaci provést v konstantním čase.
+
+\begin{lstlisting}[caption={Ukázka využití Cons}]
+['Cons 'Pi ['LisOf '1 '2 '3]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline|Head|}
+Typ: \lstinline{(Any1 List(Any1))}
+
+Funkce \lstinline{Head} vrátí první prvek seznamu. Seznam musí být neprázdný, v opačném případě
+funkce nevrací nic (vrací \lstinline{Nil}).
+
+\begin{lstlisting}[caption={Ukázka využití Head}]
+['Head ['ListOf '1 '2 '3]]. -- Konstruuje 1
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline|Tail|}
+Typ: \lstinline{(List(Any1) List(Any1))}
+
+Funkce \lstinline{Tail} vrátí seznam bez jeho prvního prvku. Funkce je nedefinovaná pro prázdné
+seznamy.
+
+\begin{lstlisting}[caption={Ukázka využití Head}]
+['Tail ['ListOf '1 '2 '3]]. -- Konstruuje seznam [2, 3]
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline|IsEmpty|}
+Typ: \lstinline{(Bool List(Any1))}
+
+Aplikací \lstinline{IsEmpty} na prázdný seznam získáme hodnotu \lstinline{True}. Aplikací
+na neprázdný seznam získáme \lstinline{False}.
+
+\begin{lstlisting}[caption={Ukázka využití IsEmpty}]
+['IsEmpty ['ListOf '1 '2 '3]]. -- False
+['IsEmpty ['Tail ['ListOfOne '1]]]. -- True
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline|EmptyListOf|}
+Typ: \lstinline{(List(Any1) Type)}
+
+Funkce \lstinline{EmptyListOf} jako svůj jediný vstup přijímá objekt typu \lstinline{Type}.
+Výsledkem aplikace na typ je poté prázdný seznam objektů specifikovaného typu.
+
+\begin{lstlisting}[caption={Ukázka využití EmptyListOf}]
+['IsEmptyOf 'Int].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline|Print|, \lstinline{Println}}
+Typ: \lstinline{(Any1 Any1)}
+
+Funkce \lstinline{Print}, \lstinline{Println} zajistí výpis svého argumentu na standardní výstup
+programu a poté vrátí svůj jediný argument. Funkce \lstinline{Println} vypíše také oddělovač řádků
+(v systému GNU/Linux znak LF, v systému Windows sekvenci CRLF). Funkce \lstinline{Print} tento
+oddělovač nevypisuje.
+
+\begin{lstlisting}[caption={Ukázka využití Print, Println}]
+['Println '['+ '1 '2]]. -- Vypíše konstrukci ['+ '1 '2]
+['Print ['+ '1 '2]]. -- Vypíše konstrukci ['+ '1 '2]
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{If}}
+Typ: \lstinline{(Any1 Bool Any1 Any1)}
+
+Funkce \lstinline{If} je, narozdíl od všech ostatních funkcí, prováděna líně. Funkce \lstinline{If}
+přijímá tři argumenty. První argument je objekt typu \lstinline{Bool}. Druhým argumentem je hodnota,
+kterou funkce vrátí, je-li první argument \lstinline{True}. Jinak funkce \lstinline{If} vrátí svůj
+druhý argument. Konstrukce, která konstruuje argument funkce \lstinline{If}, je ovšem provedena až
+poté, co překladač zkontroluje hodnotu prvního argumentu, aby nedošlo ke zbytečnému provedení
+konstrukce a následnému zahození výsledku.
+
+\begin{lstlisting}[caption={Ukázka využití If}]
+['If ['> x y]
+    ['Println '"x is greater than y"]
+    ['Println '"y is greater than or equal to x"]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Cond}}
+
+\lstinline{Cond} slouží pouze jako syntaktický cukr pro funkci \lstinline{If}. \lstinline{Cond} tedy
+není funkcí sama o sobě, překladačem je ovšem při procesu tvorby AST přeložena na sérii vnořených
+aplikací funkce \lstinline{If}.
+
+Máme-li pouze jednu podmínku se dvěma větvemi, \textit{if} a \textit{else}, je využití funkce
+\lstinline{If} jednoduché a čitelné. Máme-li však větví více, musíme aplikace funkce \lstinline{If}
+zanořit -- větví \textit{else} tak musí být další aplikace \lstinline{If}.
+
+Syntaktický cukr \lstinline{Cond} nám umožňuje zjednodušit zápis funkce \lstinline{If} a vyhnout
+se zanořování. \lstinline{Cond} přijímá nespecifikovaný, avšak sudý počet argumentů. Lichým
+argumentem je vždy podmínka. Sudým argumentem je poté konstrukce, která se provede, je-li podmínka
+pravdivá. Překladač během překladu přeloží aplikaci \lstinline{Cond} na zanořené aplikace funkce
+\lstinline{If}. Podmínky se tedy nevyhodnocují všechny najednou, ale jedna po druhé, dokud není
+nalezena první pravdivá podmínka. Není-li pravdivá ani jedna podmínka, \lstinline{Cond} vrací
+\lstinline{Nil}.
+
+\begin{lstlisting}[caption={Ukázka využití Cond}]
+['Cond
+    ['= x '2] ['Log2 y]
+    ['= x '10] ['Log10 y]
+    'True ['Log y]]. -- catch-all podmínka
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Progn}}
+Typ: \lstinline{(Any2 Any1 Any2)}
+
+Funkce \lstinline{Progn} přijímá dva argumenty. První argument ignoruje, druhý argument vrátí, jak
+jej dostala. Funkce \lstinline{Progn} je tedy ekvivalentem funkce \textit{False} lambda kalkulu
+($\lambda x \lambda y . y$, případně $\lambda x, y: y$ v TIL). Díky principu kompozicionality je aplikace
+\lstinline{Progn} $v$-nevlastní, neobdrží-li první argument. V takovém případě tedy vůbec nedojde
+k vyhodnocení druhého argumentu.
+
+Funkci \lstinline{Progn} využijeme například při výpisu např. do souboru nebo na standardní výstup.
+Pro analýzu přirozeného jazyka většinou není potřeba, kódovat přirozená čísla pomocí Churchova
+kódování v Transparentní intenzionální logice nepotřebujeme.
+
+Funkce \lstinline{Progn} je binární funkcí, existuje pro ni ovšem podobný syntaktický cukr, jako pro
+\lstinline{Cond} nebo \lstinline{ListOf}. Předáme-li funkci \lstinline{Progn} více než dva
+argumenty, překladač aplikaci \lstinline{Progn} na více argumentů rozepíše na vnořené aplikace
+binární funkce \lstinline{Progn}. Narozdíl od \lstinline{Cond}, \lstinline{Progn} je tedy
+skutečnou funkcí.
+
+Název \lstinline{Progn} je převzat z jazyka Lisp.
+
+\begin{lstlisting}[caption={Ukázka využití Progn}]
+-- Vypíše 'x + y = ' a součet x a y
+-- Vrátí součet x+y, protože Println vrátí svůj argument
+['Progn
+    ['Print '"x + y = "]
+    ['Println ['+ x y]]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Tr}}
+Typ: \lstinline{(Construction Any1)}
+
+Trivializuje svůj argument.
+
+\begin{lstlisting}[caption={Ukázka využití Tr}]
+['Tr ['+ '1 '2]]. -- Kompozice konstruuje '3
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{TypeOf}}
+Typ: \lstinline{(Type Any1)}
+
+Vrátí typ svého argumentu. Může být užitečné například v typově polymorfních funkcích,
+potřebujeme-li provést rozhodnutí na základě typu argumentu.
+
+\begin{lstlisting}[caption={Ukázka využití TypeOf}]
+-- Volba funkce na základě typu argumentu typově polymorfní funkce
+\x: Any1 -> Any1 [['If ['= ['TypeOf x] 'Int] 'DiscreteLog 'Log10] x].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{IsNil}}
+Typ: \lstinline{(Bool Any1)}
+
+Vrátí \lstinline{True}, neobdrží-li žádný argument (tedy je-li argumentem \lstinline{Nil}). Tato
+funkce porušuje princip kompozicionality, je ovšem potřeba např. k ošetření chyb.
+
+\begin{lstlisting}[caption={Ukázka využití IsNil}]
+x -> Real = ['/ a b].
+['If ['IsNil x]
+    -- Vypíšeme chybu a ukončíme program
+    ['Progn
+        ['Println '"Program obdržel nesprávný vstup"]
+        ['Exit '-1]]
+    -- Program obdržel validní vstup, hodnota 1 bude ignorována
+    '1].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Exit}}
+
+Aplikací \lstinline{Exit} ukončíme překlad programu. Argument funkce určuje návratovou hodnotu
+programu.
+
+\begin{lstlisting}[caption={Ukázka využití Exit}]
+x -> Real = ['/ a b].
+['If ['IsNil x]
+    -- Vypíšeme chybu a ukončíme program
+    ['Progn
+        ['Println '"Program obdržel nesprávný vstup"]
+        ['Exit '-1]]
+    -- Program obdržel validní vstup, hodnota 1 bude ignorována
+    '1].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{RandomInt}}
+Typ: \lstinline{(Int DeviceState)}
+
+Funkce \lstinline{RandomInt} vrací náhodné celé číslo v intervalu $\bigl \langle 0; 2^{64}-1 \bigr \rangle$.
+
+\begin{lstlisting}[caption={Ukázka využití RandomInt}]
+['RandomInt deviceState].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Random}}
+Typ: \lstinline{(Real DeviceState)}
+
+Funkce \lstinline{Random} vrací náhodné reálné číslo v intervalu $\bigl \langle 0; 1 \bigr \rangle$.
+
+\begin{lstlisting}[caption={Ukázka využití Random}]
+['* ['Random deviceState] '100]. -- náhodné číslo v rozsahu 0-100
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Random}}
+Typ: \lstinline{(Real DeviceState)}
+
+Funkce \lstinline{Random} vrací náhodné reálné číslo v intervalu $\bigl \langle 0; 1 \bigr \rangle$.
+
+\begin{lstlisting}[caption={Ukázka využití Random}]
+['* ['Random deviceState] '100]. -- náhodné číslo v rozsahu 0-100
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Not}}
+Typ: \lstinline{(Bool Bool)}
+
+Logická negace.
+
+\begin{lstlisting}[caption={Ukázka využití Not}]
+['Not ['= x y]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{And}}
+Typ: \lstinline{(Bool Bool Bool)}
+
+Logická konjunkce.
+
+\begin{lstlisting}[caption={Ukázka využití And}]
+[And ['= x y] ['= x z]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Or}}
+Typ: \lstinline{(Bool Bool Bool)}
+
+Logická disjunkce.
+
+\begin{lstlisting}[caption={Ukázka využití Or}]
+[Or ['= x y] ['= x z]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Implies}}
+Typ: \lstinline{(Bool Bool Bool)}
+
+Implikace.
+
+\begin{lstlisting}[caption={Ukázka využití Implies}]
+['Implies ['And ['= x y] ['= x z]] ['= y z]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{OneTuple}}
+Typ: \lstinline{(Tuple(Any1) Any1)}
+
+Vytvoří n-tici obsahující právě jeden prvek -- obdržený argument. Lze využít například při rekurzivní
+tvorbě n-tice.
+
+\begin{lstlisting}[caption={Ukázka využití OneTuple}]
+['OneTuple '1].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{MkTuple}}
+
+\lstinline{MkTuple} slouží jako syntaktický cukr pro tvorbu n-tic. \lstinline{MkTuple} přijímá
+nespecifikovaný počet argumentů, překladačem je poté přeložena na aplikaci \lstinline{OneTuple}
+a následné vložení prvků na začátek n-tice.
+
+\begin{lstlisting}[caption={Ukázka využití OneTuple}]
+['MkTuple '1 '3.5 'True].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{PrependToTuple}}
+Typ: \lstinline{(Any1 Any2 Any3)}
+
+\lstinline{PrependToTuple} přijímá dva argumenty. Prvním argumentem je libovolná hodnota. Druhý
+argument musí být vždy n-tice. \lstinline{PrependToTuple} vytvoří novou (n+1) vložením prvního
+argumentu na začátek n-tice specifikované druhým argumentem.
+
+\begin{lstlisting}[caption={Ukázka využití PrependToTuple}]
+['PrependToTuple '4 ['MkTuple '1 '3.5 'True]]. -- Vytvoří n-tici (4, 1, 3.5, True)
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Get}}
+Typ: \lstinline{(Any1 Any2 Int)}
+
+Funkce \lstinline{Get} umožňuje získat prvek n-tice na požadované pozici. Prvním argumentem je
+n-tice, druhým je index prvku. Prvky indexujeme od nuly. Funkce \lstinline{Get} je nedefinovaná,
+je-li index větší nebo roven velikosti n-tice.
+
+\begin{lstlisting}[caption={Ukázka využití Get}]
+['Get '1 ['MkTuple 'E 'Pi]]. -- Pi
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{TupleLen}}
+Typ: \lstinline{(Int Any1)}
+
+Funkce \lstinline{TupleLen} vrátí délku n-tice. Využití funkce je převážně v typově polymorfních
+funkcích, neboť není-li funkce typově polymorfní, museli jsme typ explicitně uvést, a tedy délku
+n-tice známe. Argumentem musí být n-tice, funkce je typově polymorfní proto, aby argumentem mohly
+být n-tice libovolné délky.
+
+\begin{lstlisting}[caption={Ukázka využití TupleLen}]
+-- vynásobíme první prvek n-tice délkou n-tice
+[\x: Any1 -> Int ['* ['TupleLen x] ['Get x '0]]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{TupleLen}}
+Typ: \lstinline{(Int Any1)}
+
+Funkce \lstinline{TupleLen} vrátí délku n-tice. Využití funkce je převážně v typově polymorfních
+funkcích, neboť není-li funkce typově polymorfní, museli jsme typ explicitně uvést, a tedy délku
+n-tice známe. Argumentem musí být n-tice, funkce je typově polymorfní proto, aby argumentem mohly
+být n-tice libovolné délky.
+
+\begin{lstlisting}[caption={Ukázka využití TupleLen}]
+-- vynásobíme první prvek n-tice délkou n-tice
+[\x: Any1 -> Int ['* ['TupleLen x] ['Get x '0]]].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Char}}
+Typ: \lstinline{(Text Text Int)}
+
+Funkce \lstinline{Char} vrátí znak textového řetězce na požadované pozici. Prvky indexujeme od nuly.
+Funkce \lstinline{Char} je nedefinovaná, je-li index větší nebo roven velikosti řetězce.
+
+
+\begin{lstlisting}[caption={Ukázka využití Char}]
+['Char '"TIL" '1]. -- "I"
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{CatS}}
+Typ: \lstinline{(Text Text Text)}
+
+Funkce \lstinline{CatS} spojí dva textové řetězce.
+
+\begin{lstlisting}[caption={Ukázka využití Char}]
+-- Kompozice konstruuje řetězec "Transparentní intenzionální logika"
+['CatS '"Transparentní intenzionální" '" logika"].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{HeadS}}
+Typ: \lstinline{(Text Text)}
+
+Funkce \lstinline{HeadS} vrátí první znak řetězce. Funkce je nedefinovaná pro prázdné řetězce.
+
+\begin{lstlisting}[caption={Ukázka využití HeadS}]
+['HeadS '"TIL"]. -- "T"
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{TailS}}
+Typ: \lstinline{(Text Text)}
+
+Funkce \lstinline{HeadS} vrátí řetězec bez prvního znaku. Funkce je nedefinovaná pro prázdné
+řetězce.
+
+\begin{lstlisting}[caption={Ukázka využití TailS}]
+[TailS '"TIL"]. -- "IL"
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{LenS}}
+Typ: \lstinline{(Int Text)}
+
+Funkce \lstinline{LenS} vrátí délku textového řetězce.
+
+\begin{lstlisting}[caption={Ukázka využití LenS}]
+[LenS '"TIL"]. -- 3
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{IsBefore}, \lstinline{IsBeforeOrEq}, \lstinline{IsAfter},
+  \lstinline{IsAfterOrEq}}
+Typ: \lstinline{(Bool Time)}
+
+Funkce slouží k porovnávání časových okamžiků. Pro obyčejnou rovnost lze využít funkci
+\lstinline{=}.
+
+\begin{lstlisting}[caption={Ukázka porovnávání časových okamžiků}]
+['IsBefore t1 t2].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Now}}
+Typ: \lstinline{(Time DeviceState)}
+
+Funkce \lstinline{Now} vrátí aktuální systémový čas.
+
+\begin{lstlisting}[caption={Ukázka využití Now}]
+[['PrezidentCR ['Now deviceState]] w].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{IntToText},
+\lstinline{RealToText},
+\lstinline{IntToTime},
+\lstinline{TextToInt},
+\lstinline{TextToReal},
+\lstinline{TimeToInt},
+\lstinline{IntToReal},
+\lstinline{RealToInt}
+}
+
+Funkce slouží k převodu mezi typy. Při převodu z reálných čísel na čísla celá dochází k ořezání
+čísla (zaokrouhlení směrem k nule).
+
+\begin{lstlisting}[caption={Ukázka využití konverzí}]
+['Log ['IntToReal ['+ '2 '3]]].
+['CatS '"Log 10 = " ['RealToText ['Log '10]]].
+\end{lstlisting}
+
+\subsubsection*{Funkce:
+\lstinline{IsVariable},
+\lstinline{IsComposition},
+\lstinline{IsClosure},
+\lstinline{IsExecution},
+\lstinline{IsFunction},
+\lstinline{IsTrivialization},
+\lstinline{IsSymbol},
+\lstinline{IsList},
+\lstinline{IsValue},
+\lstinline{IsTuple},
+\lstinline{IsConstruction},
+\lstinline{IsStruct}
+}
+
+Typ: \lstinline{(Bool Any1)}
+
+Tyto funkce umožňují ověřit, zda je argument konkrétní hodnotou (\lstinline{IsValue}), symbolickou
+hodnotou (\lstinline{IsSymbol}), seznamem, n-ticí, strukturou nebo konstrukcí. Také nám umožňují
+určit, o jaký typ konstrukce se jedná.
+
+\begin{lstlisting}[caption={Ukázka využití IsSymbol}]
+[\x: Int -> Int
+    ['If ['IsSymbol x]
+        Nil -- neumíme umocnit symbolickou hodnotu
+        ['* x x]]]. -- konkrétní hodnotu umocníme
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{NilAt}}\label{nilat-fn}
+Typ: \lstinline{(Int Text Tuple(Int Int Text))}
+
+Funkce \lstinline{NilAt} je nedefinována na všech argumentech. Funkce umožňuje zkonstruovat hodnotu
+\lstinline{Nil}. \lstinline{Nil} jde také zmínit přímo, \lstinline{NilAt} nám ovšem umožňuje vnitřní
+reprezentaci \lstinline{Nil} obohatit také o důvod, proč byla konstrukce $v$-nevlastní, a pozici,
+kde byla zavolána funkce, jež \lstinline{Nil} vrátila. Tímto způsobem můžeme dosáhnout lepšího
+hlášení chyb.
+
+Argumentem funkce je důvod, proč byla vrácena hodnota \lstinline{Nil}, a pozice, kde došlo
+k aplikaci funkci na argumenty, na kterých není definována. Často zde budeme chtít použít proměnnou
+\lstinline{callsite}, viz \peteref{callsite-var}.
+
+Ukázka je schválně jednoduchá, logaritmus v matematické knihovně tuto situaci řeší sám, v praxi tedy
+není třeba kontrolovat argument logaritmu manuálně. Proměnná \lstinline{callsite} konstruuje
+pozici ve zdrojovém kódu, kde došlo k aplikaci funkce konstruované uzávěrem.
+
+\begin{lstlisting}[caption={Ukázka využití NilAt}]
+[\x: Real -> Real
+    ['If ['Not ['> x 0.0]]
+        ['NilAt '"Argument logaritmu musí být kladný" 'callsite]
+        ['Log x]]].
+\end{lstlisting}
+
+%TODO: Continue if necessary
 
 \subsection{Typy}
 
+Standardní knihovna jazyka TIL-Script definuje atomické typy popsané v kapitole
+\peteref{tilscript-chapter}, tedy typy
+\lstinline{Bool}, \lstinline{Type}, \lstinline{Int}, \lstinline{Text}, \lstinline{Indiv},
+\lstinline{Real}, \lstinline{Time}, \lstinline{World}, \lstinline{DeviceState}.
+
+Dále definuje seznamy a n-tice. Žádné struktury standardní knihovna nedefinuje.
+
 \subsection{Proměnné}
+
+Standardní knihovna definuje pouze tři proměnné.
+
+\subsubsection{\lstinline{w -> World}}
+
+Proměnná \lstinline{w} označuje současný svět. Objekty typu \lstinline{World} nemají žádnou
+inherentní hodnotu, využívají se hlavně k označení intenzí. Proměnná \lstinline{w} proto existuje,
+aby si ji uživatel nemusel zbytečně vytvářet sám.
+
+\subsubsection{\lstinline{deviceState -> DeviceState}}
+
+Proměnná \lstinline{deviceState} existuje ze stejného důvodu, jako proměnná \lstinline{w}. Objekty
+typu \lstinline{DeviceState} nemají žádnou skutečnou hodnotu a jsou využívány pro označení funkcí,
+jejichž hodnota závisí na stavu zařízení, na němž je program spuštěn.
+
+\subsubsection{\lstinline{callsite -> Tuple(Text Int Int)}}\label{callsite-var}
+
+Proměnná \lstinline{callsite} je automaticky vytvářená proměnná. Proměnná \lstinline{callsite}
+je vytvořena při aplikaci funkce, a obsahuje pozici ve zdrojovém kódu, kde byla aplikace funkce
+provedena. Proměnná slouží především k umožnění lepšího hlášení chyb.
+
+Proměnná slouží převážně jako argument funkce \lstinline{NilAt}, viz \peteref{nilat-fn}.
 
 \section{Matematická knihovna}
 
