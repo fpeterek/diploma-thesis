@@ -273,7 +273,7 @@ nalezena první pravdivá podmínka. Není-li pravdivá ani jedna podmínka, \ls
 ['Cond
     ['= x '2] ['Log2 y]
     ['= x '10] ['Log10 y]
-    'True ['Log y]]. -- catch-all podmínka
+    'True ['Ln y]]. -- catch-all podmínka
 \end{lstlisting}
 
 \subsubsection*{Funkce: \lstinline{Progn}}
@@ -665,7 +665,299 @@ Proměnná slouží převážně jako argument funkce \lstinline{NilAt}, viz \pe
 
 \section{Matematická knihovna}
 
+Matematická knihovna slouží také jako ukázka tvorby TIL-Script knihoven v jazycích kompilovaných
+do JVM bytekódu, nebo jako test importu jmen z Java archivů. Přesto obsahuje několik užitečných
+definic. Narozdíl od standardní knihovny, všechny funkce matematické knihovny jsou korektně
+definované, a lze tedy provést jejich aplikaci na argumenty.
+
+\subsection{Funkce}
+
+\subsubsection*{Funkce: \lstinline{Sin}}
+Typ: \lstinline{(Real Real)}
+
+Funkce sinus. Kromě konkrétních hodnot přijímá také symbolickou hodnotu \lstinline{Pi/Real}.
+
+\begin{lstlisting}[caption={Ukázka využití Sin}]
+['Sin 'Pi]. -- 0
+['Sin ['/ '3.14159 '2.0]]. -- přibližně 1
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Cos}}
+Typ: \lstinline{(Real Real)}
+
+Funkce cosinus. Kromě konkrétních hodnot přijímá také symbolickou hodnotu \lstinline{Pi/Real}.
+
+\begin{lstlisting}[caption={Ukázka využití Cos}]
+['Cos 'Pi]. -- -1
+['Cos ['/ '3.14159 '2.0]]. -- přibližně 0
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Tan}}
+Typ: \lstinline{(Real Real)}
+
+Funkce tangens. Kromě konkrétních hodnot přijímá také symbolickou hodnotu \lstinline{Pi/Real}.
+
+\begin{lstlisting}[caption={Ukázka využití Tan}]
+['Tan 'Pi]. -- 0
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Ln, Log2, Log10}}
+Typ: \lstinline{(Real Real)}
+
+Přirozený logaritmus, logaritmus o základu dvě a logaritmus o základu 10. Přirozený logaritmus
+přijímá rovněž symbolickou hodnotu \lstinline{E/Real}.
+
+\begin{lstlisting}[caption={Ukázka využití Ln, Log2, Log10}]
+['Ln ['* '2.71828 '2.71828]]. -- Přibližně 2
+['Log2 '1024]. -- 10
+['Log10 '1000]. -- 3
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Log}}
+Typ: \lstinline{(Real Real Real)}
+
+Logaritmus o libovolném základu. Prvním argumentem je číslo, jehož logaritmus chceme spočítat,
+druhým argumentem je základ logaritmu.
+
+\begin{lstlisting}[caption={Ukázka využití Log}]
+['Log '27.0 '3.0]. -- 3
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Round}}
+Typ: \lstinline{(Real Real)}
+
+Funkce \lstinline{Round} umožňuje zaokrouhlit reálné číslo na jednotky.
+
+\begin{lstlisting}[caption={Ukázka využití Round}]
+['Round '3.2]. -- 3
+['Round '3.7]. -- 4
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline{Sqrt}}
+Typ: \lstinline{(Real Real)}
+
+Funkce \lstinline{Sqrt} vrátí druhou odmocninu svého argumentu.
+
+\begin{lstlisting}[caption={Ukázka využití Round}]
+['Round '3.2]. -- 3
+['Round '3.7]. -- 4
+\end{lstlisting}
+
+\subsection{Symbolické hodnoty}
+
+\subsubsection*{Hodnota \lstinline{Pi/Real}}
+
+Hodnota \lstinline{Pi} nám umožňuje symbolicky zmínit číslo $\pi$, viz \peteref{symbolic-values}.
+
+\begin{lstlisting}[caption={Ukázka využití Pi}]
+['Sin 'Pi].
+\end{lstlisting}
+
+\subsubsection*{Hodnota \lstinline{E/Real}}
+
+Hodnota \lstinline{E} nám umožňuje symbolicky zmínit Eulerovo číslo $e$,
+viz \peteref{symbolic-values}.
+
+\begin{lstlisting}[caption={Ukázka využití E}]
+['Ln 'E].
+\end{lstlisting}
+
+\subsection{Proměnné}
+
+\subsubsection*{Proměnná \lstinline{pi -> Real}}
+
+Proměnná \lstinline{pi -> Real} aproximuje číslo $\pi$ s přesností na 15 desetinných míst.
+
+\begin{lstlisting}[caption={Ukázka využití proměnné pi}]
+['* pi '2]. -- přibližně 6.28
+\end{lstlisting}
+
+\subsubsection*{Proměnná \lstinline{e -> Real}}
+
+Proměnná \lstinline{e -> Real} aproximuje Eulerovo číslo s přesností na 15 desetinných míst.
+
+\begin{lstlisting}[caption={Ukázka využití proměnné e}]
+['Ln ['* e ['* e e]]]. -- 3
+\end{lstlisting}
+
 \section{Implementace knihovny}
+
+Nyní si ukážeme, jak implementovat vlastní TIL-Script knihovnu v jazyce Java. Ukázku implementace
+v jazyce Kotlin přiložíme za účelem porovnávání těchto dvou jazyků v příloze. V praxi lze využít
+libovolný jazyk kompilovaný pro platformu JVM, nejen Javu nebo Kotlin. Implementovat budeme funkci
+\lstinline{InvSqrt/(Real Real)}, tedy převrácenou hodnotu druhé odmocniny.
+
+\subsection{Implementace funkce}
+
+Začneme vytvořením třídy \lstinline{InvSqrt}. Tato třída musí být potomkem třídy
+\lstinline{DefaultFunction}, abychom ji mohli použít jako TIL-Script funkci.
+
+\begin{lstlisting}[caption={Třída InvSqrt}, language=Java]
+public class InvSqrt extends DefaultFunction {
+
+}
+\end{lstlisting}
+
+Následně musíme implementovat konstruktor třídy \lstinline{InvSqrt}. V konstruktoru musíme zavolat
+konstruktor předka -- třídy \lstinline{DefaultFunction}. Konstruktor \lstinline{DefaultFunction}
+přijímá tři argumenty.
+
+Prvním je jméno funkce -- tímto jménem budeme funkci označovat v jazyce TIL-Script. Na jméně třídy,
+která danou funkci reprezentuje, nezáleží, kvůli přehlednosti je však lepší třídu pojmenovat podle
+názvu funkce.
+
+Druhým argumentem je obor hodnot -- typ objektu, který funkce vrátí. Abychom si zkrátili zápis,
+vytváříme v kódu statickou proměnnou \lstinline{real}.
+
+Třetím argumentem je seznam proměnných -- argumentů funkce. Zde nám postačí jeden argument. Opět
+vytvoříme pomocnou proměnnou, tentokrát pojmenovanou \lstinline{arg}. Konstruktor třídy
+\lstinline{Variable} přijímá pět argumentů. Prvním je název proměnné. Druhým argumentem je pozice
+ve zdrojovém kódu -- tento argument se využívá v parseru jazyka TIL-Script a využívá se k hlášení
+chyb. Jelikož je funkce implementovaná v Javě, ne v jazyce TIL-Script, nastavíme pozici na hodnotu,
+která značí, že je pozice neznámá. Třetí argument konstruktoru určuje typ proměnné. Čtvrtým
+argumentem je seznam chyb hlášených při definici proměnné -- jelikož nechceme zbytečně hlásit chyby
+pro vlastní proměnnou, vytvoříme prázdný seznam. Posledním argumentem je hodnota proměnné. Jelikož
+se ale jedná o argument funkce, není potřeba žádnou hodnotu dodávat. Při aplikaci funkce se vždy
+danému argumentu nastaví korektní hodnota. Nakonec tedy vytvoříme seznam obsahující tento jeden
+argument.
+
+\begin{lstlisting}[caption={Konstruktor InvSqrt}, language=Java]
+
+  private static AtomicType real = Primitives.INSTANCE.getReal();
+
+  private static Variable arg = new Variable(
+    "x",
+    new SrcPosition(-1, -1, ""),
+    real,
+    new ArrayList<>(),
+    null
+  );
+
+  public InvSqrt() {
+    super(
+      "InvSqrt",
+      real,
+      Collections.singletonList(arg)
+      );
+  }
+\end{lstlisting}
+
+Nakonec musíme naprogramovat sémantiku funkce \lstinline{InvSqrt}. Za tímto účelem musíme vytvořit
+metodu \lstinline{apply}. Jelikož přepisujeme zděděnou abstraktní metodu, můžeme si ji nechat
+vygenerovat vývojovým prostředím nebo jazykovým serverem.
+
+Jakmile máme vygenerovanou hlavičku funkce, stačí funkci naprogramovat. Funkce přijímá pouze jeden
+argument, proto si tento argument uložíme do pomocné proměnné, abychom nemuseli při každém
+přístupu k argumentu indexovat seznam argumentů.
+
+Následně se ujistíme, že je argument Java objekt typu \lstinline{Real}. Díky typové kontroly víme,
+že argument bude reálné číslo, pouze nevíme, zda se jedná o konkrétní číslo (Java objekt typu
+\lstinline{Real} reprezentující reálná čísla), nebo o symbolickou hodnotu (Java objekt typu
+\lstinline{Symbol}). Pokud argumentem není konkrétní hodnota, bohužel nevíme, jakou hodnotu
+potřebujeme odmocnit.
+
+Následně potřebujeme získat hodnotu argumentu jako proměnnou typu \lstinline{double}, abychom
+mohli provádět matematické operace v jazyku Java.
+
+Dále se musíme ujistit, že funkce obdržela argument, na kterém je definovaná.
+
+Poté už stačí jen spočítat výsledek a vrátit objekt typu \lstinline{Real}, reprezentující reálné
+číslo v jazyce TIL-Script.
+
+\begin{lstlisting}[caption={Konstruktor InvSqrt}, language=Java]
+  @NotNull
+  @Override
+  public Construction apply(
+    @NotNull InterpreterInterface interpreterInterface,
+    @NotNull List<? extends Construction> args,
+    @NotNull FnCallContext ctx) {
+
+    final Construction arg = args.get(0);
+
+    if (! (arg instanceof Real)) {
+      return new Nil(
+        ctx.getPosition(),
+        new ArrayList<>(),
+        "Argument of InvSqrt must not be symbolic"
+      );
+    }
+
+    final double value = ((Real) arg).getValue();
+
+    if (value <= 0.0) {
+      return new Nil(
+        ctx.getPosition(),
+        new ArrayList<>(),
+        "Argument of InvSqrt must be greater than zero"
+      );
+    }
+
+    final double res = 1.0 / Math.sqrt(value);
+
+    return new Real(res, ctx.getPosition(), new ArrayList<>());
+  }
+\end{lstlisting}
+
+Metoda \lstinline{apply} přijímá tři argumenty. První argument -- objekt typu
+\lstinline{InterpreterInterface} slouží ke komunikaci s překladačem jazyka TIL-Script -- v tomto
+případě jej nevyužijeme. Druhý argument je seznam argumentů, které obdržela funkce
+\lstinline{InvSqrt}. Posledním argumentem je kontext aplikace funkce. Kontext obsahuje pozici
+ve zdrojovém kódu, kde k aplikaci funkce došlo. Kontext využíváme pro hlášení chyb -- můžeme
+uživateli naší knihovny přesněji říct, kde aplikoval funkci na argumenty, na kterých není
+definována.
+
+Konstruktor třídy \lstinline{Nil} přijímá pozici ve zdrojovém kódu, kde tato hodnota vznikla,
+seznam hlášení, který opět bude prázdný, a nakonec důvod, proč je výsledkem aplikace funkce hodnota
+\lstinline{Nil}. Seznam hlášení by v jazyce Kotlin nebylo třeba explicitně uvádět, neboť by byl
+vytvořen implicitním argumentem. Tento seznam slouží k hlášení chyb, které však nemůžou vzniknout
+při implementaci funkce v jazyce Java.
+
+Konstruktor třídy \lstinline{Real} přijímá reálné číslo, které daný objekt představuje, pozici
+ve zdrojovém kódu, kde byl daný objekt zkonstruován, a (opět prázdný) seznam hlášení.
+
+\subsection{Implementace registrátoru}
+
+Dále musíme implementovat vlastní registrátor. Registrátor musí implementovat rozhraní
+\lstinline{SymbolRegistrar}. Rozhraní definuje řadu abstraktních metod -- opět si je můžeme nechat
+vygenerovat vývojovým prostředím. Tyto metody nám umožňují registrovat např. struktury, typové
+aliasy (\lstinline{TypeDef}), apod. Zde uvedeme pouze definici metody \lstinline{getFunctions()},
+jež slouží k registraci funkcí. Zbylé metody vrací pouze prázdný seznam
+(\lstinline{java.util.ArrayList}) a neuvádíme je zde za účelem zkrácení zápisu.
+
+Metoda \lstinline{getFunctions()} pouze vytvoří seznam obsahující instanci námi vytvořené funkce.
+
+\begin{lstlisting}[caption={Java registrátor}, language=Java]
+public class JavaMathRegistrar implements SymbolRegistrar {
+
+  @NotNull
+  @Override
+  public List<FunctionInterface> getFunctions() {
+    return Arrays.asList(
+      new InvSqrt()
+    );
+  }
+
+}
+\end{lstlisting}
+
+\subsection{Aplikace \lstinline{InvSqrt} v TIL-Script programu}
+
+Po implementaci a sestavení naší Java knihovny již stačí pouze knihovnu importovat v TIL-Script
+programu a funkci aplikovat.
+
+\begin{lstlisting}[caption={Aplikace InvSqrt}, language=Haskell]
+Import "class://org.fpeterek.tilscript.javamath.JavaMathRegistrar".
+
+['Println ['InvSqrt '4.0]].
+\end{lstlisting}
+
+Následně program spustíme a ujistíme se, že program vypíše očekávanou hodnotu. První řádek výpisu
+obsahuje spuštění překladače. Druhý řádek je již výstup programu.
+
+\begin{lstlisting}[caption={Aplikace InvSqrt}, language=Bash]
+$ ./bin/tilscript.sh examples/javasqrt.tils
+0.5
+\end{lstlisting}
 
 \section{Ukázka TIL-Script programu}
 
