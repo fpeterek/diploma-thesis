@@ -1,8 +1,141 @@
 \chapter{Uživatelská dokumentace}
 
-Tato kapitola je věnována uživatelské dokumentaci. Součástí dokumentace je návod, jak spustit
-TIL-Script program, popis standardní i matematické knihovny, návod na implementaci vlastní knihovny,
-a nakonec také ukázka jednoduchého TIL-Script programu.
+Tato kapitola je věnována uživatelské dokumentaci. Uživatelská dokumentace začíná ukázkou několika
+TIL-Script programů. Poté následuje návod, jak spustit překladač jazyka TIL-Script a program
+přeložit. Dále dokumentace popisuje standardní i matematickou knihovnu. Součástí dokumentace je
+například popis funkcí standardní i matematické knihovny. Uživatel tak může při práci s jazykem
+TIL-Script konzultovat tuto dokumentaci a vyhledávat si potřebné informace. Na konci dokumentace
+se nachází také ukázka implementace TIL-Script knihovny v jazyce Java, příloha práce však obsahuje
+také ukázku knihovny psané v jazyce Kotlin.
+
+\section{Ukázka TIL-Script programu}
+
+\subsection{Hello, World!}
+
+V rámci zachování programátorské tradice začneme ukázkou implementace programu
+\lstinline{Hello, World!}.
+
+Náš program nejprve začíná komentáři. Zápis komentářů je stejný jako v jazyce Haskell. Obsah
+komentářů je překladačem ignorován. Komentáře následuje velmi jednoduchá Kompozice. Kompozicí
+aplikujeme funkci \lstinline{Println} na argument -- objekt, který chceme vypsat. Objekt může být
+libovolného typu, zde vypisujeme textový řetězec. Funkci \lstinline{Println} a literál textového
+řetězce nesmíme zapomenout trivializovat.
+
+\begin{lstlisting}[caption={Program Hello, World! v jazyce TIL-Script}]
+-- Toto je komentář
+-- Následující řádek vypíše Hello, World!
+['Println '"Hello, World!"].
+\end{lstlisting}
+
+\subsection{Jednoduchá aritmetika}
+
+Nyní si ukážeme složitější Kompozice, ukázku matematických funkcí, a také přiřazení do proměnné,
+abychom nemuseli stejnou kompozici zbytečně provádět vícekrát. Abychom mohli využívat matematické
+funkce, nesmíme zapomenout importovat matematickou knihovnu.
+
+\begin{lstlisting}[caption={Aritmetika v jazyce TIL-Script}]
+-- Import matematické knihovny
+Import "class://org.fpeterek.tilscript.math.Registrar".
+
+-- Aplikace funkce
+-- Nesmíme zapomenout, že definičním oborem logaritmu
+-- jsou reálná čísla, proto musíme zapsat literál reálného čísla
+-- Literály reálných čísel obsahují desetinnou tečku a alepoň jednu
+-- číslici před i za desetinnou tečkou
+['Log '27.0 '3.0].
+
+-- Výsledek kompozice využijeme jako argument jiné funkce
+['Log ['+ '20.0 '7.0] '3.0].
+
+-- Předchozí výsledky jsme však zbytečně zahodili
+-- Abychom mohli s výsledkem dále pracovat,
+-- uložíme jej do proměnné
+-- Alternativně můžeme výsledek vypsat na výstup programu
+
+x -> Real := ['Log ['+ '20.0 '7.0] '3.0].
+
+-- Čísla můžeme sčítat, odčítat, násobit, dělit i porovnávat
+
+-- Vypíše True
+['Println ['= ['+ '15 '5] ['- '24 '4]]].
+
+-- Vypíše False
+['Println ['= ['* '2 '3] ['/ '42 '6]]].
+
+-- Proměnnou můžeme provést
+['Println x].
+
+-- A využít jako argument funkce
+['Println ['Cos x]].
+
+-- Na výstup programu můžeme vypsat také konstrukci
+-- Zde aplikujeme funkci Print na konstrukci, abychom ji vypsali
+-- Využíváme Print, ne Println, abychom nevypsali sekvenci odřádkování
+['Print '['Cos x]].
+
+-- Oddělíme konstrukci od výsledku jejího provedení
+['Print '": "].
+
+-- A nakonec konstrukci provedeme a výsledek vypíšeme
+['Println ['Cos x]].
+\end{lstlisting}
+
+\subsection{Abstrakce a tvorba funkcí}
+
+Abstrakce je základním pravidlem jak lambda kalkulu, tak programování. Nyní si abstrakce v jazyce
+TIL-Script ukážeme prakticky.
+
+Funkci lze vytvořit provedením uzávěru, nebo pomocí speciální syntaxe pro definici pojmenované
+funkce. Uzávěr je konstrukcí, proto jej můžeme využít jako podkonstrukci jiné konstrukce. Definice
+pojmenované funkce konstrukcí není. Definicí pojmenované funkce přiřadíme funkci jméno. Kdykoliv
+pak potřebujeme funkci zmínit, využijeme k tomu její jméno. Pojmenovanou funkci nesmíme zapomenout
+trivializovat.
+
+V ukázce si také zkusíme vytvořit trochu zajímavější funkci. V předchozí ukázce jsme chtěli vypsat
+konstrukci i její výsledek. V nynější ukázce si nad tímto výpisem vytvoříme abstrakci. V ukázce
+využijeme funkci \lstinline{Progn}. Funkce je podrobněji popsána v dokumentaci funkcí standardní
+knihovny, viz \peteref{progn-fn}. Nyní pouze uvedeme, že se jedná o syntaktický cukr
+nad kombinátorem $\lambda x y . y$. Je-li alespoň jeden z argumentů \lstinline{Progn} \lstinline{Nil},
+pak je nevlastní celá kompozice, jinak funkce \lstinline{Progn} vrací svůj druhý argument. Pokud
+obdrží argumentů více, parser kompozici rozepíše na vnořené aplikace binární funkce
+\lstinline{Progn}.
+
+\begin{lstlisting}[caption={Funkce a uzávěry}]
+-- Funkci lze zkonstruovat provedením uzávěru
+[\x: Real, y: Real -> Real ['Sqrt ['+ ['* x x] ['* y y]]]].
+
+-- Takto zkonstruovanou funkci lze aplikovat
+-- Pro přehlednost uzávěr a argumenty uvádíme na více řádcích
+[[\x: Real, y: Real -> Real ['Sqrt ['+ ['* x x] ['* y y]]]]
+  '3.0
+  '4.0].
+
+-- Pro zpřehlednění můžeme funkci přiřadit proměnné
+hypotenuse -> (Real Real Real) :=
+  [\x: Real, y: Real -> Real
+    ['Sqrt ['+ ['* x x] ['* y y]]]].
+
+-- Jelikož je hypotenuse proměnná, netrivializujeme ji
+['Println [hypotenuse '3.0 '4.0]].
+
+-- Nyní si vytvoříme funkci pro výpis konstrukce
+-- a výsledku jejího provedení
+-- Funkci Progn využijeme, abychom provést více
+-- výpisů na výstup programu
+-- Proměnná cons v-konstruuje konstrukci
+-- Nejprve vypíše danou konstrukci
+-- Za konstrukci poté dopíšeme dvojtečku
+-- Nakonec musíme využít dvojí provedení, abychom provedli
+-- konstrukci konstruovanou proměnnou cons
+Defn PrettyPrint(cons: Construction) -> Any1 :=
+  ['Progn
+    ['Print cons]
+    ['Print '": "]
+    ['Println ^2 cons]].
+
+-- Nakonec stačí funkci aplikovat na konstrukci
+['PrettyPrint '[hypotenuse '3.0 '4.0]].
+\end{lstlisting}
 
 \section{Překlad programu}
 
@@ -276,7 +409,7 @@ nalezena první pravdivá podmínka. Není-li pravdivá ani jedna podmínka, \ls
     'True ['Ln y]]. -- catch-all podmínka
 \end{lstlisting}
 
-\subsubsection*{Funkce: \lstinline{Progn}}
+\subsubsection*{Funkce: \lstinline{Progn}}\label{progn-fn}
 Typ: \lstinline{(Any2 Any1 Any2)}
 
 Funkce \lstinline{Progn} přijímá dva argumenty. První argument ignoruje, druhý argument vrátí, jak
@@ -958,7 +1091,5 @@ obsahuje spuštění překladače. Druhý řádek je již výstup programu.
 $ ./bin/tilscript.sh examples/javasqrt.tils
 0.5
 \end{lstlisting}
-
-\section{Ukázka TIL-Script programu}
 
 \endinput
