@@ -137,6 +137,144 @@ Defn PrettyPrint(cons: Construction) -> Any1 :=
 ['PrettyPrint '[hypotenuse '3.0 '4.0]].
 \end{lstlisting}
 
+V praxi se klidně může stát, že bude funkce \lstinline{PrettyPrint} aplikována na funkci,
+která je $v$-nevlastní pro aktuálně zkoumanou valuaci $v$. Aplikací funkce \lstinline{Println}
+na hodnotu \lstinline{Nil} dojde k výpisu \lstinline{Nil} na výstup programu, přesto bude celá
+Kompozice $v$-nevlastní. Toto chování je v praxi pravděpodobně žádoucí, chtěli bychom vidět, že naše
+Kompozice byla $v$-nevlastní a nezkonstruovala žádnou hodnotu. Jako cvičení si však můžeme napsat
+také variaci funkce \lstinline{PrettyPrint}, jež provede zápis na výstup programu pouze pokud
+obdržená konstrukce není $v$-nevlastní.
+
+Za tímto účelem musíme vytvořit novou abstrakci nad aplikací funkce \lstinline{Progn}. Abstrakci
+vytvoříme uzávěrem. Uzávěr bude konstruovat funkci, která přijímá jeden argument -- výsledek
+provedení konstrukce, jež je argumentem \lstinline{PrettyPrint}. Pokud bude tato konstrukce
+$v$-nevlastní, bude současně $v$-nevlastní také aplikace naší abstrakce nad \lstinline{Progn}.
+
+\begin{lstlisting}[caption={Funkce a uzávěry}]
+Defn PrettyPrint(cons: Construction) -> Any1 :=
+  -- Abstrakce nad aplikací Progn
+  [[\x: Any1 -> Any1
+    ['Progn
+      ['Print cons]
+      ['Print '": "]
+      ['Println x]]]
+      -- Argument funkce konstruované uzávěrem
+      ^2 cons].
+\end{lstlisting}
+
+\subsection{Seznamy}
+
+Další praktický příklad se týká práce se seznamy. Předvedeme, jak idiomaticky pracovat se seznamy
+(tvorba, traverzace, apod.). Z příkladu poté snad vyplynou také výhody induktivní implementace
+seznamů, jež se využívá ve funkcionálních programovacích jazycích.
+
+Nejprve začneme tvorbou jednoduchého seznamu. Seznam vytvoříme aplikací funkce \lstinline{ListOf}.
+Funkce \lstinline{ListOf} slouží jako syntaktický cukr, který nám zjednoduší tvorbu seznamu.
+
+Následně si zkusíme seznam proiterovat a odstranit z něj prvky větší nebo rovné pěti. Začneme proto
+tvorbou predikátu, funkce \lstinline{LessThanFive}. Dále vytvoříme rekurzivní funkci
+\lstinline{GetSmall}, která vytvoří nový seznam obsahující pouze takové prvky, které jsou menší než
+pět. Funkce jako svůj argument obdrží seznam. Zde můžeme vidět využití funkce \lstinline{If}.
+
+Je-li seznam prázdný, vrátíme jej v nezměněné podobě -- z prázdného seznamu již nemáme co
+odstraňovat. Argumenty funkce \lstinline{If} jsou vyhodnocovány líně -- je vždy vyhodnocena pouze
+jedna podkonstrukce. Pokud by došlo k vyhodnocení obou konstrukcí, došlo by k pokusu k přístupu
+prvního prvku seznamu -- prázdný seznam ovšem nemá první prvek. Celá aplikace \lstinline{GetSmall}
+by tak byla $v$-nevlastní pro všechny argumenty a ve všech valuacích (jednalo by se o funkci
+\textit{degenerovanou}).
+
+Pokud je seznam neprázdný, potřebujeme provést další aplikaci funkce \lstinline{If}. Nejprve
+zkontrolujeme, jestli je první prvek seznamu menší než pět. Nezávisle na hodnotě aktuálního prvku --
+pomocí funkce \lstinline{Tail} vezmeme seznam bez jeho prvního prvku, a rekurzivně aplikujeme
+\lstinline{GetSmall}. Rekurzivní aplikací získáme zbytek seznamu, z něhož již byly odstraněny čísla
+větší než čtyři. Jediné, v čem se liší jednotlivé větve podmínky (argumenty funkce \lstinline{If}),
+je, zda zachováme první prvek seznamu, nebo ne. Pokud je prvek seznamu menší než pět, pomocí funkce
+\lstinline{Cons} vytvoříme nový seznam přidáním prvního prvku původního seznamu na začátek seznamu
+vytvořeného rekurzivní aplikací \lstinline{GetSmall}. Pokud je hodnota prvku pět nebo vyšší, vrátíme
+pouze výsledek rekurzivní aplikace \lstinline{GetSmall} na zbytek seznamu a první prvek ignorujeme.
+
+Jelikož jsou seznamy neměnné (chceme-li seznam jakkoliv změnit, naší jedinou možností je vytvořit
+nový seznam), a protože jsou definovány induktivě (každý seznam je buď prázdný seznam, nebo buňka,
+\textit{cons cell}, skládající se z prvního prvku seznamu, a podseznamu reprezentující zbytek
+seznamu), jsou operace \lstinline{Cons}, \lstinline{Head}, \lstinline{Tail} (přesněji tedy operace,
+které aplikace těchto funkcí představuje), proveditelné v konstantním čase.
+
+Dále budeme chtít projít seznam, a vybrat jen ty prvky, které jsou větší než čtyři. Ihned se nabízí
+možnost zkopírovat funkci \lstinline{GetSmall} a jen ji upravit, aby využila jiný predikát. Snad
+není třeba uvádět, že tento postup je neideální, neboť v lambda kalkulu, a tedy i Transparentní
+intenzionální logice, lze využívat funkce jako argumenty jiných funkcí. Proto zkopírujeme funkci
+\lstinline{GetSmall}, novou funkci pojmenujeme \lstinline{Filter}, a přidáme nový argument,
+predikát, funkci typu \lstinline{(Bool Int)}. Aplikace funkce \lstinline{GetSmall} nahradíme
+rekurzivní aplikací \lstinline{Filter}, a jako místo aplikace \lstinline{LessThanFive} aplikujeme
+funkci zkonstruovanou provedením argumentu \lstinline{pred}.
+
+Funkci \lstinline{Filter} můžeme jako predikát předat funkci \lstinline{LessThanFive}, a ověřit,
+že aplikace funkce \lstinline{Filter} na seznam a predikát \lstinline{LessThanFive} je procedurálně
+izomorfní Kompozicí s procedurou aplikace \lstinline{GetSmall} na ekvivalentní seznam.
+
+Funkci \lstinline{GetBig} poté definujeme pouze jako aplikaci funkce \lstinline{Filter} na seznam
+a predikát $\lambda x ['> x '4]$.
+
+Dále se pokusíme napsat funkci, která transformuje jednotlivé prvky seznamu, ale zachová počet
+prvků. Takovou funkci tradičně ve funkcionálním programování nazýváme \lstinline{Map}, proto se
+tohoto názvosloví budeme nyní držet. Funkce \lstinline{Map} přijímá dva argumenty -- seznam, a
+funkci, pomocí které transformujeme jeden prvek seznamu. Nyní nám postačí jen jediná podmínka.
+Pokud je seznam prázdný, vrátíme jej, jak jsme jej obdrželi -- není co transformovat. Pokud je seznam
+neprázný, aplikujeme funkci reprezentovanou argumentem \lstinline{transform} na první prvek
+seznamu, rekurzivně transformujeme zbytek seznamu, a nakonec vytvoříme nový seznam
+z transformovaného zbytku a prvního prvku seznamu pomocí funkce \lstinline{Cons}. Poté stačí ověřit
+funkčnost funkce \lstinline{Map} například tím, že si spočítáme druhé mocniny čísel v našem seznamu.
+
+Poslední příklad jen ukazuje, že nemusíme definovat pouze seznamy čísel. Lze definovat také seznamy
+individuí, funkcí, konstrukcí, apod. Seznamy jsou ovšem homogenní, nemůžou tedy obsahovat objekty
+různého typu.
+
+\begin{lstlisting}[caption={Funkce a uzávěry}]
+numbers -> List(Int) := ['ListOf '1 '6 '2 '5 '3 '4].
+
+Defn LessThanFive(num: Int) -> Bool := ['< num '5].
+
+Defn GetSmall(list: List(Int)) -> List(Int) :=
+    ['If ['IsEmpty list]
+        list
+        ['If ['LessThanFive ['Head list]]
+            ['Cons ['Head list] ['GetSmall ['Tail list]]]
+            ['GetSmall ['Tail list]]]].
+
+['Println ['GetSmall numbers]].
+
+Defn Filter(list: List(Int), pred: (Bool Int)) -> List(Int) :=
+    ['If ['IsEmpty list]
+        list
+        ['If [pred ['Head list]]
+            ['Cons ['Head list] ['Filter ['Tail list] pred]]
+            ['Filter ['Tail list] pred]]].
+
+['Println ['Filter numbers 'LessThanFive]].
+
+Defn GetBig(list: List(Int)) -> List(Int) :=
+    ['Filter list [\x: Int -> Bool ['> x '4]]].
+
+['Println ['GetBig numbers]].
+
+Defn Map(list: List(Int), transform: (Int Int)) -> List(Int) :=
+    ['If ['IsEmpty list]
+        list
+        ['Cons
+            [transform ['Head list]]
+            ['Map ['Tail list] transform]]].
+
+['Println ['Map numbers [\x: Int -> Int ['* x x]]]].
+
+Karel, Petr, Adela/Indiv.
+
+['Println ['ListOf 'Karel 'Petr 'Adela]].
+\end{lstlisting}
+
+\subsection{N-tice}
+
+\subsection{Intenze}
+
 \section{Překlad programu}
 
 Překladač byl psán pro platformu Java, proto pro spuštění překladače jazyka TIL-Script musíme mít
