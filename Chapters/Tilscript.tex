@@ -426,7 +426,7 @@ jiného názvu.
 \begin{lstlisting}[caption={Příklad využití zkrácené notace}]
 (Bool Indiv)@tw -- intenze typu (((Bool Indiv) Time) World)
 ['Rektor@wt 'VSB] -- extenzionalizace funkce Rektor/(((Indiv Indiv) Time) World)
-                  -- a nasledna aplikace na argument VSB.
+                  -- a následná aplikace na argument VSB.
 \end{lstlisting}
 
 \subsection{Seznamy}
@@ -465,8 +465,9 @@ generovat konstrukce konstruující seznamy dynamicky za běhu programu, museli 
 aplikace \lstinline{Cons}.
 
 \begin{lstlisting}[caption={Příklad využití seznamů}]
-['ListOf '1 '2 '3].                    -- vytvoreni listu
-['Cons '1 ['Cons '2 ['ListOfOne '3]]]. -- ekvivalent predchoziho radku a priklad prepisu ListOf
+['ListOf '1 '2 '3].                    -- vytvoření seznamu
+['Cons '1 ['Cons '2 ['ListOfOne '3]]]. -- ekvivalent předchozího řádku
+                                       -- a ukázka přepisu ListOf
 ['Head ['ListOf '1 '2 '3]]             -- 1
 ['Tail ['ListOf '1 '2 '3]]             -- ['ListOf '2 '3]
 \end{lstlisting}
@@ -495,8 +496,8 @@ více než dva argumenty, parser aplikaci \lstinline{MkTuple} rozepíše na jedn
 s n-ticemi jsou podrobněji popsány v uživatelské dokumentaci.
  
 \begin{lstlisting}[caption={Příklad využití n-tic}]
-['MkTuple '1 '2.0 'True].                    -- vytvoreni n-tice
-['PrependToTuple '1 ['MkTuple '2.0 'True]].  -- ekvivalent predchoziho radku
+['MkTuple '1 '2.0 'True].                    -- vytvoření n-tice
+['PrependToTuple '1 ['MkTuple '2.0 'True]].  -- ekvivalent předchozího řádku
 
 x -> Tuple(Int, Real, Int) := ['MkTuple '1 '3.14159 '10].
 \end{lstlisting}
@@ -536,7 +537,7 @@ mohlo být číslo 1.
 Pi/Real.
 ['Sin 'Pi]. -- 0
 ['Cos 'Pi]. -- -1
-['+ '1 'Pi]. -- Nil - vysledek existuje, na pocitaci jej vsak nelze spocitat
+['+ '1 'Pi]. -- Nil - Výsledek existuje, na počítači jej však nelze spočítat
 \end{lstlisting}
 
 \section{Rozšíření jazyka TIL-Script}
@@ -794,7 +795,7 @@ kompozice nelze vytvořit. Dále využití konstruktorů pro konstrukci prázdn�
 vyhnout se využívání typových referencí. Neprázdný list pomocí konstruktoru vytvořit nelze.
 
 \begin{lstlisting}[caption={Příklad definice struktury}]
-{List(Tree)}. -- Konstrukce prazdneho listu
+{List(Tree)}. -- Konstrukce prazdného listu
 {Tree '0 {List(Tree) }}. -- Konstrukce objektu typu Tree
 
 myTree -> Tree := {Tree

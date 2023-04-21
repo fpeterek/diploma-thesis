@@ -100,7 +100,7 @@ pak je nevlastní celá kompozice, jinak funkce \lstinline{Progn} vrací svůj d
 obdrží argumentů více, parser kompozici rozepíše na vnořené aplikace binární funkce
 \lstinline{Progn}.
 
-\begin{lstlisting}[caption={Funkce a uzávěry}]
+\begin{lstlisting}[caption={Funkce a uzávěry}, language=Tilscript]
 -- Funkci lze zkonstruovat provedením uzávěru
 [\x: Real, y: Real -> Real ['Sqrt ['+ ['* x x] ['* y y]]]].
 
@@ -120,7 +120,7 @@ hypotenuse -> (Real Real Real) :=
 
 -- Nyní si vytvoříme funkci pro výpis konstrukce
 -- a výsledku jejího provedení
--- Funkci Progn využijeme, abychom provést více
+-- Funkci Progn využijeme, abychom provedli více
 -- výpisů na výstup programu
 -- Proměnná cons v-konstruuje konstrukci
 -- Nejprve vypíše danou konstrukci
@@ -229,7 +229,7 @@ Poslední příklad jen ukazuje, že nemusíme definovat pouze seznamy čísel. 
 individuí, funkcí, konstrukcí, apod. Seznamy jsou ovšem homogenní, nemůžou tedy obsahovat objekty
 různého typu.
 
-\begin{lstlisting}[caption={Funkce a uzávěry}]
+\begin{lstlisting}[caption={Funkce a uzávěry}, language=Tilscript]
 numbers -> List(Int) := ['ListOf '1 '6 '2 '5 '3 '4].
 
 Defn LessThanFive(num: Int) -> Bool := ['< num '5].
@@ -274,6 +274,8 @@ Karel, Petr, Adela/Indiv.
 \subsection{N-tice}
 
 \subsection{Intenze}
+
+Nakonec si ještě ukážeme práci s intenzemi.
 
 \section{Překlad programu}
 
@@ -636,15 +638,6 @@ Funkce \lstinline{RandomInt} vrací náhodné celé číslo v intervalu $\bigl \
 
 \begin{lstlisting}[caption={Ukázka využití RandomInt}]
 ['RandomInt deviceState].
-\end{lstlisting}
-
-\subsubsection*{Funkce: \lstinline{Random}}
-Typ: \lstinline{(Real DeviceState)}
-
-Funkce \lstinline{Random} vrací náhodné reálné číslo v intervalu $\bigl \langle 0; 1 \bigr \rangle$.
-
-\begin{lstlisting}[caption={Ukázka využití Random}]
-['* ['Random deviceState] '100]. -- náhodné číslo v rozsahu 0-100
 \end{lstlisting}
 
 \subsubsection*{Funkce: \lstinline{Random}}
