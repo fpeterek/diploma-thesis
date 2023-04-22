@@ -105,33 +105,30 @@ obdrží argumentů více, parser kompozici rozepíše na vnořené aplikace bin
 [\x: Real, y: Real -> Real ['Sqrt ['+ ['* x x] ['* y y]]]].
 
 -- Takto zkonstruovanou funkci lze aplikovat
--- Pro přehlednost uzávěr a argumenty uvádíme na více řádcích
+-- Pro přehlednost lze uzávěr a argumenty uvést na více řádcích
 [[\x: Real, y: Real -> Real ['Sqrt ['+ ['* x x] ['* y y]]]]
-  '3.0
-  '4.0].
+    '3.0
+    '4.0].
 
 -- Pro zpřehlednění můžeme funkci přiřadit proměnné
 hypotenuse -> (Real Real Real) :=
-  [\x: Real, y: Real -> Real
-    ['Sqrt ['+ ['* x x] ['* y y]]]].
+    [\x: Real, y: Real -> Real
+        ['Sqrt ['+ ['* x x] ['* y y]]]].
 
 -- Jelikož je hypotenuse proměnná, netrivializujeme ji
 ['Println [hypotenuse '3.0 '4.0]].
 
--- Nyní si vytvoříme funkci pro výpis konstrukce
--- a výsledku jejího provedení
--- Funkci Progn využijeme, abychom provedli více
--- výpisů na výstup programu
--- Proměnná cons v-konstruuje konstrukci
--- Nejprve vypíše danou konstrukci
+-- Nyní si vytvoříme funkci pro výpis konstrukce a výsledku jejího provedení
+-- Funkci Progn využijeme, abychom provedli více výpisů na výstup programu
+-- Proměnná cons v-konstruuje konstrukci nejprve vypíše danou konstrukci
 -- Za konstrukci poté dopíšeme dvojtečku
--- Nakonec musíme využít dvojí provedení, abychom provedli
--- konstrukci konstruovanou proměnnou cons
+-- Nakonec musíme využít dvojí provedení, abychom provedli konstrukci
+-- konstruovanou proměnnou cons
 Defn PrettyPrint(cons: Construction) -> Any1 :=
-  ['Progn
-    ['Print cons]
-    ['Print '": "]
-    ['Println ^2 cons]].
+    ['Progn
+        ['Print cons]
+        ['Print '": "]
+        ['Println ^2 cons]].
 
 -- Nakonec stačí funkci aplikovat na konstrukci
 ['PrettyPrint '[hypotenuse '3.0 '4.0]].
@@ -152,14 +149,14 @@ $v$-nevlastní, bude současně $v$-nevlastní také aplikace naší abstrakce n
 
 \begin{lstlisting}[caption={Funkce a uzávěry}]
 Defn PrettyPrint(cons: Construction) -> Any1 :=
-  -- Abstrakce nad aplikací Progn
-  [[\x: Any1 -> Any1
-    ['Progn
-      ['Print cons]
-      ['Print '": "]
-      ['Println x]]]
-      -- Argument funkce konstruované uzávěrem
-      ^2 cons].
+    -- Abstrakce nad aplikací Progn
+    [[\x: Any1 -> Any1
+        ['Progn
+            ['Print cons]
+            ['Print '": "]
+            ['Println x]]]
+            -- Argument funkce konstruované uzávěrem
+            ^2 cons].
 \end{lstlisting}
 
 \subsection{Seznamy}
@@ -209,8 +206,8 @@ rekurzivní aplikací \lstinline{Filter}, a jako místo aplikace \lstinline{Less
 funkci zkonstruovanou provedením argumentu \lstinline{pred}.
 
 Funkci \lstinline{Filter} můžeme jako predikát předat funkci \lstinline{LessThanFive}, a ověřit,
-že aplikace funkce \lstinline{Filter} na seznam a predikát \lstinline{LessThanFive} je procedurálně
-izomorfní Kompozicí s procedurou aplikace \lstinline{GetSmall} na ekvivalentní seznam.
+že aplikace funkce \lstinline{Filter} na seznam a predikát \lstinline{LessThanFive} je ekvivalentní
+aplikaci \lstinline{GetSmall} na ekvivalentní seznam.
 
 Funkci \lstinline{GetBig} poté definujeme pouze jako aplikaci funkce \lstinline{Filter} na seznam
 a predikát $\lambda x ['> x '4]$.
@@ -230,19 +227,31 @@ individuí, funkcí, konstrukcí, apod. Seznamy jsou ovšem homogenní, nemůžo
 různého typu.
 
 \begin{lstlisting}[caption={Funkce a uzávěry}, language=Tilscript]
+
+-- Nejprve si vytvoříme seznam, se kterým budeme pracovat
 numbers -> List(Int) := ['ListOf '1 '6 '2 '5 '3 '4].
 
+-- Pomocná funkce -- predikát, který později využijeme
 Defn LessThanFive(num: Int) -> Bool := ['< num '5].
 
+-- Funkce GetSmall vrátí nový seznam obsahující pouze čísla
+-- menší než pět
 Defn GetSmall(list: List(Int)) -> List(Int) :=
     ['If ['IsEmpty list]
+        -- Pokud je seznam prázdný, můžeme jej přímo vrátit
         list
+        -- Jinak zkontrolujeme, zda je první prvek seznamu
+        -- menší než pět, a pokud ano, uložíme jej na začátek
+        -- seznamu získaného rekurzivní aplikací GetSmall
         ['If ['LessThanFive ['Head list]]
             ['Cons ['Head list] ['GetSmall ['Tail list]]]
             ['GetSmall ['Tail list]]]].
 
 ['Println ['GetSmall numbers]].
 
+-- Predikát lze parametrizovat
+-- Funkce Filter přijímá jako jeden z argumentů predikát,
+-- který je využit namísto konkrétní funkce
 Defn Filter(list: List(Int), pred: (Bool Int)) -> List(Int) :=
     ['If ['IsEmpty list]
         list
@@ -257,6 +266,7 @@ Defn GetBig(list: List(Int)) -> List(Int) :=
 
 ['Println ['GetBig numbers]].
 
+-- Pomocí funkce Map můžeme transformovat jednotlivé prvky seznamu
 Defn Map(list: List(Int), transform: (Int Int)) -> List(Int) :=
     ['If ['IsEmpty list]
         list
@@ -268,14 +278,323 @@ Defn Map(list: List(Int), transform: (Int Int)) -> List(Int) :=
 
 Karel, Petr, Adela/Indiv.
 
+-- Seznamy jsou vždy homogenní, můžeme však mít seznamy
+-- objektů libovolného typu, zde vytváříme seznam individuí
 ['Println ['ListOf 'Karel 'Petr 'Adela]].
 \end{lstlisting}
 
 \subsection{N-tice}
 
+V další ukázce si vyzkoušíme práci s n-ticemi. N-tice jsou heterogenní kolekce jasně specifikované
+délky. Délka n-tice je dána jejím typem.
+
+V ukázce bude opět nutné importovat matematickou knihovnu.
+
+N-tici můžeme vytvořit aplikací funkce \lstinline{MkTuple}. Funkce \lstinline{MkTuple} je podrobněji
+popsáná v dokumentaci standardní knihovny, viz \peteref{mk-tuple-fn}, zde pouze zmíníme, že se
+jedná o syntaktický cukr, který nám umožňuje jednoduše vytvářet n-tice. Aplikace \lstinline{MkTuple}
+je přepisována parserem.
+
+Dále definujeme funkce \lstinline{Fst} a \lstinline{Snd}. Funkce jsou typově polymorfní a jejich
+argument je typu \lstinline{Any1}. Argument musí být typu \lstinline{Any1}, aby bylo možné funkci
+aplikovat na n-tice různé délky. Pokud by oborem hodnot funkce byly pouze n-tice přesně dané délky
+$n$, mohli bychom jako typ argumentu explicitně uvést n-tici, a typ \lstinline{Any} využít pouze
+pro prvky n-tice. Tedy například pro trojice bychom využili typ \lstinline{Tuple(Any1, Any2, Any3)}.
+
+Funkce \lstinline{Fst} vrátí první prvek n-tice. Funkce \lstinline{Snd} vrátí druhý prvek n-tice.
+Funkce \lstinline{Get} je obsažena ve standardní knihovně jazyka TIL-Script a vrátí prvek n-tice
+na pozici $i$. Prvky n-tice jsou indexovány od nuly.
+
+Pomocí funkce \lstinline{PrependToTuple} můžeme vytvořit novou $(n+1)$-tici přidáním prvku
+na začátek již existující n-tice.
+
+Nakonec si ukážeme možné reálné využití n-tic. Nejprve, pro zpřehlednění zápisu, pomocí výrazu
+\lstinline{TypeDef} vytvoříme nové jméno, \lstinline{Vector2}, pro typ
+\lstinline{Tuple(Real, Real)}. Tímto typem, jak název napovídá, budeme reprezentovat
+dvoudimenzionální vektory. Dále definujeme funkci \lstinline{DotProduct}, která spočítá skalární
+součin páru dvoudimenzionálních vektorů.
+
+Poslední řádky ukázky ukazují funkcionalitu výrazu \lstinline{TypeDef}. Tyto výrazy nevytvoří nový
+typ, pouze přiřadí jiné jméno již existujícímu typu. V našem programu vytvoříme dvě n-tice typu
+\lstinline{Tuple(Real, Real)}, a dále jen aplikujeme funkci \lstinline{DotProduct} na naše vektory.
+
+\begin{lstlisting}[caption={Práce s n-ticemi}, language=Tilscript]
+Import "class://org.fpeterek.tilscript.math.Registrar".
+
+-- Tvorba n-tice libovolné délky -- zde vytváříme trojici
+triple -> Tuple(Int, Text, Construction) :=
+    ['MkTuple ['+ '1 '3] ['IntToText '5] '['+ '3 '3]].
+
+['Println triple].
+
+-- Definice funkce přijímající n-tici libovolné délky
+Defn Fst(tuple: Any1) -> Any2 :=
+    ['Get tuple '0].
+
+Defn Snd(tuple: Any1) -> Any2 :=
+    ['Get tuple '1].
+
+['Println ['Fst triple]].
+['Println ['Snd triple]].
+
+-- Vytvoření nové n-tice přidáním prvku na začátek již existující n-tice
+quadruple -> Tuple(Real, Int, Text, Construction) :=
+    ['PrependToTuple '3.0 triple].
+
+['Println quadruple].
+
+-- Vytvoření alternativního jména pro typ Tuple(Real, Real)
+TypeDef Vector2 := Tuple(Real, Real).
+
+-- Vytvoření funkce operující nad dvěma n-ticemi konkrétního typu
+Defn DotProduct(v1: Vector2, v2: Vector2) -> Real :=
+    ['+
+        ['* ['Fst v1] ['Fst v2]]
+        ['* ['Snd v1] ['Snd v2]]].
+
+v1 -> Vector2 := ['MkTuple '2.0 '3.0].
+v2 -> Vector2 := ['MkTuple '3.0 '2.0].
+
+['Println ['DotProduct v1 v2]].
+\end{lstlisting}
+
+\subsection{Struktury}
+
+Struktury, viz \peteref{structs}, slouží k vytvoření nového typu. Struktury jsou složené typy, které
+nám umožňují rozlišit typy, které mají stejnou interní reprezentaci (tedy skládají se ze stejného
+množství objektů stejného typu uspořádaných ve stejném pořadí).
+
+V ukázce opět importujeme matematickou knihovnu a definujeme funkci \lstinline{PrettyPrint}.
+
+Následně definujeme dva nové typy, \lstinline{Polar}, sloužící k reprezentaci polárních souřadnic,
+a \lstinline{Cart}, reprezentující souřadnice kartézské. Na ukázce dobře vidíme, že oba typy mají
+stejnou interní reprezentaci, tedy oba se skládají ze dvou objektů typu \lstinline{Real}. Pokud
+bychom k reprezentaci kartézských i polárních souřadnic využili n-tice, oba druhy souřadnic by byly
+reprezentovány typem \lstinline{Tuple(Real, Real)}. Poté by mohlo jednoduše dojít k záměně jednoho
+druhu souřadnic za druhý. Typový systém by této záměně nedokázal zabránit. Vytvoření nového typu
+nám umožňuje využít typovou kontrolu k zabránění chybné záměny souřadnic.
+
+Abychom si předvedli práci se strukturami, vytvoříme si funkci pro převod kartézských souřadnic
+na polární. Za tímto účelem si ovšem nejprve definujeme funkci \lstinline{GetAngle}. Argumenty
+této funkce jsou souřadnice \lstinline{x}, \lstinline{y} bodu a vzdálenost tohoto bodu od počátku
+v kartézském systému. V reálné implementaci by si funkce vzdálenost od počátku měla spočítat sama,
+jelikož se však jedná pouze o pomocnou funkci, vzdálenost předáme jako argument, abychom ji nemuseli
+počítat vícekrát. Funkce \lstinline{GetAngle} spočítá úhel mezi osou x a úsečkou definovanou
+počátkem a bodem.
+
+Funkce \lstinline{CartToPolar} převede kartézské souřadnice na polární. Jelikož ve funkci
+potřebujeme využít vzdálenost bodu od počátku vícekrát, vytvoříme si pomocí uzávěru funkci, jejíž
+argumentem je právě tato vzdálenost. Funkci vytvořenou uzávěrem poté okamžitě aplikujeme
+na vypočítanou vzdálenost od počátku. V tomto případě uzávěr využíváme pouze ke zkrácení zápisu,
+abychom nemuseli vícekrát uvádět vzorec Pythagorovy věty. V praxi ovšem můžeme pomocí uzávěrů
+tímto způsobem omezit například vícenásobné provádění drahých operací (čtení z disku, komunikace
+po síti), nebo zabránit možným chybám (například kdy opakovanou aplikací funkce \lstinline{Random}
+získáme různá náhodná čísla). Ve funkci využijeme konstruktor struktury pro vytvoření objektu typu
+\lstinline{Polar}. Následně jen vytvoříme proměnnou $v$-konstruující objekt typu \lstinline{Cart},
+a převod mezi souřadnicemi otestujeme.
+
+Druhou částí ukázky je definici rekurzivní struktury -- v tomto případě stromu. Každý strom se skládá
+z hodnoty v kořenu stromu a seznamu podstromů. Po definici typu \lstinline{Tree} si jeden strom
+ihned vytvoříme, abychom si mohli vyzkoušet práci se stromy.
+
+Práci se stromy si vyzkoušíme implementací funkce \lstinline{Depth}, která spočítá hloubku stromu.
+Hloubka stromu je rovna jedné, pokud strom nemá podstromy. Pokud má strom alespoň jeden podstrom,
+je hloubka přičteme číslo jedna k hloubce nejhlubšího podstromu.
+
+K implementaci funkce \lstinline{Depth} potřebujeme také několik pomocných funkcí. Funkce
+\lstinline{Depths} spočítá hloubky pro každý strom v seznamu stromů. Tuto funkci využijeme
+k vypočtení hloubek podstromu. Funkce \lstinline{Max} vrátí největší hodnotu v seznamu celých
+čísel, interně však tato funkce slouží pouze ke zjednodušení aplikaci rekurzivní funkce
+\lstinline{MaxInt}, která rekurzivně projde celý seznam a v rekurzivních aplikacích si předává
+nejvyšší nalezený prvek. Funkce \lstinline{MaxOf} pouze vrátí větší ze dvou celých čísel.
+
+Nakonec provedeme výpis stromu i jeho hloubky.
+
+K přístupu k atributu instance struktury (v příkladu k objektům typu \lstinline{Cart} a
+\lstinline{Tree}) využíváme syntaktický konstrukt \lstinline{::}.
+
+\begin{lstlisting}[caption={Práce se strukturami}, language=Tilscript]
+Import "class://org.fpeterek.tilscript.math.Registrar".
+
+Defn PrettyPrint(cons: Construction) -> Any1 :=
+    ['Progn
+        ['Print cons]
+        ['Print '": "]
+        ['Println ^2 cons]].
+
+-- Definice typu reprezentujícího polární souřadnice
+Struct Polar {
+    dist: Real,
+    angle: Real,
+}.
+
+-- Definice typu reprezentujícího kartézské souřadnice
+Struct Cart {
+    x: Real,
+    y: Real,
+}.
+
+-- Výpočet úhlu mezi bodem a osou x
+Defn GetAngle(x: Real, y: Real, len: Real) -> Real :=
+    ['Cond
+        ['= '0.0 len] '0.0
+        ['> y '0.0] ['Acos ['/ x len]]
+        'True ['- '360.0 ['Acos ['/ x len]]]].
+
+-- Převod kartézských souřadnic na souřadnice polární
+Defn CartToPolar(cart: Cart) -> Polar :=
+    [[\dist: Real -> Polar
+        {Polar dist ['GetAngle cart::x cart::y dist] }]
+        ['Sqrt ['+ ['* cart::x cart::x] ['* cart::y cart::y]]] ].
+
+cart -> Cart := {Cart '2.0 '2.0}.
+
+['Println ['CartToPolar cart]].
+
+-- Definice rekurzivní struktury
+Struct Tree {
+    value: Int,
+    subtrees: List(Tree),
+}.
+
+-- Vytvoření stromu
+myTree -> Tree := {Tree
+    '1
+    ['ListOf
+        {Tree '2 {List(Tree) }}
+        {Tree '3 ['ListOf {Tree '4 {List(Tree) } }]}]}.
+
+-- Funkce vrátí větší ze dvou čísel
+Defn MaxOf(fst: Int, snd: Int) -> Int :=
+    ['If ['> fst snd] fst snd].
+
+-- Funkce vrátí největší číslo v seznamu
+-- Největší nalezené číslo je předáváno jako argument při rekurzivní aplikaci
+Defn MaxInt(lst: List(Int), max: Int) -> Int :=
+    ['If ['IsEmpty lst]
+        max
+        ['MaxInt ['Tail lst] ['MaxOf ['Head lst] max]]].
+
+
+-- Funkce pouze rozloží seznam na první prvek a zbytek seznamu
+-- a aplikuje rekurzivní funkci MaxInt
+-- Funkce Max slouží ke zjednodušení aplikace MaxInt
+Defn Max(lst: List(Int)) -> Int := ['MaxInt ['Tail lst] ['Head lst]].
+
+-- Funkce Depths spočítá hloubky všech stromů v seznamu
+Defn Depths(trees: List(Tree)) -> List(Int) :=
+    ['If ['IsEmpty trees]
+        {List(Int) }
+        ['Cons
+            ['Depth ['Head trees]]
+            ['Depths ['Tail trees]]]].
+
+-- Výpočet hloubky stromu
+Defn Depth(tree: Tree) -> Int :=
+    ['If ['IsEmpty tree::subtrees]
+        '1
+        ['+ '1 ['Max ['Depths tree::subtrees]]]].
+
+['PrettyPrint 'myTree].
+['PrettyPrint 'myTree::subtrees].
+['PrettyPrint '['Depth myTree]].
+\end{lstlisting}
+
 \subsection{Intenze}
 
-Nakonec si ještě ukážeme práci s intenzemi.
+Všechny příklady zatím pracovali pouze s extenzemi. Důvodem bylo převážně zjednodušení ukázek.
+Nyní si však ukážeme také příklad práce s intenzemi, neboť s nimi bezpochyby budeme chtít v praxi
+pracovat.
+
+V ukázce implementujeme intenze v jazyce TIL-Script. Databázi definujeme pomocí tzv. aktuálních
+extenzí, tedy funkcí popisujících stav světa v konkrétních časovým oknech. Dále definujeme intenze,
+které při extenzionalizaci podle dodaných argumentů správně vyberou aktuální extenzi popisující
+požadovaný světamih. Databáze bude přiložena v příloze, neboť se jedná o dlouhou ukázku. Cílem této
+sekce je nastínit práci s intenzemi, ne jejich tvorbu.
+
+Kromě intenzí v databázi, která je součástí příkladu, definujeme také individua, se kterými budeme
+pracovat. Konkrétně se jedná o individua \lstinline{Adela}, \lstinline{Karel} a \lstinline{Vaclav}.
+
+Definice intenzí v jazyce TIL-Script je ovšem zdlouhavá a pro větší databázi může být velmi
+nepřehledná. Pro praktické využití může být žádoucí využít databázové systémy pro uložení dat,
+a pomocí již existující Java knihovny pro daný databázový systém vytvořit TIL-Script knihovnu,
+která umožní s databází komunikovat.
+
+V ukázce opět importujeme matematickou knihovnu. Dále importujeme také databázi obsahující potřebné
+intenze. Soubor definující intenze se jmenuje \lstinline{intensions.tils}. Za účelem výpisu v ukázce
+také definujeme funkci \lstinline{PrettyPrint}.
+
+Jazyk TIL-Script definuje fyzickou reprezentaci časových okamžiků jako 64-bitové číslo, nijak však
+nepředepisuje, jak má uživatel dané číslo intepretovat. Proto pro zjednodušení budeme v ukázce
+využívat rozumně malá čísla, neboť využívání např. unixového času by vedlo ke špatně čitelné ukázce.
+
+Proměnná \lstinline{w -> World} je definována ve standardní knihovně. V ukázce musíme definovat
+pouze proměnnou \lstinline{t -> Time}, pomocí které budeme určovat časové okamžiky, které zkoumáme.
+Hodnotu proměnné několikrát změníme, abychom mohli prozkoumat více časových okamžiků. Protože
+v jazyce TIL-Script jsou časové okamžiky a čísla reprezentovány jiným typem, musíme literál celého
+čísla konvertovat na časový okamžik pomocí funkce \lstinline{IntToTime}.
+
+Také musíme deklarovat funkci \lstinline{LastDigit}, která vrátí poslední číslici reálného čísla,
+pokud taková číslice existuje. Protože však funkci nepotřebujeme aplikovat, nemusíme ji definovat
+(tedy dodávat předpis funkce), stačí nám pouze uvést její jméno a typ.
+
+V ukázce ve většině případů využíváme notaci \lstinline{@wt}, která slouží pouze jako zkratka
+za aplikaci intenze nejprve na svět, a následně aplikaci získané funkce na časový okamžik. Tato
+notace je čistě syntaktická a parser jazyka TIL-Script ji přepíše na Kompozici během zpracování
+a analýzy syntaktického stromu.
+
+Součástí databáze je individuová role \lstinline{BestStudent/((Indiv Time) World)}, která
+specifikuje nejlepšího studenta v daném okamžiku (podle naší, arbitrárně zvolené metriky), a
+funkce \lstinline{IsComputing/(((Bool Indiv Construction) Time) World)}, která uvádí, zda
+uvedené individuum v daném světamihu počítá výraz představovaný konstrukcí.
+
+Při výpisu nejlepšího studenta může na první pohled působit překvapivě dvojí trivializace. Zde je
+třeba si uvědomit, že zápis \lstinline{@wt} slouží jako zkratka za Kompozici. Pravou trivializací
+zmíníme funkci \lstinline{BestStudent}, kterou pomocí Kompozice extenzionalizujeme. Levá
+trivializace poté trivializuje právě konstrukci extenzionalizace funkce \lstinline{BestStudent}.
+Jelikož se jedná o individuovou roli, extenzionalizací získáme konkrétní individuum, ne funkci.
+V příkladu s funkcí \lstinline{IsComputing} již extenzionalizaci provádíme jako podkonstrukci jiné
+kompozice, jež získanou aktuální extenzi aplikuje na požadované argumenty.
+
+Dále je již ukázka velmi přímočará. Pouze extenzionalizujeme žádané intenze v různých světamizích,
+a zkoumáme stavy světa. Sledujeme, kdo byl nejlepším studentem v konkrétních časových okamžicích,
+nebo jaké příklady studenti počítali. V předposlední větě programu pouze funkci
+\lstinline{BestStudent} extenzionalizujeme pomocí explicitně uvedených Kompozic, abychom dokázali,
+že zápis \lstinline{@wt} je čistě syntaktický a slouží pouze ke zkrácení zápisu.
+
+\begin{lstlisting}[caption={Funkce a uzávěry}, language=Tilscript]
+Import "class://org.fpeterek.tilscript.math.Registrar".
+Import "intensions.tils".
+
+Defn PrettyPrint(cons: Construction) -> Any1 :=
+    ['Progn
+        ['Print cons]
+        ['Print '": "]
+        ['Println ^2cons]].
+
+t -> Time := ['IntToTime '130].
+
+LastDigit/(Int Real).
+
+['PrettyPrint ''BestStudent@wt].
+
+['PrettyPrint '['IsComputing@wt 'Adela '['Ln '14.0]]].
+['PrettyPrint '['IsComputing@wt 'Karel '['/ '18 '6]]].
+
+t -> Time := ['IntToTime '250].
+
+['Println 'BestStudent@wt].
+
+['PrettyPrint '['IsComputing@wt 'Adela '['Ln '14.0]]].
+['PrettyPrint '['IsComputing@wt 'Adela '['Cos 'Pi]]].
+['PrettyPrint '['IsComputing@wt 'Karel '['/ '18 '6]]].
+
+t -> Time := ['IntToTime '600].
+
+['Println [['BestStudent w] t]].
+
+['PrettyPrint '['IsComputing@wt 'Vaclav '['LastDigit 'Pi]]].
+\end{lstlisting}
 
 \section{Překlad programu}
 
@@ -695,7 +1014,7 @@ tvorbě n-tice.
 ['OneTuple '1].
 \end{lstlisting}
 
-\subsubsection*{Funkce: \lstinline{MkTuple}}
+\subsubsection*{Funkce: \lstinline{MkTuple}}\label{mk-tuple-fn}
 
 \lstinline{MkTuple} slouží jako syntaktický cukr pro tvorbu n-tic. \lstinline{MkTuple} přijímá
 nespecifikovaný počet argumentů, překladačem je poté přeložena na aplikaci \lstinline{OneTuple}
