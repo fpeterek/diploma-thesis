@@ -13,11 +13,12 @@ také ukázku knihovny psané v jazyce Kotlin.
 \subsection{Hello, World!}
 
 V rámci zachování programátorské tradice začneme ukázkou implementace programu
-\lstinline{Hello, World!}.
+\textit{Hello, World!}.
 
 Náš program nejprve začíná komentáři. Zápis komentářů je stejný jako v jazyce Haskell. Obsah
 komentářů je překladačem ignorován. Komentáře následuje velmi jednoduchá Kompozice. Kompozicí
-aplikujeme funkci \lstinline{Println} na argument -- objekt, který chceme vypsat. Objekt může být
+aplikujeme funkci \lstinline{Println} na argument -- objekt, který chceme vypsat. Argument
+\lstinline{Println} může být
 libovolného typu, zde vypisujeme textový řetězec. Funkci \lstinline{Println} a literál textového
 řetězce nesmíme zapomenout trivializovat.
 
@@ -29,9 +30,9 @@ libovolného typu, zde vypisujeme textový řetězec. Funkci \lstinline{Println}
 
 \subsection{Jednoduchá aritmetika}
 
-Nyní si ukážeme složitější Kompozice, ukázku matematických funkcí, a také přiřazení do proměnné,
-abychom nemuseli stejnou kompozici zbytečně provádět vícekrát. Abychom mohli využívat matematické
-funkce, nesmíme zapomenout importovat matematickou knihovnu.
+Nyní si ukážeme složitější Kompozice, ukázku matematických funkcí, a také přiřazení hodnoty
+proměnné, abychom nemuseli stejnou kompozici zbytečně provádět vícekrát. Abychom mohli využívat
+matematické funkce, nesmíme zapomenout importovat matematickou knihovnu.
 
 \begin{lstlisting}[caption={Aritmetika v jazyce TIL-Script}]
 -- Import matematické knihovny
@@ -48,8 +49,7 @@ Import "class://org.fpeterek.tilscript.math.Registrar".
 ['Log ['+ '20.0 '7.0] '3.0].
 
 -- Předchozí výsledky jsme však zbytečně zahodili
--- Abychom mohli s výsledkem dále pracovat,
--- uložíme jej do proměnné
+-- Abychom mohli s výsledkem dále pracovat, uložíme jej do proměnné
 -- Alternativně můžeme výsledek vypsat na výstup programu
 
 x -> Real := ['Log ['+ '20.0 '7.0] '3.0].
@@ -94,10 +94,10 @@ trivializovat.
 V ukázce si také zkusíme vytvořit trochu zajímavější funkci. V předchozí ukázce jsme chtěli vypsat
 konstrukci i její výsledek. V nynější ukázce si nad tímto výpisem vytvoříme abstrakci. V ukázce
 využijeme funkci \lstinline{Progn}. Funkce je podrobněji popsána v dokumentaci funkcí standardní
-knihovny, viz \peteref{progn-fn}. Nyní pouze uvedeme, že se jedná o syntaktický cukr
-nad kombinátorem $\lambda x y . y$. Je-li alespoň jeden z argumentů \lstinline{Progn} \lstinline{Nil},
-pak je nevlastní celá kompozice, jinak funkce \lstinline{Progn} vrací svůj druhý argument. Pokud
-obdrží argumentů více, parser kompozici rozepíše na vnořené aplikace binární funkce
+knihovny, viz \ref{progn-fn}. Nyní pouze uvedeme, že se jedná o syntaktický cukr
+nad kombinátorem $\lambda x y . y$. Je-li alespoň jeden z argumentů \lstinline{Progn} hodnota
+\lstinline{Nil}, pak je nevlastní celá kompozice, jinak funkce \lstinline{Progn} vrací svůj druhý
+argument. Pokud obdrží argumentů více, parser kompozici rozepíše na vnořené aplikace binární funkce
 \lstinline{Progn}.
 
 \begin{lstlisting}[caption={Funkce a uzávěry}, language=Tilscript]
@@ -162,13 +162,13 @@ Defn PrettyPrint(cons: Construction) -> Any1 :=
 \subsection{Seznamy}
 
 Další praktický příklad se týká práce se seznamy. Předvedeme, jak idiomaticky pracovat se seznamy
-(tvorba, traverzace, apod.). Z příkladu poté snad vyplynou také výhody induktivní implementace
+(tvorba, průchod, apod.). Z příkladu poté snad vyplynou také výhody induktivní implementace
 seznamů, jež se využívá ve funkcionálních programovacích jazycích.
 
 Nejprve začneme tvorbou jednoduchého seznamu. Seznam vytvoříme aplikací funkce \lstinline{ListOf}.
 Funkce \lstinline{ListOf} slouží jako syntaktický cukr, který nám zjednoduší tvorbu seznamu.
 
-Následně si zkusíme seznam proiterovat a odstranit z něj prvky větší nebo rovné pěti. Začneme proto
+Následně si zkusíme seznam projít a odstranit z něj prvky větší nebo rovné pěti. Začneme proto
 tvorbou predikátu, funkce \lstinline{LessThanFive}. Dále vytvoříme rekurzivní funkci
 \lstinline{GetSmall}, která vytvoří nový seznam obsahující pouze takové prvky, které jsou menší než
 pět. Funkce jako svůj argument obdrží seznam. Zde můžeme vidět využití funkce \lstinline{If}.
@@ -202,7 +202,7 @@ není třeba uvádět, že tento postup je neideální, neboť v lambda kalkulu,
 intenzionální logice, lze využívat funkce jako argumenty jiných funkcí. Proto zkopírujeme funkci
 \lstinline{GetSmall}, novou funkci pojmenujeme \lstinline{Filter}, a přidáme nový argument,
 predikát, funkci typu \lstinline{(Bool Int)}. Aplikace funkce \lstinline{GetSmall} nahradíme
-rekurzivní aplikací \lstinline{Filter}, a jako místo aplikace \lstinline{LessThanFive} aplikujeme
+rekurzivní aplikací \lstinline{Filter}, a namísto aplikace \lstinline{LessThanFive} aplikujeme
 funkci zkonstruovanou provedením argumentu \lstinline{pred}.
 
 Funkci \lstinline{Filter} můžeme jako predikát předat funkci \lstinline{LessThanFive}, a ověřit,
@@ -210,7 +210,7 @@ Funkci \lstinline{Filter} můžeme jako predikát předat funkci \lstinline{Less
 aplikaci \lstinline{GetSmall} na ekvivalentní seznam.
 
 Funkci \lstinline{GetBig} poté definujeme pouze jako aplikaci funkce \lstinline{Filter} na seznam
-a predikát $\lambda x ['> x '4]$.
+a predikát \lstinline{\x: Int -> Bool ['> x '4]}.
 
 Dále se pokusíme napsat funkci, která transformuje jednotlivé prvky seznamu, ale zachová počet
 prvků. Takovou funkci tradičně ve funkcionálním programování nazýváme \lstinline{Map}, proto se
@@ -285,15 +285,15 @@ Karel, Petr, Adela/Indiv.
 
 \subsection{N-tice}
 
-V další ukázce si vyzkoušíme práci s n-ticemi. N-tice jsou heterogenní kolekce jasně specifikované
+V další ukázce si vyzkoušíme práci s n-ticemi. N-tice jsou heterogenní kolekce přesně specifikované
 délky. Délka n-tice je dána jejím typem.
 
 V ukázce bude opět nutné importovat matematickou knihovnu.
 
 N-tici můžeme vytvořit aplikací funkce \lstinline{MkTuple}. Funkce \lstinline{MkTuple} je podrobněji
-popsáná v dokumentaci standardní knihovny, viz \peteref{mk-tuple-fn}, zde pouze zmíníme, že se
-jedná o syntaktický cukr, který nám umožňuje jednoduše vytvářet n-tice. Aplikace \lstinline{MkTuple}
-je přepisována parserem.
+popsáná v dokumentaci standardní knihovny, viz \ref{mk-tuple-fn}, zde pouze zmíníme, že se
+jedná o syntaktický cukr podobný například funkci \lstinline{ListOf}, který nám umožňuje jednoduše
+vytvářet n-tice.
 
 Dále definujeme funkce \lstinline{Fst} a \lstinline{Snd}. Funkce jsou typově polymorfní a jejich
 argument je typu \lstinline{Any1}. Argument musí být typu \lstinline{Any1}, aby bylo možné funkci
@@ -399,7 +399,7 @@ ihned vytvoříme, abychom si mohli vyzkoušet práci se stromy.
 
 Práci se stromy si vyzkoušíme implementací funkce \lstinline{Depth}, která spočítá hloubku stromu.
 Hloubka stromu je rovna jedné, pokud strom nemá podstromy. Pokud má strom alespoň jeden podstrom,
-je hloubka přičteme číslo jedna k hloubce nejhlubšího podstromu.
+přičteme číslo jedna k hloubce nejhlubšího podstromu.
 
 K implementaci funkce \lstinline{Depth} potřebujeme také několik pomocných funkcí. Funkce
 \lstinline{Depths} spočítá hloubky pro každý strom v seznamu stromů. Tuto funkci využijeme
@@ -507,10 +507,10 @@ Nyní si však ukážeme také příklad práce s intenzemi, neboť s nimi bezpo
 pracovat.
 
 V ukázce implementujeme intenze v jazyce TIL-Script. Databázi definujeme pomocí tzv. aktuálních
-extenzí, tedy funkcí popisujících stav světa v konkrétních časovým oknech. Dále definujeme intenze,
+extenzí, tedy funkcí popisujících stav světa v konkrétních časovým okamžicích, případně intervalech,
+pokud funkce popisuje interval okamžiků. Dále definujeme intenze,
 které při extenzionalizaci podle dodaných argumentů správně vyberou aktuální extenzi popisující
-požadovaný světamih. Databáze bude přiložena v příloze, neboť se jedná o dlouhou ukázku. Cílem této
-sekce je nastínit práci s intenzemi, ne jejich tvorbu.
+požadovaný světamih. Databáze bude přiložena v příloze.
 
 Kromě intenzí v databázi, která je součástí příkladu, definujeme také individua, se kterými budeme
 pracovat. Konkrétně se jedná o individua \lstinline{Adela}, \lstinline{Karel} a \lstinline{Vaclav}.
@@ -518,7 +518,7 @@ pracovat. Konkrétně se jedná o individua \lstinline{Adela}, \lstinline{Karel}
 Definice intenzí v jazyce TIL-Script je ovšem zdlouhavá a pro větší databázi může být velmi
 nepřehledná. Pro praktické využití může být žádoucí využít databázové systémy pro uložení dat,
 a pomocí již existující Java knihovny pro daný databázový systém vytvořit TIL-Script knihovnu,
-která umožní s databází komunikovat.
+která uživateli umožní s databází komunikovat.
 
 V ukázce opět importujeme matematickou knihovnu. Dále importujeme také databázi obsahující potřebné
 intenze. Soubor definující intenze se jmenuje \lstinline{intensions.tils}. Za účelem výpisu v ukázce
@@ -544,7 +544,7 @@ notace je čistě syntaktická a parser jazyka TIL-Script ji přepíše na Kompo
 a analýzy syntaktického stromu.
 
 Součástí databáze je individuová role \lstinline{BestStudent/((Indiv Time) World)}, která
-specifikuje nejlepšího studenta v daném okamžiku (podle naší, arbitrárně zvolené metriky), a
+specifikuje nejlepšího studenta v daném okamžiku (podle naší arbitrárně zvolené metriky), a
 funkce \lstinline{IsComputing/(((Bool Indiv Construction) Time) World)}, která uvádí, zda
 uvedené individuum v daném světamihu počítá výraz představovaný konstrukcí.
 
@@ -628,7 +628,7 @@ Nejjednodušší způsob, jak překladač jazyka TIL-Script spustit, je využít
 standardem POSIX, proto by tento skript měl fungovat korektně na všech operačních systémech
 splňujících standard POSIX. Dále se standardu POSIX musí držet také shell, který bude tento pomocný
 skript interpretovat\footnote{Můžeme tedy používat například ZSH nebo Bash. Naopak shell Fish není
-kompatibilní se standardem POSIX, proto skript nebude fungovat korektně}.
+kompatibilní se standardem POSIX, proto skript nebude schopen interpretovat.}.
 
 Skript \lstinline{tilscript.sh} předpokládá, že se nachází ve stejné složce jako soubor
 \lstinline{tilscript.jar}, tedy archiv obsahující přeložený kód překladače. Dále tento skript
@@ -735,16 +735,40 @@ Třída propozic $v$-nevlastních ve všech valuacích $v$.
 
 \subsubsection{Definice}
 
-Následující funkce již jsou korektně definovány a lze provést jejich aplikaci na argumenty. Ke každé
+Následující funkce již jsou definovány a lze provést jejich aplikaci na argumenty. Ke každé
 funkci je přiložena ukázka jejího využití.
+
+\subsubsection*{Funkce: \lstinline|+|, \lstinline|-|, \lstinline|*|, \lstinline|/|}
+
+Typ: \lstinline{(Int Int Int)}, \lstinline{(Real Real Real)}
+
+Aritmetické operace. Tyto funkce jsou definovány jak pro reálná, tak pro celá čísla, oba argumenty
+však musí být stejného typu.
+
+\begin{lstlisting}[caption={Ukázka využití aritmetických operací}]
+['+ '1 '2].
+['* '3.14159 '2.71828].
+\end{lstlisting}
+
+\subsubsection*{Funkce: \lstinline|=|}
+
+Typ: \lstinline{(Bool Any1 Any1)}
+
+Funkce \lstinline{=} slouží k porovnávání objektů. Porovnání objektů je automaticky definováno
+pro všechny typy, včetně seznamů, n-tic, i uživatelem definovaných struktur. Porovnávání
+objektů molekulárních typů probíhá prvek po prvku.
+
+\begin{lstlisting}[caption={Ukázka využití funkce =}]
+['= ['ListOf '1 '2 '3] ['Cons '1 ['ListOf '2 '3]]].
+\end{lstlisting}
 
 \subsubsection*{Funkce: \lstinline|ListOf|}
 
 \lstinline{ListOf} slouží pouze jako syntaktický cukr pro tvorbu seznamů. \lstinline{ListOf}
 aplikujeme na alespoň jeden argument, počet argumentů je ale shora neomezený. Jediným omezením je,
 že všechny argumenty musí být stejného typu. Parser jazyka TIL-Script poté aplikaci
-\lstinline{ListOf} převede na korektní sestavení seznamu pomocí funkce \lstinline{ListOfOne} a
-funkcí \lstinline{Cons}.
+\lstinline{ListOf} převede na korektní sestavení seznamu pomocí funkcí \lstinline{ListOfOne} a
+\lstinline{Cons}.
 
 
 \begin{lstlisting}[caption={Ukázka využití ListOf}]
@@ -770,7 +794,7 @@ Jelikož jsou seznamy definovány induktivně, a zároveň jsou neměnné, není
 kopírovat. Proto lze tuto operaci provést v konstantním čase.
 
 \begin{lstlisting}[caption={Ukázka využití Cons}]
-['Cons 'Pi ['LisOf '1 '2 '3]].
+['Cons 'Pi ['ListOf '1 '2 '3]].
 \end{lstlisting}
 
 \subsubsection*{Funkce: \lstinline|Head|}
@@ -843,7 +867,7 @@ konstrukce a následnému zahození výsledku.
     ['Println '"y is greater than or equal to x"]].
 \end{lstlisting}
 
-\subsubsection*{Funkce: \lstinline{Cond}}
+\subsubsection*{Funkce: \lstinline{Cond}}\label{cond-documentation}
 
 \lstinline{Cond} slouží pouze jako syntaktický cukr pro funkci \lstinline{If}. \lstinline{Cond} tedy
 není funkcí sama o sobě, překladačem je ovšem při procesu tvorby AST přeložena na sérii vnořených
@@ -873,13 +897,13 @@ Typ: \lstinline{(Any2 Any1 Any2)}
 
 Funkce \lstinline{Progn} přijímá dva argumenty. První argument ignoruje, druhý argument vrátí, jak
 jej dostala. Funkce \lstinline{Progn} je tedy ekvivalentem funkce \textit{False} lambda kalkulu
-($\lambda x \lambda y . y$, případně $\lambda x, y: y$ v TIL). Díky principu kompozicionality je aplikace
+($\lambda x \lambda y . y$, případně $\lambda x, y y$ v TIL). Díky principu kompozicionality je aplikace
 \lstinline{Progn} $v$-nevlastní, neobdrží-li první argument. V takovém případě tedy vůbec nedojde
 k vyhodnocení druhého argumentu.
 
-Funkci \lstinline{Progn} využijeme například při výpisu např. do souboru nebo na standardní výstup.
-Pro analýzu přirozeného jazyka většinou není potřeba, kódovat přirozená čísla pomocí Churchova
-kódování v Transparentní intenzionální logice nepotřebujeme.
+Funkci \lstinline{Progn} využijeme například při výpisu do souboru nebo na standardní výstup.
+Pro analýzu přirozeného jazyka většinou není potřeba. Kódovat přirozená čísla pomocí Churchova
+kódování v Transparentní intenzionální logice také nepotřebujeme.
 
 Funkce \lstinline{Progn} je binární funkcí, existuje pro ni ovšem podobný syntaktický cukr, jako pro
 \lstinline{Cond} nebo \lstinline{ListOf}. Předáme-li funkci \lstinline{Progn} více než dva
@@ -914,7 +938,7 @@ potřebujeme-li provést rozhodnutí na základě typu argumentu.
 
 \begin{lstlisting}[caption={Ukázka využití TypeOf}]
 -- Volba funkce na základě typu argumentu typově polymorfní funkce
-\x: Any1 -> Any1 [['If ['= ['TypeOf x] 'Int] 'DiscreteLog 'Log10] x].
+[\x: Any1 -> Any1 [['If ['= ['TypeOf x] 'Int] 'DiscreteLog 'Log10] x]].
 \end{lstlisting}
 
 \subsubsection*{Funkce: \lstinline{IsNil}}
@@ -936,8 +960,8 @@ x -> Real = ['/ a b].
 
 \subsubsection*{Funkce: \lstinline{Exit}}
 
-Aplikací \lstinline{Exit} ukončíme překlad programu. Argument funkce určuje návratovou hodnotu
-programu.
+Aplikací funkce \lstinline{Exit} ukončíme překlad programu. Argument funkce určuje návratovou
+hodnotu programu.
 
 \begin{lstlisting}[caption={Ukázka využití Exit}]
 x -> Real = ['/ a b].
@@ -1028,7 +1052,7 @@ a následné vložení prvků na začátek n-tice.
 Typ: \lstinline{(Any1 Any2 Any3)}
 
 \lstinline{PrependToTuple} přijímá dva argumenty. Prvním argumentem je libovolná hodnota. Druhý
-argument musí být vždy n-tice. \lstinline{PrependToTuple} vytvoří novou (n+1) vložením prvního
+argument musí být vždy n-tice. \lstinline{PrependToTuple} vytvoří novou (n+1)-tici vložením prvního
 argumentu na začátek n-tice specifikované druhým argumentem.
 
 \begin{lstlisting}[caption={Ukázka využití PrependToTuple}]
@@ -1044,19 +1068,6 @@ je-li index větší nebo roven velikosti n-tice.
 
 \begin{lstlisting}[caption={Ukázka využití Get}]
 ['Get '1 ['MkTuple 'E 'Pi]]. -- Pi
-\end{lstlisting}
-
-\subsubsection*{Funkce: \lstinline{TupleLen}}
-Typ: \lstinline{(Int Any1)}
-
-Funkce \lstinline{TupleLen} vrátí délku n-tice. Využití funkce je převážně v typově polymorfních
-funkcích, neboť není-li funkce typově polymorfní, museli jsme typ explicitně uvést, a tedy délku
-n-tice známe. Argumentem musí být n-tice, funkce je typově polymorfní proto, aby argumentem mohly
-být n-tice libovolné délky.
-
-\begin{lstlisting}[caption={Ukázka využití TupleLen}]
--- vynásobíme první prvek n-tice délkou n-tice
-[\x: Any1 -> Int ['* ['TupleLen x] ['Get x '0]]].
 \end{lstlisting}
 
 \subsubsection*{Funkce: \lstinline{TupleLen}}
@@ -1230,13 +1241,13 @@ Standardní knihovna definuje pouze tři proměnné.
 
 Proměnná \lstinline{w} označuje současný svět. Objekty typu \lstinline{World} nemají žádnou
 inherentní hodnotu, využívají se hlavně k označení intenzí. Proměnná \lstinline{w} proto existuje,
-aby si ji uživatel nemusel zbytečně vytvářet sám.
+aby si ji uživatel nemusel explicitně vytvářet sám.
 
 \subsubsection{\lstinline{deviceState -> DeviceState}}
 
 Proměnná \lstinline{deviceState} existuje ze stejného důvodu, jako proměnná \lstinline{w}. Objekty
-typu \lstinline{DeviceState} nemají žádnou skutečnou hodnotu a jsou využívány pro označení funkcí,
-jejichž hodnota závisí na stavu zařízení, na němž je program spuštěn.
+typu \lstinline{DeviceState} nemají žádnou konkrétní hodnotu a jsou využívány pouze pro označení
+funkcí, jejichž hodnota závisí na stavu zařízení, na němž je program spuštěn.
 
 \subsubsection{\lstinline{callsite -> Tuple(Text Int Int)}}\label{callsite-var}
 
@@ -1244,13 +1255,13 @@ Proměnná \lstinline{callsite} je automaticky vytvářená proměnná. Proměnn
 je vytvořena při aplikaci funkce, a obsahuje pozici ve zdrojovém kódu, kde byla aplikace funkce
 provedena. Proměnná slouží především k umožnění lepšího hlášení chyb.
 
-Proměnná slouží převážně jako argument funkce \lstinline{NilAt}, viz \peteref{nilat-fn}.
+Proměnná slouží převážně jako argument funkce \lstinline{NilAt}, viz~\ref{nilat-fn}.
 
 \section{Matematická knihovna}
 
 Matematická knihovna slouží také jako ukázka tvorby TIL-Script knihoven v jazycích kompilovaných
 do JVM bytekódu, nebo jako test importu jmen z Java archivů. Přesto obsahuje několik užitečných
-definic. Narozdíl od standardní knihovny, všechny funkce matematické knihovny jsou korektně
+definic. Narozdíl od standardní knihovny, všechny funkce matematické knihovny jsou plně
 definované, a lze tedy provést jejich aplikaci na argumenty.
 
 \subsection{Funkce}
@@ -1258,7 +1269,8 @@ definované, a lze tedy provést jejich aplikaci na argumenty.
 \subsubsection*{Funkce: \lstinline{Sin}}
 Typ: \lstinline{(Real Real)}
 
-Funkce sinus. Kromě konkrétních hodnot přijímá také symbolickou hodnotu \lstinline{Pi/Real}.
+Funkce sinus. Kromě konkrétních hodnot je definována také pro symbolickou hodnotu
+\lstinline{Pi/Real}.
 
 \begin{lstlisting}[caption={Ukázka využití Sin}]
 ['Sin 'Pi]. -- 0
@@ -1277,7 +1289,8 @@ Inverzní funkce k funkci sinus.
 \subsubsection*{Funkce: \lstinline{Cos}}
 Typ: \lstinline{(Real Real)}
 
-Funkce cosinus. Kromě konkrétních hodnot přijímá také symbolickou hodnotu \lstinline{Pi/Real}.
+Funkce cosinus. Kromě konkrétních hodnot je definována také pro symbolickou hodnotu
+\lstinline{Pi/Real}.
 
 \begin{lstlisting}[caption={Ukázka využití Cos}]
 ['Cos 'Pi]. -- -1
@@ -1296,7 +1309,8 @@ Inverzní funkce k funkci kosinus.
 \subsubsection*{Funkce: \lstinline{Tan}}
 Typ: \lstinline{(Real Real)}
 
-Funkce tangens. Kromě konkrétních hodnot přijímá také symbolickou hodnotu \lstinline{Pi/Real}.
+Funkce tangens. Kromě konkrétních hodnot je definována také pro symbolickou hodnotu
+\lstinline{Pi/Real}.
 
 \begin{lstlisting}[caption={Ukázka využití Tan}]
 ['Tan 'Pi]. -- 0
@@ -1306,7 +1320,7 @@ Funkce tangens. Kromě konkrétních hodnot přijímá také symbolickou hodnotu
 Typ: \lstinline{(Real Real)}
 
 Přirozený logaritmus, logaritmus o základu dvě a logaritmus o základu 10. Přirozený logaritmus
-přijímá rovněž symbolickou hodnotu \lstinline{E/Real}.
+je definován také pro symbolickou hodnotu \lstinline{E/Real}.
 
 \begin{lstlisting}[caption={Ukázka využití Ln, Log2, Log10}]
 ['Ln ['* '2.71828 '2.71828]]. -- Přibližně 2
@@ -1404,7 +1418,7 @@ konstruktor předka -- třídy \lstinline{DefaultFunction}. Konstruktor \lstinli
 přijímá tři argumenty.
 
 Prvním je jméno funkce -- tímto jménem budeme funkci označovat v jazyce TIL-Script. Na jméně třídy,
-která danou funkci reprezentuje, nezáleží, kvůli přehlednosti je však lepší třídu pojmenovat podle
+která danou funkci reprezentuje, nezáleží, kvůli přehlednosti je však vhodné třídu pojmenovat podle
 názvu funkce.
 
 Druhým argumentem je obor hodnot -- typ objektu, který funkce vrátí. Abychom si zkrátili zápis,
@@ -1451,7 +1465,7 @@ Jakmile máme vygenerovanou hlavičku funkce, stačí funkci naprogramovat. Funk
 argument, proto si tento argument uložíme do pomocné proměnné, abychom nemuseli při každém
 přístupu k argumentu indexovat seznam argumentů.
 
-Následně se ujistíme, že je argument Java objekt typu \lstinline{Real}. Díky typové kontroly víme,
+Následně se ujistíme, že je argument Java objektem typu \lstinline{Real}. Díky typové kontroly víme,
 že argument bude reálné číslo, pouze nevíme, zda se jedná o konkrétní číslo (Java objekt typu
 \lstinline{Real} reprezentující reálná čísla), nebo o symbolickou hodnotu (Java objekt typu
 \lstinline{Symbol}). Pokud argumentem není konkrétní hodnota, bohužel nevíme, jakou hodnotu
@@ -1518,12 +1532,14 @@ ve zdrojovém kódu, kde byl daný objekt zkonstruován, a (opět prázdný) sez
 
 \subsection{Implementace registrátoru}
 
-Dále musíme implementovat vlastní registrátor. Registrátor musí implementovat rozhraní
+Dále musíme implementovat vlastní registrátor -- třídu, jejíž instance nám umožní importovat
+námi definovanou funkci. Registrátor musí implementovat rozhraní
 \lstinline{SymbolRegistrar}. Rozhraní definuje řadu abstraktních metod -- opět si je můžeme nechat
 vygenerovat vývojovým prostředím. Tyto metody nám umožňují registrovat např. struktury, typové
 aliasy (\lstinline{TypeDef}), apod. Zde uvedeme pouze definici metody \lstinline{getFunctions()},
 jež slouží k registraci funkcí. Zbylé metody vrací pouze prázdný seznam
-(\lstinline{java.util.ArrayList}) a neuvádíme je zde za účelem zkrácení zápisu.
+(\lstinline{java.util.ArrayList}) a neuvádíme je v ukázce za účelem zkrácení zápisu, v reálné
+implementaci by funkce pouze vraceli instanci prázného seznamu, nesměly by však chybět.
 
 Metoda \lstinline{getFunctions()} pouze vytvoří seznam obsahující instanci námi vytvořené funkce.
 

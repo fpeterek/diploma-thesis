@@ -1,5 +1,22 @@
 \chapter{Závěr}
 
-% TODO
+Cíl práce -- vytvořit funkční překladač jazyka TIL-Script, byl splněn. Byl implementován prototyp
+překladače, který dokáže překládat programy jazyka TIL-Script, chybí mu ovšem některé v praxi
+potřebné optimalizace (například optimalizace koncového volání). Nedostatky jsou však v textu
+zdokumentovány, aby bylo možné překladač dále rozšiřovat a vylepšovat.
+
+Dále práce rozšířila jazyk TIL-Script o nové prvky -- jako jsou například definice nových typů,
+komentáře, výrazy \lstinline{Import}, nebo textové řetězce.
+
+Implementována byla také standardní knihovna pro základní práci s jazykem TIL-Script, nebo
+matematická knihovna definující několik užitečných matematických funkcí.
+
+Překladač umožňuje implementovat TIL-Script funkce, které interně volají funkce jazyka Java -- tím
+se jazyku TIL-Script otvírá také celý Java ekosystém, včetně knihoven pro jazyk Java.
+
+Při tvorbě překladače bylo myšleno také na budoucí rozvoj. Současnou implementaci překladač je možné
+nahradit implementací novou. Pokud bude nový překladač implementovat potřebná rozhraní, bude tento
+překladač plně kompatibilní se standardní a matematickou knihovnou, případně s jakoukoliv jinou
+knihovnou psanou pro jazyk TIL-Script.
 
 \endinput

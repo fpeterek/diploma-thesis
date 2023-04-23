@@ -1,6 +1,6 @@
 \chapter{Implementace}
 
-V této kapitole nastíníme implementační detaily interpreteru. Nejprve zmíníme využité technologie,
+V této kapitole nastíníme implementační detaily překladače. Nejprve zmíníme využité technologie,
 poté popíšeme architekturu projektu, nakonec pak uvedeme zajímavější problémy, které se objevily
 při implementaci překladače, a jejich řešení.
 
@@ -13,10 +13,15 @@ Celý projekt je implementován v jazyce \textbf{Kotlin} \footnote{Přestože je
   Mezi jazyky Kotlin a Java navíc existuje plná interoperabilita}.
 Jazyk Kotlin je staticky typovaný, multiparadigmatický jazyk kompilovaný do \textbf{JVM} bytekódu.
 Kotlin je vytvářen jako alternativa k jazyku Java, a nabízí plnou kompatibilitu s Javou. Využití
-Kotlinu umožňuje využívat veškeré výhody Java ekosystému, včetně knihoven psaných v Javě, ale také
-psát expresivnější kód, než by bylo možné v Javě. Null-safety a jazyková podpora pro algebraické
-datové typy pak umožňují psát bezpečnější kód, než je možné v jazyce Java. Pro spuštění překladače
-je nutné mít na počítači nainstalované JRE.
+Kotlinu umožňuje využívat veškeré výhody Java ekosystému, a také volat již existující Java kód.
+Tím můžeme využít například libovolnou již existující Java knihovnu.
+
+Jazyk Kotlin byl pro implementaci překladače vybrán, protože umožňuje psát expresivnější kód, než by
+bylo možné v Javě. Dále jazyk Kotlin implementuje více statické analýzy, než jazyk Java. Null-safety
+a jazyková podpora pro algebraické datové typy tak umožňuje psát bezpečnější kód, než je možné
+v jazyce Java. Řadu chyb, kterých by bylo možné se dopustit v jazyce Java, dokáže kompilátor Kotlinu
+zachytit již během kompilace, a proto je vývoj projektu rychlejší a překladač obsahuje méně
+potenciálních problémů. Pro spuštění překladače je nutné mít na počítači nainstalované JRE.
 
 Jako build systém byl zvolen projekt \textbf{Gradle}. Důvodem této volby je relativní jednoduchost
 konfigurace i využití systému Gradle, ale také přístup k Maven repozitáři s Java knihovnami. Dále
@@ -26,7 +31,7 @@ Parser generujeme za pomoci technologie \textbf{Antlr} ve verzi 4. Antlr je open
 parserů podporující tvorbu parserů v řadě jazyků. V našem případě využíváme jako cílový jazyk
 Javu.
 
-Interpreter využívá knihovnu \lstinline{org.apache.commons:commons-text} pro zpracování escape
+Interpret využívá knihovnu \lstinline{org.apache.commons:commons-text} pro zpracování escape
 sekvencí. Tím výčet využitých technologií končí.
 
 \section{Architektura projektu}
@@ -68,14 +73,15 @@ Knihovna nemá žádné externí závislosti.
 \subsection{Standardní knihovna \lstinline{stdlib}}
 
 Knihovna \lstinline{stdlib} obsahuje implementaci standardní knihovny. \lstinline{stdlib}
-nekonformuje vůči rozhraní, kterému musí konformovat TIL-Script knihovny implementované jako Java
-knihovny a distribuované jako Java archivy. Standardní knihovnu překladač automaticky importuje
-v každém souboru. Není tedy třeba ji importovat explicitně.
+se nedrží definice rozhraní, které musí implementovat TIL-Script knihovny implementované jako Java
+knihovny a distribuované jako Java archivy. Standardní knihovna je na úrovni překladače importována
+jiným způsobem, než ostatní knihovny. Standardní knihovnu ovšem není třeba importovat explicitně --
+import standardní knihovny implicitně zajistí překladač.
 
-Standardní knihovna je nezávislá na použitém překladači jazyka TIL-Script. Interpreter, jenž je
-součástí projektu, můžeme klidně nahradit novým interpreter (za předpokladu, že daný interpreter
+Standardní knihovna je nezávislá na použitém překladači jazyka TIL-Script. Interpret, jenž je
+součástí projektu, můžeme klidně nahradit novým překladačem (za předpokladu, že daný překladač
 implementuje potřebná rozhraní, např. \lstinline{InterpreterInterface} definované v knihovně
-\lstinline{common}). Interpreter samotný však na standardní knihovně závisí. Kvůli syntaktickému
+\lstinline{common}). Interpret samotný však na standardní knihovně závisí. Kvůli syntaktickému
 cukru (funkce \lstinline{Cond}, \lstinline{ListOf}, atd.), funkci \lstinline{If}, jež musí být
 vyhodnocována líně, apod., musí překladač obsahovat speciální podporu pro standardní knihovnu.
 
@@ -95,7 +101,8 @@ eulerovo číslo a číslo $\pi$.
 
 \subsection{Interpreter}
 
-Na rozdíl od předchozích komponent, které byly čistě Java knihovnami, Interpreter je spustitelný
+Na rozdíl od předchozích komponent, které byly čistě Java knihovnami, Interpreter, tedy projekt
+obsahující interpret jazyka TIL-Script, je spustitelný
 Java program (tedy program s korektně definovanou funkcí \lstinline{main}). Jedná se o referenční
 implementaci překladače jazyka TIL-Script. Překladač podporuje TIL-Script v takové podobě, v jaké je
 definován touto prací. Obsahuje základní nástroje pro hlášení chyb, aby ulehčil práci
@@ -107,9 +114,9 @@ V této sekci nejprve nastíníme fungování překladače. Poté popíšeme zaj
 implementace překladače. Problémy můžou být zajímavé jak z hlediska řešeného problému, tak
 z hlediska budoucího rozvoje.
 
-\subsection{Vysokoúrovňový pohled na interpreter}
+\subsection{Vysokoúrovňový pohled na interpret}
 
-Interpreter funguje čistě jako neinteraktivní textová aplikace. Programy, které potřebujeme
+Překladač funguje čistě jako neinteraktivní textová aplikace. Programy, které potřebujeme
 interpretovat, předáváme překladači jako CLI argumenty. Pro překladač momentálně neexistuje žádné
 grafické rozhraní, ani REPL, který by umožnil interaktivní překlad TIL-Script výrazů. Pokud
 využíváme funkci \lstinline{main} definovanou v JAR překladače, spustí se programy sekvenčně
@@ -121,7 +128,7 @@ Pro strojovou práci se zdrojovým kódem musíme nejdříve daný kód převés
 do reprezentace, se kterou počítač umí pracovat lépe. Proto programy převádíme do stromové
 reprezentace nazývané abstraktní syntaktický strom (také AST -- Abstract Syntax Tree). Tomuto převodu
 se říká \textit{parsování}, případně anglicky \textit{parsing}. Parsing (včetně tokenizace a
-lexikální analýzy) je v našem interpreteru delegován parseru automaticky vygenerovaném technologií
+lexikální analýzy) je v našem překladači delegován parseru automaticky vygenerovaném technologií
 Antlr. Pokud lexer nebo parser narazí na syntaktické chyby v programu, jsou dané chyby ohlášeny
 uživateli a překlad automaticky končí neúspěchem. Pokud je program syntakticky korektní,
 parser vytvoří abstraktní syntaktický strom.
@@ -131,7 +138,7 @@ proto i pomocí Antleru vytvořené AST bývají všeobecné. Antlr však kromě
 abstraktní třídu \lstinline{Visitor} sloužící k průchodu AST pomocí návrhového vzoru
 \textit{visitor}. Pomocí visitoru převedeme výsledek parsování na dočasnou reprezantaci --
 mezivýsledek. Tento výsledek je, díky omezením automaticky vygenerované třídy, stále nedostatečný.
-V průběhu tohoto průchodu interpreter nehledá chyby v programu -- k tomu chybí překladači v současném
+V průběhu tohoto průchodu interpret nehledá chyby v programu -- k tomu chybí překladači v současném
 momentě dostatečný kontext.
 
 Proto proces parsování následuje ještě jeden průchod stromem a jeho konečný převod na přívětivou
@@ -139,7 +146,7 @@ strukturu. Během tohoto průchodu překladač převede reprezentaci zdrojového
 definovaných v knihovně \lstinline{common} -- tedy na standardní objekty očekávané napříč projektem
 (překladačem, funkcemi, apod.). Dále v tomto průchodu překladač provede expanzi funkcí
 \lstinline{Cond}, \lstinline{ListOf}, \lstinline{TupleOf}, \lstinline{Progn} z variadických funkcí,
-jež v TILu neexistují, na sekvenci binárních funkcí. Během tohoto průchodu může interpreter opět
+jež v TILu neexistují, na sekvenci binárních funkcí. Během tohoto průchodu může interpret opět
 zachytávat chyby -- většinou se jedná o chybné využití syntaktického cukru
 
 Následně již dochází k interpretaci programu. Jednotlivé výrazy ovšem nejsou interpretovány přesně
@@ -174,8 +181,8 @@ ve zdrojovém programu.
 \subsection{Detaily implementace}
 
 Tato podsekce popisuje detaily implementace, které mohou být důležité nebo zajímavé. Cílem je
-vyzdvihnout řešení, které jsou důležité z hlediska budoucího rozvoje, řešení zajímavých problémů,
-ale také řešení, které jsou suboptimální a zasloužily by si další vývoj.
+vyzdvihnout řešení, která jsou důležitá z hlediska budoucího rozvoje, řešení zajímavých problémů,
+ale také řešení, která jsou suboptimální a zasloužila by si další vývoj.
 
 \subsubsection{
   Interpretace konstrukcí, správa paměti a operace nad AST}\label{interpretation-of-constructions}
@@ -187,16 +194,16 @@ není překládán do bytekódu, který by byl následně interpretován.
 Tento přístup k interpretaci má jednu velkou výhodu -- nízkou náročnost na implementaci. Překlad
 do bytekódu by s sebou nesl značnou přidanou komplexitu. V první řadě by bylo potřeba implementovat
 vlastní mechanismus zásobníku. V současné době TIL-Script sdílí zásobník s Java prostředím. Aplikace
-funkcí je řešena rekurzivně. Při aplikaci TIL-Script funkce volá interpreter interně metodu, která
+funkcí je řešena rekurzivně. Při aplikaci TIL-Script funkce volá interpret interně metodu, která
 aplikaci provede. S voláním metody na JVM je vždy vytvořen nový rámec na zásobníku\footnote{
   Tzv. \textit{inlining funkcí} zde nebereme v potaz. Při aplikaci TIL-Script funkcí navíc musí
   překladač vždy zavolat virtuální metodu objektu, jenž funkci reprezentuje. Inlining virtuálních
-  metod je možný, avšak složitější, a na podstatu řešení TIL-Script interpreteru nemá žádný vliv,
+  metod je možný, avšak složitější, a na podstatu řešení TIL-Script překladače nemá žádný vliv,
   neboť aplikace funkcí je řešena rekurzivně. Rekurzivní volání nelze inlinovat, a jelikož se
   nejedná o koncové volání, kompilátor nemůže aplikovat ani TCO.
 }.
 Na tomto rámci se poté uloží kontext aplikované TIL-Script funkce (argumenty funkce, apod.).
-Po dokončení interpretace TIL-Script funkce se interpreter vrací z metody zpět na místo, odkud byla
+Po dokončení interpretace TIL-Script funkce se interpret vrací z metody zpět na místo, odkud byla
 metoda zavolána. S návratem z funkce je spojena destrukce rámce na zásobníku -- destrukce, která
 v současné implementaci obsahuje také zapomenutí kontextu funkce. Paměť využitá kontextem funkce
 je v případě potřeby uvolněna garbage collectorem během reklamačního cyklu.
@@ -219,7 +226,7 @@ jako Java funkce. Tyto funkce psané v Javě přirozeně jako své arugmenty oč
 Pokud bychom však překládali zdrojový kód do bytekódu, museli bychom před voláním Java funkce
 převést všechny její argumenty z bytekódu zpět na JVM objekty.
 
-V závislosti na definici bytekódu a implementaci interpreteru by také mohlo být třeba implementovat
+V závislosti na definici bytekódu a implementaci překladače by také mohlo být třeba implementovat
 vlastní haldu a alokátor paměti, neboť by nemuselo být možné využít haldu a alokátory JVM, které
 využívá současná implementace.
 
@@ -238,7 +245,7 @@ rekurze bohužel velmi rychle dojde k přetečení zásobníku.\footnote{
 }
 
 Z časových omezení se bohužel optimalizaci koncové rekurze, ani vše, co by s její implementací bylo
-nutně spojeno (vlastní zásobník, správu paměti, překladač a interpreter bytekódu), nepodařilo
+nutně spojeno (vlastní zásobník, správu paměti, překladač a interpret bytekódu), nepodařilo
 implementovat. Čas byl věnován především rozvoji jazyka TIL-Script a možností jeho interpretace.
 Implementaci TCO je ovšem třeba do budoucna zvážit, a tato sekce tak může posloužit alespoň jako
 návod, jak pokračovat v rozvoji jazyka TIL-Script.
@@ -252,7 +259,7 @@ způsobem je již dříve zmiňovaná definice funkce pomocí Java objektu.
 Aby byl JVM objekt použitelný jako funkce jazyka TIL-Script, musí být daný objekt instancí třídy
 \lstinline{DefaultFunction}. Daný objekt poté musí definovat jméno a typ funkce, a současně metodu
 \lstinline{apply} volanou právě při aplikaci dané funkce. Argumenty této metody jsou instance
-rozhraní \lstinline{InterpreterInterface}, představující aktuálně používaný interpreter, seznam
+rozhraní \lstinline{InterpreterInterface}, představující aktuálně používaný interpret, seznam
 (\lstinline{java.util.List}) všech argumentů funkce, a také kontext aplikace funkce. Kontext
 aplikace obsahuje pozici ve zdrojovém kódu, kde k aplikaci funkce došlo, a slouží především
 k hlášení chyb. Návratovou hodnotou metody \lstinline{apply} je výsledek aplikace funkce na dodané
@@ -330,7 +337,21 @@ konstrukce, nebo nad konstrukcemi, které nejsou nikdy provedeny. Narazí-li př
 kontroly na typově inkoherentní výraz (např. konstrukci, přiřazení proměnné), program okamžitě
 končí chybou.
 
-\begin{lstlisting}[caption={Příklad hlášení chyby}]
+V Transparentní intenzionální logice je provedení typové kontroly problematičtější. Zejména pokud
+je jedním z konstituentů konstrukce dvojí provedení, není vždy možné provést typovou kontrolu
+strojově. Dále, díky hyperintenzionalitě, která nám umožňuje vytvářet nové konstrukce dynamicky
+za běhu programu (například pomocí substituční metody), vyvstává otázka, kdy typovou kontrolu
+provádět. Nabízí se možnost typovou kontrolu provést vždy, když je zkonstruována konstrukce,
+nezávisle na tom, zda bude konstrukce provedena. Tento problém s sebou nese výkonnostní implikace,
+neboť by bylo nutné provádět typovou kontrolu velmi často. Navíc by ji nebylo vždy možné provést.
+Proto typovou kontrolu překladač provádí pouze tehdy, kdy ji může provést s naprostou přesností --
+tedy při provedení konstrukce, kdy již pracuje s konkrétními objekty známého typu. Navíc tak
+překladač provede typovou kontrolu pouze jednou. Výhodou tohoto přístupu je vyšší výkon -- překladač
+provádí méně operací, nevýhodou pak je, že překladač nedokáže chyby zachytit předem.
+
+Ukázku hlášení chyby lze vidět například v ukázce \peteref{type-error-reporting}.
+
+\begin{lstlisting}[caption={Příklad hlášení chyby},label=type-error-reporting]
   ** Error **
 (2, 2): ['CatS '1 '"text"].
      ~~~ ^ ~~~
@@ -360,7 +381,7 @@ K porovnání atributů vůbec nedojde, pokud se počet atributů liší, nebo p
 v názvu. Z popisu typové kontroly struktur vyplývá, že záleží na pořadí atributů -- ačkoliv by to
 ve vysokoúrovňovém skriptovacím jazyku nemuselo být třeba (např. protože neřešíme padding), cílem
 této volby je přinutit uživatele nevytvářet zbytečné definice struktur, zamezit případům, kdy
-se špatně navrhnutá struktura využívá k účelům, ke kterým nebyla zamyšlena, a také zjednodušení
+se špatně navrhnutá struktura využívá k účelům, ke kterým nebyla zamýšlena, a také zjednodušení
 implementace.
 
 Při typové kontrole argumentů a výsledků funkcí již není porovnávání jednotlivých typů nezávislé,
@@ -392,7 +413,7 @@ Mechanismus sdíleného zásobníku (\textit{callstack}) byl nastíněn v oddíl
 Pochopení tohoto mechanismu je navíc potřeba k pochopení implementace uzávěrů a uzávěrem
 konstruovaných funkcí.
 
-Kromě JVM zásobníku si interpreter udržuje také vlastní zásobník. Vlastní zásobník je však díky
+Kromě JVM zásobníku si interpret udržuje také vlastní zásobník. Vlastní zásobník je však díky
 rekurzivní implementace aplikace funkcí svázán se zásobníkem platformy Java. Jednotlivé rámce
 zásobníku jsou využívány k ukládání proměnných. Dále pak má každý rámec nanejvýš jeden rodičovský
 rámec. Při provádění proměnné překladač zkontroluje nejprve rámec na vrcholu zásobníku. Pokud daný
@@ -456,7 +477,7 @@ jazycích nezbytná, či překlad do bytekódu umožňující efektivnější p�
 že bude potřeba nahradit současný překladač jinou implementací. V takovém případě ovšem není
 žádoucí, aby nastala potřeba přepsat nebo upravit také všechny již existující TIL-Script knihovny,
 standardní knihovnu, apod. Pro implementaci TIL-Script knihovny je však potřeba, aby např.
-TIL-Script funkce implementované v Javě měly určitý přístup k interpreteru, nebo alespoň kontextu,
+TIL-Script funkce implementované v Javě měly určitý přístup k překladači, nebo alespoň kontextu,
 ve kterém jsou volány. Jinak by tyto funkce nemohly přistupovat k proměnným, k jiným funkcím, apod.
 
 Za účelem odstranění závislosti na konkrétním překladači definuje knihovna \lstinline{common}
