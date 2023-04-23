@@ -5,11 +5,12 @@ překladače, který dokáže překládat programy jazyka TIL-Script, chybí mu 
 potřebné optimalizace (například optimalizace koncového volání). Nedostatky jsou však v textu
 zdokumentovány, aby bylo možné překladač dále rozšiřovat a vylepšovat.
 
-Dále práce rozšířila jazyk TIL-Script o nové prvky -- jako jsou například definice nových typů,
+Dále práce rozšířila jazyk TIL-Script o nové prvky, jako jsou například definice nových typů,
 komentáře, výrazy \lstinline{Import}, nebo textové řetězce.
 
 Implementována byla také standardní knihovna pro základní práci s jazykem TIL-Script, nebo
-matematická knihovna definující několik užitečných matematických funkcí.
+matematická knihovna definující několik užitečných matematických funkcí. Standardní i matematická
+knihovna jsou zdokumentovány v tomto textu.
 
 Překladač umožňuje implementovat TIL-Script funkce, které interně volají funkce jazyka Java -- tím
 se jazyku TIL-Script otvírá také celý Java ekosystém, včetně knihoven pro jazyk Java.
@@ -18,5 +19,13 @@ Při tvorbě překladače bylo myšleno také na budoucí rozvoj. Současnou imp
 nahradit implementací novou. Pokud bude nový překladač implementovat potřebná rozhraní, bude tento
 překladač plně kompatibilní se standardní a matematickou knihovnou, případně s jakoukoliv jinou
 knihovnou psanou pro jazyk TIL-Script.
+
+Nakonec byla práce také doplněna o řadu ukázek TIL-Script programů, ale také o ukázku tvorby
+TIL-Script knihoven pomocí jazyků Java a Kotlin. Do budoucna lze jazyk TIL-Script i překladač dále
+rozvíjet, kromě dříve zmíněných optimalizací by například bylo možné překladač doplnit o
+interaktivní prostředí, které umožní zadávat TIL-Script věty a konstrukce interaktivně a postupně
+je překládat. K interaktivnímu rozhraní by pak bylo možné vytvořit grafické prostředí, například
+skrze webovou aplikaci. Přesto je však překladač funkčí a použitelný již v současné verzi, a snad
+tedy umožní další vývoj na poli logické analýzy přirozeného jazyka.
 
 \endinput
