@@ -10,24 +10,18 @@
 \usepackage{amsfonts}
 \usepackage{enumerate}
 
-% \usepackage[dvipsnames]{xcolor}
 \usepackage{listings}
 
 \lstdefinelanguage{Kotlin}{
   comment=[l]{//},
   commentstyle={\color{gray}\ttfamily},
   emph={filter, first, firstOrNull, forEach, lazy, map, mapNotNull, println},
-  % emphstyle={\color{OrangeRed}},
-  % identifierstyle=\color{black},
   keywords={!in, !is, abstract, actual, annotation, as, as?, break, by, catch, class, companion, const, constructor, continue, crossinline, data, delegate, do, dynamic, else, enum, expect, external, false, field, file, final, finally, for, fun, get, if, import, in, infix, init, inline, inner, interface, internal, is, lateinit, noinline, null, object, open, operator, out, override, package, param, private, property, protected, public, receiveris, reified, return, return@, sealed, set, setparam, super, suspend, tailrec, this, throw, true, try, typealias, typeof, val, var, vararg, when, where, while},
-  % keywordstyle={\color{NavyBlue}\bfseries},
   morecomment=[s]{/*}{*/},
   morestring=[b]",
   morestring=[s]{"""*}{*"""},
   ndkeywords={@Deprecated, @JvmField, @JvmName, @JvmOverloads, @JvmStatic, @JvmSynthetic, Array, Byte, Double, Float, Int, Integer, Iterable, Long, Runnable, Short, String, Any, Unit, Nothing},
-  % ndkeywordstyle={\color{BurntOrange}\bfseries},
   sensitive=true,
-  % stringstyle={\color{ForestGreen}\ttfamily},
 }
 
 \lstdefinelanguage{Tilscript}{
@@ -98,35 +92,18 @@
 \AddAcronym{GNU}{GNU is not Unix}
 \AddAcronym{RCE}{Remote Code Execution}
 
-\addbibresource{Sources/biblatex-examples.bib}
-\addbibresource{Sources/coffee.bib}
-
-% Novy druh tabulkoveho sloupce, ve kterem jsou cisla zarovnana podle desetinne carky
-\newcolumntype{d}[1]{D{,}{,}{#1}}
-
 \renewcommand\lstlistingname{Ukázka}
-% \renewcommand\listoflistingscaption{Seznam výpisů zdrojového kódu}
-% \listoflistings
 
-% Zacatek dokumentu
 \begin{document}
 
-% TODO: Uncomment
 \MakeTitlePages
 
-% TODO: Uncomment
-% Jsou v praci obrazky? Pokud ano vysazime jejich seznam a odstrankujeme.
-% Pokud ne smazeme nasledujici dve makra.
 \listoffigures
 \clearpage
 
-% TODO: Uncomment
-% Jsou v praci tabulky? Pokud ano vysazime jejich seznam a odstrankujeme.
-% Pokud ne smazeme nasledujici dve makra.
 \listoftables
 \clearpage
 
-% A nasleduje text zaverecne prace.
 \input{Chapters/Introduction.tex}
 \input{Chapters/TIL.tex}
 \input{Chapters/Tilscript.tex}
@@ -134,10 +111,46 @@
 \input{Chapters/Documentation.tex}
 \input{Chapters/Conclusion.tex}
 
-% Seznam literatury
-\printbibliography[title={Literatura}, heading=bibintoc]
+% \printbibliography[title={Literatura}, heading=bibintoc]
 
-% Prilohy
+\begin{thebibliography}{50}
+
+\bibitem{til-duzi}
+Duží, M., Materna, P.: \textit{TIL jako procedurální logika, (průvodce zvídavého čtenáře Transparentní intensionální logikou)} \\
+Aleph Bratislava 2012, ISBN 978-80-89491-08-7
+
+\bibitem{til-script}
+Ciprich, N., Duží, M., Košinár, M.: \textit{TIL-Script: Functional Programming Based on
+Transparent Intensional Logic} \\
+In: \textit{RASLAN 2007}, Sojka, P., Horák, A., (Eds.), Masaryk University Brno, 2007, pp. 37–42.
+
+\bibitem{antlr-src}
+Parr, T.: \textit{ANTLR v4} [online, cit. 2022-06-09] \\
+Dostupné z: \url{https://www.antlr.org} \\
+Terence Parr
+
+\bibitem{kotlin-src}
+Kotlin: \textit{Kotlin Programming Language} [online, cit. 2022-06-09] \\
+Dostupné z: \url{https://kotlinlang.org} \\
+Jetbrains, s.r.o.
+
+\bibitem{gradle-src}
+Gradle: \textit{Gradle Build Tool} [online, cit. 2022-06-09] \\
+Dostupné z: \url{https://gradle.org} \\
+Gradle Enterprise
+
+\bibitem{halting-problem-src}
+Turing, A. M.: \textit{On Computable Numbers, With Application To Entscheidungsproblem} \\
+Dostupné z: \url{https://doi.org/10.1112/plms/s2-42.1.230}\\
+Proceedings of the London Mathematical Society, s2-42: 230-265.
+
+\bibitem{lisp-src}
+John McCarthy. 1960. \textit{Recursive functions of symbolic expressions and their computation by machine, Part I.}\\
+Dostupné z: \url{https://doi.org/10.1145/367177.367199}
+Commun. ACM 3, 4 (April 1960), 184–195.
+
+\end{thebibliography}
+
 \appendix
 \input{Chapters/Appendix2.tex}
 
