@@ -3,7 +3,7 @@
 Nyní konečně přišel čas představit TIL-Script. TIL-Script je interpretovaný funkcionální
 programovací jazyk, do znatelné míry inspirovaný jazyky jako Haskell nebo Lisp. Syntax jazyka
 TIL-Script by měla co nejvíce připomínat syntaktické prvky Transparentní intenzionální logiky, aby
-pouhá znalost TILu stačila k okamžitému pochopení jazyka TIL-Script. Sémantika TIL-Script konstrukcí
+pouhá znalost TIL stačila k okamžitému pochopení jazyka TIL-Script. Sémantika TIL-Script konstrukcí
 poté musí odpovídat sémantice TIL.
 
 Tato kapitola je rozdělena do tří sekcí. V první sekci jsou popsány důležité základní rysy jazyka
@@ -13,22 +13,20 @@ oproti předchozím iteracím jazyka. Poslední sekce navrhuje rozšíření jaz
 \section{Charakteristické rysy jazyka TIL-Script}
 
 Tato sekce popisuje charakteristické rysy jazyka TIL-Script v takové podobě, jakou nabývá v této
-práci. Pokud se v některém bodě TIL-Script neshoduje s TILem či předchozími verzemi jazyka
-TIL-Script, je rozdíl náležitě popsán a vysvětlen.
+práci. Pokud se v některém bodě TIL-Script neshoduje s Transparentní intenzionální logikou či
+předchozími verzemi jazyka TIL-Script, je rozdíl náležitě popsán a vysvětlen.
 
 \subsection{Lambda kalkul parciálních funkcí}
 
 \subsubsection{Shora neomezená arita funkcí}
 
-% TODO: Ozdrojovat currying asi? Idk, lambda kalkul
-
 Na rozdíl od lambda kalkulu ve své tradiční podobě, nebo například jazyka Haskell, v Transparentní
 intezionální logice není arita funkce shora omezená, viz \peteref{fn-arity}. TIL-Script musí tento
 fakt reflektovat. Proto tento jazyk umožňuje definici i aplikaci funkcí libovolné (samozřejmě
-kladné) arity. Nevyužíváme zde tedy rozvíjení funkcí (anglicky \textit{currying}). Zatímco např.
-v Haskellu jsou funkce arity dvě nebo vyšší automaticky rozvinuty na sérií několika unárních
-funkcí, jejichž oborem hodnot jsou unární nebo nulární funkce, v jazyce TIL-Script není arita nijak
-omezená.
+kladné) arity. Nevyužíváme zde tedy rozvíjení funkcí (anglicky \textit{currying})\cite{partiality}.
+Zatímco např. v Haskellu jsou funkce arity dvě nebo vyšší automaticky rozvinuty na sérií několika
+unárních funkcí, jejichž oborem hodnot jsou unární nebo nulární funkce, v jazyce TIL-Script není
+arita nijak omezená.
 
 \subsubsection{Parciální funkce a respektování principu kompozicionality}
 
@@ -39,15 +37,12 @@ je $v$-nevlastní, bude také nutně $v$-nevlastní. Reprezentaci stavu, kdy je 
 aplikována na argumenty, na kterých není definována, se věnuje podsekce \peteref{nil-value}
 této kapitoly. 
 
-%TODO: Ocitovat
 Jedinou výjimkou je funkce \lstinline{IsNil}, jež vrací pravdivostní hodnotu \lstinline{True},
 pokud je její jediný argument \lstinline{Nil}, v opačném případě je jejím výsledkem
 \lstinline{False}. Tato speciální sémantika funkce \lstinline{IsNil}, ačkoliv porušuje princip
 kompozicionality a vyžaduje aplikaci unární funkce na \textit{nic}, je zvolena jako doplněk
-k funkci $Improper/(o*_n)$ definované v Průvodci čtenáře, a jako kompromis mezi dodržením
-principů TIL a umožněním zpracování chybových stavů.
-
-%TODO: Pokračovat v kontrole
+k funkci $Improper/(o*_n)$ definované v Průvodci čtenáře\cite{til-duzi}, a jako kompromis mezi
+dodržením principů TIL a umožněním zpracování chybových stavů.
 
 \subsection{Okamžité vyhodnocování}
 
@@ -57,7 +52,7 @@ principu kompozicionality. Pokud by vyhodnocování bylo líné, programátor im
 funkci v jazyce Java by si mohl vyžádat vyhodnocení argumentu během aplikace funkce, zjistit,
 že funkce neobdržela jeden z argumentů, ale přesto by mohl tento fakt ignorovat a vrátit ze své
 funkce validní hodnotu. Tím by však došlo k aplikaci funkce na chybějící argument a také k porušení
-principu kompozicionality (konstrukce by mohla mít význam, ačkoliv je jedna z jejích konstrukcí
+principu kompozicionality (konstrukce by mohla mít význam, ačkoliv je jedna z jejich podkonstrukcí
 $v$-nevlastní).
 
 \subsection{Neměnnost argumentů funkcí a objektů (\textit{Immutability})}
@@ -66,13 +61,16 @@ Jelikož je TIL-Script funkcionální jazyk, jsou objekty a argumenty funkcí ne
 (\textit{immutable}). Zatímco v imperativních jazycích, jako je třeba jazyk C++, není problém
 v těle funkce modifikovat argument, který funkce obdržela, v jazyce TIL-Script nic takového provést
 nemůžeme. Dále například nemůžeme modifikovat existující seznam. Pokud chceme transformovat již
-existující seznam, musíme vytvořit nový seznam a požadované hodnoty uložit v novém seznamu. Podobně
-nemůžeme změnit hodnoty n-tice, můžeme však vytvořit novou n-tici.
+existující seznam, musíme vytvořit nový seznam a požadované hodnoty uložit v novém seznamu\footnote{
+  Neměnnost a induktivní definice seznamů umožňuje, aby dva různé seznamy rozdílně začínaly, od
+  určitého prvku však sdílely stejný zbytek (\lstinline{Tail}). Díky této optimalizaci se můžeme
+  vyhnout zbytečnému kopírování seznamů.
+}. Podobně nemůžeme změnit hodnoty n-tice, můžeme však vždy vytvořit novou n-tici.
 
 Hodnotu volné proměnné změnit lze, abychom mohli zkoumat konstrukce při různých valuacích $v$.
 Typ proměnné však změnit nelze.
 
-Obdobně nelze redefinovat funkce nebo změnit typ symbolické hodnoty
+Obdobně nelze redefinovat funkce (změnit typ či předpis funkce) nebo změnit typ symbolické hodnoty
 (viz \peteref{symbolic-values}).
 
 \subsection{Definice a deklarace symbolů}
@@ -112,14 +110,16 @@ pořadí, v jakém jsou uvedené ve zdrojovém kódu.
 
 Deklarace bez řádných definic na první pohled můžou působit zbytečně. K čemu může sloužit funkce,
 kterou nelze aplikovat? Nesmíme však zapomenout, že konstrukce TIL samy vyjadřují význam, a nemusí
-nutně sloužit pouze k provedení. Provedením konstrukce sice dostaneme její denotát, ten nás ale ne
+nutně být pouze provedeny. Provedením konstrukce sice dostaneme její denotát, ten nás ale ne
 vždy zajímá. Představme si tedy případ, kdy provádíme analýzu výrazu přirozeného jazyka. Výraz
 analyzujeme pomocí Transparentní intenzionální logiky a získáme konstrukci. S danou konstrukcí
 chceme dále pracovat a chceme ji strojově zpracovat. Její denotát nás ovšem nezajímá, zajímá nás
 pouze význam konstrukce -- procedura. Současně daná konstrukce obsahuje funkci, jejíž definici vůbec
 neznáme, nebo ji známe, ale nejsme schopni ji strojově vyjádřit, nebo nás pouze nezajímá. Jelikož
 víme, že konstrukci nebudeme provádět, a tedy nebudeme ani aplikovat funkci v ní zmíněnou,
-nepotřebujeme znát její přesnou definici. Stačí nám znát pouze její název a typ.
+nepotřebujeme znát její přesnou definici. Stačí nám znát pouze její název a typ. Právě tehdy
+provedeme deklaraci funkce, pomocí které funkci přiřadíme název a typ, ale již nijak nedefinujeme
+sémantiku funkce.
 
 Pro představu uveďme několik příkladů, kdy stačí dodat deklaraci (název a typ), protože
 nepotřebujeme definici (název, typ i sémantiku).
@@ -144,10 +144,11 @@ následně je očíslovat, a vytvořit nekonečnou tabulku, která každému pro
 pokud program zastaví, v opačném případě pak hodnotu 0. Jelikož však počítače mají pouze omezené
 zdroje, nekonečnou tabulku sestavit nelze. A jelikož, jak dokázal již Alan Turing, je tento problém
 algoritmicky nerozhodnutelný, nemůžeme ani sestavit algoritmus, který obdrží na vstupu zdrojový kód,
-a na základě analýzy zdrojového kódu rozhodne, zda program zastaví. Přesto však funkci
-\lstinline{Zastaví/(Bool Text)}, případně \lstinline{Halts/(Bool Text)} můžeme potřebovat například
-k analýze věty ``Programátor zkoumá, zda jeho program někdy zastaví.'' V tomto případě deklaraci bez
-definice využijeme proto, že korektní definice funkce \lstinline{Halts/(Bool Text)} neexistuje.
+a na základě analýzy zdrojového kódu rozhodne, zda program zastaví\cite{halting-problem-src}. Přesto
+však funkci \lstinline{Zastaví/(Bool Text)}, případně \lstinline{Halts/(Bool Text)} můžeme
+potřebovat například k analýze věty ``Programátor zkoumá, zda jeho program někdy zastaví.'' V tomto
+případě deklaraci bez definice využijeme proto, že korektní definice funkce
+\lstinline{Halts/(Bool Text)} neexistuje.
 
 Názvosloví \textit{deklarace}, \textit{definice} je převzato z programovacího jazyka C, kde
 deklarace pouze uvědomí překladač o existenci symbolu, definice poté přiřadí symbolu konkrétní
@@ -155,11 +156,11 @@ hodnotu. Počet deklarací je shora neomezený, naopak definice může existovat
 Deklarace nedefinovaného symbolu není chybou, ovšem snaha nedefinovaný symbol využít (např. volání
 funkce, přístup k proměnné) vyústí v chybu při procesu linkování.
 
-\section{TIL-Script jako výpočetní varianta TILu}
+\section{TIL-Script jako výpočetní varianta TIL}
 
 Tato sekce popisuje základní výrazy a konstrukce jazyka TIL-Script, které existovaly již
 v předchozích verzích jazyka. Pokud práce tyto výrazy nějakým způsobem upravuje, je úprava náležitě
-popsána a zdůvodněna.
+popsána a zdůvodněna.\cite{til-script}\cite{vyletelek}
 
 \subsection{Věty jazyka TIL-Script}
 
@@ -183,17 +184,17 @@ Typ $o$ představující pravdivostní hodnoty TIL-Script pojmenovává \lstinli
 
 Typ $\iota$, v jazyce TIL-Script \lstinline{Indiv}, reprezentuje množinu individuí. Individua
 v Transparentní intenzionální logice považujeme za \textit{holá} -- žádnou netriviální vlastnost
-nemají nutně. Všechny netriviální vlastnosti individuí jsou určeny stavem světa. Individuum samotné
-nemá žádnou inherentní valuaci. Slouží pouze jako unikátní indentifikátor. Obdobně hodnoty
-\lstinline{Indiv} v jazyce TIL-Script nemají žádnou konkrétní reprezentaci. Typ \lstinline{Indiv}
-je využíván v konjunkci se symbolickými hodnotami, viz \peteref{symbolic-values}. Tímto TIL-Script
-umožňuje uživateli referovat na konkrétní individuum pouze pomocí symbolického identifikátoru,
-aniž by individuím musely být přiřazeny arbitrárně zvolené konkrétní hodnoty.
+nemají nutně\cite{til-duzi}. Všechny netriviální vlastnosti individuí jsou určeny stavem světa.
+Individuum samotné nemá žádnou inherentní valuaci. Slouží pouze jako unikátní indentifikátor.
+Obdobně hodnoty \lstinline{Indiv} v jazyce TIL-Script nemají žádnou konkrétní reprezentaci. Typ
+\lstinline{Indiv} je využíván v konjunkci se symbolickými hodnotami, viz \peteref{symbolic-values}.
+Tímto TIL-Script umožňuje uživateli referovat na konkrétní individuum pouze pomocí symbolického
+identifikátoru, aniž by individuím musely být přiřazeny arbitrárně zvolené konkrétní hodnoty.
 
 Reálná čísla TIL-Script reprezentuje typem \lstinline{Real}. V implementaci překladače vytvořeném
 v rámci této práce jsou reálná čísla interně reprezentována typem \lstinline{double}. TIL-Script
 samotný žádné omezení na reprezentaci reálných čísel nestanovuje, prakticky však reálná čísla
-v současné implementaci reprezentujeme pomocí 64bitové reprezentace dle IEEE 754.
+v současné implementaci reprezentujeme pomocí 64bitové reprezentace dle standardu IEEE 754.
 
 Celá čísla TIL-Script reprezentuje typem \lstinline{Int}. Obdobně jako u typu \lstinline{Real}
 neexistuje omezení pro reprezentaci celých čísel. Interně je využíván datový typ \lstinline{long},
@@ -206,9 +207,9 @@ aplikací získáme počet milisekund uplynulých od 1. ledna 1970.
 
 Typ konstrukcí, v TIL denotován $*$, byl v jazyce TIL-Script přejmenován
 na \lstinline{Construction}. V dřívějších verzích jazyka se pro typ konstrukcí také využíval znak
-$*$. Změna na \lstinline{Construction} byla provedena z důvodu zachování konzistence s ostatními
-typy, které v jazyce TIL-Script taktéž pojmenováváme anglickými slovy, a také z důvodu omezení
-ambiguity, aby se typ konstrukce nepletl s funkcí násobení. Zatímco typograficky korektní
+$*$\cite{vyletelek}. Změna na \lstinline{Construction} byla provedena z důvodu zachování konzistence
+s ostatními typy, které v jazyce TIL-Script taktéž pojmenováváme anglickými slovy, a také z důvodu
+omezení ambiguity, aby se typ konstrukce nepletl s funkcí násobení. Zatímco typograficky korektní
 reprezentací násobení je využití znaku $\times$, na počítači násobení značíme $*$. Ačkoliv lze mezi
 funkcí násobení a typem konstrukcí odlišit na základě kontextu, v jakém se znak objevuje, odlišení
 již v názvu umožňuje uživateli jednoduše rozeznat typ konstrukce od násobení čísel okamžitě a
@@ -227,7 +228,7 @@ $\bigl \langle 0; 2^{32}-1 \bigr \rangle$. Nenulové indexy nesmí začínat č�
 
 Generické typy lze použít pouze v typech funkcí. Má-li více argumentů funkce stejný generický
 typ, tedy typ \lstinline{Any} se stejným indexem, překladač při procesu typové kontroly zajistí,
-že argumenty, na něž je funkce za běhu aplikována, jsou stejného typu.
+že argumenty, na něž je funkce za běhu aplikována, jsou stejného konkrétního typu.
 
 \subsection{Výrazy \textit{TypeDef}}
 
@@ -274,8 +275,11 @@ mezi názvy jednotlivých typů. Tedy ekvivalentem k typu $(o\nu\tau)$ by v jazy
 \lstinline{(Bool Int Real)}, případně \lstinline{(Bool Int Time)}.
 
 Funkce lze deklarovat uvedením názvu funkce následovaným lomítkem a jejím typem. Deklarujeme-li
-více funkcí stejného typu, můžeme uvést více názvů oddělených čárkami. Pro definici funkce byla
-přidána nová syntax popsaná v sekci \peteref{fn-definition}.
+více funkcí stejného typu, můžeme uvést více názvů oddělených čárkami. Deklarací funkci přiřadíme
+pouze název a typ, ne sémantiku.
+
+Pro definici funkce, tedy přiřazení sémantiky, byla přidána nová syntax popsaná v sekci
+\peteref{fn-definition}.
 
 \begin{lstlisting}[caption={Deklarace funkcí}]
 Add, Sub, Mult, Div/(Int Int Int).
@@ -309,16 +313,13 @@ hodnotu v závislosti na valuaci $v$.
 Volné proměnné lze deklarovat bez přiřazení valuace, ale lze je také definovat a přiřadit jim
 konkrétní hodnotu. Proměnné deklarujeme, pokud nás nezajímá konkrétní valuace. Přiřazení hodnoty
 využijeme například v případě, kdy si chceme uložit výsledek drahé operace (např. čtení
-z databáze), nebo si třeba jen chceme zkrátit zápis dlouhé konstrukce, a chceme pracovat
-s konkrétní valuací $v$. Vždy je třeba uvést typ hodnoty, kterou proměnná konstruuje.
-
-% Je-li konstrukce, jejíž hodnotu přiřazujeme proměnné, $v$-nevlastní,
-% a tedy nekonstruuje žádnou hodnotu, program skončí chybou.
+z databáze), nebo si třeba jen chceme zkrátit zápis dlouhé konstrukce, nebo když chceme pracovat
+s konkrétní valuací $v$. Vždy je třeba uvést typ hodnoty, kterou proměnná $v$-konstruuje.
 
 Syntax pro deklaraci proměnné již existovala. Syntax pro definici proměnné (přiřazení hodnoty)
-je nově zavedená. Deklarovat můžeme více proměnných najednou, za předpokladu, že se jedná o
-proměnné stejného typu, stačí názvy jednotlivých proměnných oddělit čárkou. Přiřazujeme-li však
-proměnné valuaci, můžeme uvést vždy pouze jednu proměnnou.
+je nově zavedená. Deklarovat můžeme více proměnných najednou, ale pouze za předpokladu, že se jedná
+o proměnné stejného typu. Pak stačí názvy jednotlivých proměnných oddělit čárkou. Přiřazujeme-li
+však proměnné valuaci, můžeme uvést vždy pouze jednu proměnnou.
 
 Pro změnu hodnoty volné proměnné použijeme stejnou syntax jako při úvodním přiřazení hodnoty.
 Přiřazení hodnoty proměnné však není konstrukce, ale metavýraz, proto lze hodnotu proměnné vždy
@@ -326,9 +327,10 @@ změnit pouze na nejvyšší úrovni v programu. Typ proměnné změnit nelze.
 
 Deklarace proměnných jsou vždy provedeny hned po spuštění programu, nezávisle na tom, kde v programu
 jsou uvedeny. Přiřazení hodnot proměnným není prováděno přednostně, aby byla umožněna korektní
-redefinice proměnné. Hodnota proměnné je tehdy změněna pouze a přesně na místě, kde je tak uvedeno
+redefinice proměnné. Hodnota proměnné je tedy změněna pouze a přesně na místě, kde je tak uvedeno
 v programu. Deklarace jsou však z definic vždy dedukovány automaticky -- proměnná je přednostně
-deklarována při spuštění programu, i když její deklarace není uvedena explicitně.
+deklarována při spuštění programu, i když její deklarace není uvedena explicitně, abychom proměnnou
+mohli zmínit.
 
 Název proměnné musí začínat malým písmenem. 
 
@@ -362,10 +364,11 @@ využívat příliš často. Většinou tedy budeme používat Dvojí Provedení
 
 Kompozice umožňuje aplikovat funkce na argumenty. Kompozice využívají stejnou syntax jako v TIL.
 Protože arita funkce musí být alespoň jedna, musí i Kompozice obsahovat alespoň dvě podkonstrukce
--- funkci samotnou a alespoň jeden její argument. Počet argumentů, na něž funkci aplikujeme, musí
-odpovídat počtu argumentů funkce. Dále nesmí být žádný argument $v$-nevlastní (s výjimkou funkcí
-\lstinline{If} a \lstinline{IsNil}). V opačném případě k aplikaci funkce vůbec nedojde, neboť
-nemáme argumenty, na které bychom funkci aplikovali, a Kompozice je tak $v$-nevlastní.
+-- konstrukci konstruující funkci a alespoň jeden její argument. Počet argumentů, na něž funkci
+aplikujeme, musí odpovídat počtu argumentů funkce. Dále nesmí být žádný argument $v$-nevlastní
+(s výjimkou funkcí \lstinline{If} a \lstinline{IsNil}). V opačném případě k aplikaci funkce vůbec
+nedojde, neboť nemáme argumenty, na které bychom funkci aplikovali, a Kompozice je tak
+$v$-nevlastní.
 
 \begin{lstlisting}[caption={Příklad využití Kompozice}]
 ['* '2 '6].
@@ -409,7 +412,7 @@ V TIL často využíváme zkráceného zápisu jak pro typy intenzí, tak pro je
 Pro hodnoty typu $\alpha$ závislé na světamihu zkracujeme zápis $((\alpha\tau)\omega)$
 na $(\alpha_{\tau\omega})$. Obdobně pro extenzionalizaci intenze $a$ využíváme zkráceného zápisu
 $a_{wt}$ ekvivalentnímu konstrukci $[[a w] t]$, kde $a$ je konstrukce konstruující funkci
-(většinou se jedná o Trivializaci), a $w \rightarrow_v \omega$, $t \rightarrow_v \tau$. Jedná
+(často se jedná o Trivializaci), a $w \rightarrow_v \omega$, $t \rightarrow_v \tau$. Jedná
 se však pouze o notační zkratku -- o dohodu, ne součást TIL.
 
 Ekvivalentní zkratky můžeme využívat také v jazyce TIL-Script. Chceme-li specifikovat typ intenze,
@@ -420,8 +423,8 @@ intenze. Zkratka \lstinline{@wt} vždy extenzionalizuje za využití proměnnýc
 jiného názvu.
 
 \begin{lstlisting}[caption={Příklad využití zkrácené notace}]
-(Bool Indiv)@tw -- intenze typu (((Bool Indiv) Time) World)
-['Rektor@wt 'VSB] -- extenzionalizace funkce Rektor/(((Indiv Indiv) Time) World)
+Rektor/(Indiv Indiv)@tw. -- intenze typu (((Indiv Indiv) Time) World)
+['Rektor@wt 'VSB]. -- extenzionalizace funkce Rektor/(((Indiv Indiv) Time) World)
                   -- a následná aplikace na argument VSB.
 \end{lstlisting}
 
@@ -432,7 +435,6 @@ zpracování je však vhodné mít k dispozici způsob vyjádření kolekce dat,
 obsahuje. Seznam představuje homogenní seřazenou kolekci potenciálně neomezené délky. Seznamy můžou
 obsahovat duplicity.
 
-% TODO: Lisp ref
 V této práci jsou všechny seznamy neměnné. Seznamy jsou definovány induktivně. Seznam je buď
 prázdný seznam, nebo \textit{cons cell} skládající se z hlavičky (známé jako \textit{head} nebo
 \textit{CAR} z jiných jazyků) -- prvního prvku v seznamu, a z podseznamu reprezentujícího
@@ -440,25 +442,24 @@ zbytek seznamu (\textit{tail}, \textit{CDR}). Z definice tedy vyplývá, že vyt
 vložením prvku na začátek lze provést v konstantním čase. Vytvoření nového seznamu přidáním prvku
 na konec jiného seznamu naopak bude lineární vzhledem k velikosti původního kolekce. Tato
 implementace seznamu je volena zejména proto, že umožňuje snadnou iteraci pomocí rekurzivních funkcí.
-Stejnou implementaci seznamů využívají například jazyky Lisp, Haskell, a další.
+Stejnou implementaci seznamů využívají například jazyky Lisp, Haskell, a další\cite{lisp-src}.
 
 Typ seznamu denotujeme slovem \lstinline{List} následovaným kulatými závorkami, v nichž je uveden
 typ prvku ukládaného v seznamu.
 
-% TODO: Ref to stdlib documentation
 Standardní knihovna obsahuje řadu funkcí pro práci se seznamy. Tyto funkce jsou v této kapitole
 pouze nastíněny při ilustraci využití seznamů, podrobněji jsou však zdokumentovány v kapitole
-popisující standardní knihovnu.
+popisující standardní knihovnu, viz \peteref{stdlib-doc}.
 
 Dále interpret implementuje syntaktický cukr pro jednodušší vytváření seznamů. Pro vytvoření
 seznamu stačí v kompozici aplikovat funkci \lstinline{ListOf} na nenulový, avšak shora neomezený
 počet argumentů. Během parsování bude tato kompozice korektně přepsána na sérii kompozic
-využívajících funkci \lstinline{Cons} k vytvoření \textit{cons cells}. K žádné aplikaci funkce
-na libovolný počet argumentů tedy nedochází. Při vytváření seznamu pomocí \lstinline{ListOf} musíme
-dodat alespoň jeden prvek seznamu, aby bylo možné správně dedukovat typ prvků ukládaných v seznamu.
-\lstinline{ListOf} je pouze syntaktický cukr překládaný při procesu parsování. Pokud bychom chtěli
-generovat konstrukce konstruující seznamy dynamicky za běhu programu, museli bychom zřetězit
-aplikace \lstinline{Cons}.
+využívajících funkci \lstinline{Cons} k vytvoření tzv.\textit{cons cells} -- buněk seznamu. K žádné
+aplikaci funkce na libovolný počet argumentů tedy nedochází. Při vytváření seznamu pomocí
+\lstinline{ListOf} musíme dodat alespoň jeden prvek seznamu, aby bylo možné správně dedukovat typ
+prvků ukládaných v seznamu. \lstinline{ListOf} je pouze syntaktický cukr překládaný při procesu
+parsování. Pokud bychom chtěli generovat konstrukce konstruující seznamy dynamicky za běhu programu,
+museli bychom zřetězit aplikace \lstinline{Cons}.
 
 \begin{lstlisting}[caption={Příklad využití seznamů}]
 ['ListOf '1 '2 '3].                    -- vytvoření seznamu
@@ -471,14 +472,14 @@ aplikace \lstinline{Cons}.
 \subsection{N-tice}
 
 N-tice doznaly oproti předchozím verzím jazyka TIL-Script změny. Dříve byly n-tice homogenní kolekce
-nespecifikované, avšak konečné délky. Roli homogenní kolekce však již zastává List, a v jazyce
-TIL-Script neexistoval způsob, jak seskupit více hodnot jiného typu dohromady.
+nespecifikované, avšak konečné délky. Roli homogenní kolekce však již zastává \lstinline{List}, a
+v~jazyce TIL-Script neexistoval způsob, jak seskupit více hodnot jiného typu dohromady.
 
 V matematice využíváme n-tice například k reprezentaci prvků kartézského součinu. N-tice lze
 definovat více způsoby, vždy jsou však uspořádané, konečné, a můžou být heterogenní (například
 pokud provádíme kartézský součin nad neidentickými množinami). Obdobnou roli plní n-tice i v jazyce
 TIL-Script. Délka n-tice je pevně daná, stejně jako typy hodnot v n-tici. Celý typ n-tice je
-tedy dán uspořádaným výčtem všech typů všech hodnot obsažených v této n-tici. Syntaktický zápis
+tedy dán uspořádaným výčtem typů všech hodnot obsažených v této n-tici. Syntaktický zápis
 typu n-tice je podobný typu seznamu. Typ n-tice denotujeme slovem \lstinline{Tuple}, následovaným
 kulatými závorkami. V závorkách ovšem uvádíme výčet typů. Jednotlivé typy oddělujeme čárkami. Délka
 n-tice je určena počtem uvedených typů.
@@ -489,7 +490,7 @@ syntaktický cukr. Funkce \lstinline{MkTuple} skutečně existuje, je to ale fun
 variadická, a vytváří dvojice z dodaných argumentů. Pokud ovšem funkci \lstinline{MkTuple} dodáme
 více než dva argumenty, parser aplikaci \lstinline{MkTuple} rozepíše na jednu aplikaci
 \lstinline{MkTuple} a následné řetězení funkce \lstinline{PrependToTuple}. Funkce pro práci
-s n-ticemi jsou podrobněji popsány v uživatelské dokumentaci.
+s n-ticemi jsou podrobněji popsány v uživatelské dokumentaci, viz \peteref{stdlib-doc}.
  
 \begin{lstlisting}[caption={Příklad využití n-tic}]
 ['MkTuple '1 '2.0 'True].                    -- vytvoření n-tice
@@ -515,9 +516,10 @@ Jako příklad lze uvést například individua. Individua nemají žádnou inhe
 typu $\iota$ je pouze identifikátorem, unikátním jménem. Vlastnosti individuí jsou intenze -- tedy zda
 dané individuum má či nemá konkrétní vlastnost závisí na stavu světa v konkrétním časovém okamžiku.
 Dále můžeme zmínit například číslo $\pi$. Číslo $\pi$ sice bezpochyby hodnotu má, jedná se o reálné
-číslo. Jelikož je však $\pi$ číslo iracionální, tedy číslo s nekonečným desetinným rozvojem, bohužel
-jej nemůžeme s absolutní přesností reprezentovat v počítači. V praktické implementaci se tak musíme
-spokojit pouze s aproximací čísla $\pi$, nebo právě se symbolickou reprezentací.
+číslo. Jelikož je však $\pi$ číslo iracionální, tedy číslo s nekonečným neperiodickým desetinným
+rozvojem, bohužel jej nemůžeme s absolutní přesností reprezentovat v počítači. V praktické
+implementaci se tak musíme spokojit pouze s aproximací čísla $\pi$, nebo právě se symbolickou
+reprezentací.
 
 Symbolické hodnoty nelze provést. Chceme-li je zmínit, musíme využít Trivializaci. Dále nad nimi
 nelze provádět všechny operace, které jdou provádět s nesymbolickými konkrétními hodnotami.
@@ -525,8 +527,8 @@ Například jak bychom mohli příčíst k jinému číslu číslo $\pi$, když 
 $\pi$? Kde to však dává smysl, můžeme naprogramovat dodatečnou podporu pro symbolické hodnoty.
 Funkce \lstinline{Sin}, \lstinline{Cos} v matematické knihovně mají zabudovanou kontrolu, zda
 obdržely jako svůj argument symbol \lstinline{Pi/Real}. Pokud ano, funkce vrátí korektní
-hodnotu. Obdobně by například výsledkem aplikace přirozeného logaritmu na symbol \lstinline{E/Real}
-mohlo být číslo 1.
+hodnotu. Obdobně je například výsledkem aplikace přirozeného logaritmu na symbol \lstinline{E/Real}
+číslo 1.
 
 \begin{lstlisting}[caption={Příklad využití symbolických hodnot}]
 Pi/Real.
@@ -559,21 +561,21 @@ jsou překladačem automaticky ignorovány.
 Syntax jazyka TIL-Script byla rozšířena o možnost definice pojmenovaných funkcí. Jedná se o způsob,
 jak funkci přiřadit jméno a následně na danou funkci odkazovat jménem, namísto uvádění stejného
 uzávěru vícekrát ve zdrojovém kódu. Definice pojmenovaných funkcí byla v jazyce TIL-Scriptu již
-dříve přidána ale následně byla zase odstraněna. Dokud TIL-Script sloužil pouze jako notace pro
-zápis TIL konstrukcí, byl přínos této funkcionality diskutabilní. Pokud však chceme experimentovat
-s možnostmi využití jazyka TIL-Script také jako nástroje pro analýzu TIL konstrukcí, či importovat
-funkce z jiných souborů, definice pojmenovaných funkcí je nezbytná.
+dříve přidána ale následně byla zase odstraněna\cite{vyletelek}. Dokud TIL-Script sloužil pouze
+jako notace pro zápis TIL konstrukcí, byl přínos této funkcionality diskutabilní. Pokud však
+chceme experimentovat s možnostmi využití jazyka TIL-Script také jako nástroje pro analýzu TIL
+konstrukcí, či importovat funkce z jiných souborů, definice pojmenovaných funkcí je nezbytná.
 
 Definici funkce denotujeme klíčovým slovem \lstinline{Defn}. Následuje hlavička funkce, symbol
 přiřazení (\lstinline{:=}), a nakonec konstrukce předepisující sémantiku funkce. Syntax je odlišná
 od notace pro zápis uzávěrů. Důvodem pro tento rozdíl je grafické odlišení hlavičky funkce
 specifikující název, argumenty a typ výsledku od těla funkce (konstrukce). Dále tato notace
-omezuje počet vnořených závorek a speciálních znaků v tělu funkce. Vazba argumentů funkce je
+omezuje počet vnořených závorek a speciálních znaků v těle funkce. Vazba argumentů funkce je
 samozřejmě ekvivalentní $\lambda$-vázání
 
 Název funkce musí začínat velkým písmenem. Dále může obsahovat malá i velká písmena, čísla
 a podtržítka. Povolena jsou všechna písmena české abecedy (tedy například české \textit{č} je
-povoleno, avšak katalánské \textit{\c{c}} povoleno není).
+povoleno, avšak například katalánské \textit{\c{c}} povoleno není).
 
 \begin{lstlisting}[caption={Příklad definice funkcí}]
 -- Definice binární funkce
@@ -589,15 +591,15 @@ Defn Sum(list: List(Int)) -> Int :=
 \subsection{Typ \textit{Text}}\label{text-type}
 
 Typ \lstinline{Text} slouží k reprezentaci textu. Opět se jedná o typ, který není příliš potřeba
-pro analýzu přirozeného jazyka, neboť v přirozené řeči často vypovídáme o individuích, málokdy však
-o samotných korpusech textu. V programovacím jazyku je však forma reprezentace textu nezbytná.
-Typ \lstinline{Text} využíváme jak k reprezentaci delších textů, tak k reprezentaci jednotlivých
-znaků. TIL-Script tedy nezná koncept typu pro samostatné znaky (jako např. \lstinline{Char}
-v jazyce Haskell), a \lstinline{Text} není \lstinline{List} znaků. Jedná se o atomický typ. Pomocí
-funkcí standardní knihovny však lze z textů extrahovat podřetězce (včetně jednotlivých znaků),
-konkatenovat řetězce, apod.
+pro analýzu přirozeného jazyka, neboť v přirozené řeči často vypovídáme o individuích, tedy třeba
+článcích nebo knihách, málokdy však o samotných korpusech textu. V programovacím jazyku je však
+forma reprezentace textu nezbytná. Typ \lstinline{Text} využíváme jak k reprezentaci delších textů,
+tak k reprezentaci jednotlivých znaků. TIL-Script tedy nezná koncept typu pro samostatné znaky (jako
+např. \lstinline{Char} v jazyce Haskell), a \lstinline{Text} není \lstinline{List} znaků. Jedná se
+o atomický typ. Pomocí funkcí standardní knihovny však lze z textů extrahovat podřetězce (včetně
+jednotlivých znaků), konkatenovat řetězce, apod.
 
-Literály typu \lstinline{Text} uvozujeme dvojitými uvozovkami. Hodnoty typu text musíme
+Literály typu \lstinline{Text} uvozujeme uvozovkami. Hodnoty typu text musíme
 trivializovat. V literálech textů můžeme používat tzv. \textit{escape sekvence}. Texty podporují
 standard Unicode. Interně jsou reprezentovány objekty typu \lstinline{java.lang.String} a tudíž
 využívají kódování UTF-16 a jsou internovány.
@@ -616,7 +618,7 @@ interpretaci souboru. Každý soubor můžeme importovat nanejvýš jednou v rá
 Obsahuje-li soubor se zdrojovým kódem jazyka TIL-Script více importů stejného souboru, případně Java
 třídy, daný soubor či třídu importujeme pouze jednou, následující importy jsou ignorovány.
 
-Každý soubor je interpretován pouze jednou. Pokud tedy více souborů importuje jeden soubor, daná
+Každý soubor je interpretován pouze jednou. Pokud tedy více souborů importuje jeden soubor, tato
 sdílená závislost bude interpretována pouze při první importu. Při první interpretaci si překladač
 uloží všechny symboly definované v daném souboru (symbolické hodnoty, funkce, proměnné).
 Při následných importech stejného souboru jsou poté pouze importovány tyto symboly. Tedy hodnoty
@@ -628,22 +630,22 @@ souboru je nejprve interpretován importovaný soubor, teprve poté jsou symboly
 souboru importovány do kontextu skriptu, který daný soubor importoval.
 
 Pro import souboru uvedeme nejprve klíčové slovo \lstinline{Import}, následované cestou
-k požadovanému souboru. Cesta může být absolutní nebo relativní k umístění aktuálně překládaného
-souboru. Cesta musí být uvozena uvozovkami. Importy se můžou nacházet pouze na nejvyšší úrovni
-v programu, neboť se jedná o metavýrazy, ne konstrukce.
+k požadovanému souboru. Cesta může být absolutní nebo relativní vzhledem k umístění aktuálně
+překládaného souboru. Cesta musí být uvozena uvozovkami. Importy se můžou nacházet pouze na nejvyšší
+úrovni v programu, neboť se jedná o metavýrazy, ne konstrukce.
 
 Symboly můžeme importovat také z Java archivu. V takovém případě musí být daný Java archiv načten
 již při spouštění Java prostředí společně s kódem překladače. Načítání \textit{.jar} souborů
 za běhu je z bezpečnostních důvodů velmi komplikované. Dále musí daný Java archiv obsahovat tzv.
-\textit{registrátor} symbolů konformující vůči předdefinovanému rozhraní. Pro import souborů
+\textit{registrátor} symbolů implementující potřebné rozhraní. Pro import souborů
 za využití registrátoru stačí místo cesty k TIL-Script souboru uvést plně kvalifikovaný název
 třídy registrátoru s předponou \lstinline{class://}. Právě tato předpona značí, že se jedná o
 import z \textit{.jar} souboru. Překladač poté vytvoří instanci určeného registrátoru a naimportuje
 soubory definované tímto registrátorem. Rozhraní registrátorů je popsáno v uživatelské dokumentaci.
 
 Importy nejsou tranzitivní. Tedy importujeme-li soubor, který sám importuje jiné soubory, budou
-importovány pouze symboly definované v daném souboru, ne však symboly definované v jeho
-závislostech. Importy nesmí obsahovat vzájemně konfliktní definice.
+importovány pouze symboly definované v importovaném souboru, ne však symboly definované v souborech
+jím importovaných. Importy nesmí obsahovat vzájemně konfliktní definice.
 
 \begin{lstlisting}[caption={Příklad využití výrazů Import}]
 Import "dependency.tils".
@@ -654,8 +656,8 @@ Import "class://org.fpeterek.tilscript.math.Registrar".
 
 \subsection{Typ \textit{Type}}
 
-Typ \lstinline{Type} slouží k reprezentaci typů a je primárně metaprogramovacím prvkem. V tradiční
-Transparentní intenzionální logice o typech vypovídat nemůžeme. Typově polymorfní TIL není
+Typ \lstinline{Type} slouží k reprezentaci typů a je primárně metaprogramovacím prvkem.
+V~Transparentní intenzionální logice o typech vypovídat nemůžeme. Typově polymorfní TIL není
 momentálně předmětem výzkumu. Pro účely metaprogramování je však možnost reprezentace typů
 nezbytná. Typ \lstinline{Type} umožňuje pracovat s typy jako s validními hodnotami jazyka
 TIL-Script. Typové reference, tedy hodnoty typu \lstinline{Type}, lze využít například při tvorbě
@@ -700,7 +702,7 @@ Hodnota \lstinline{Nil} slouží k reprezentaci stavu, kdy konstrukce nekonstruu
 Je-li jedním z argumentů funkce \lstinline{Nil}, je výsledek automaticky opět \lstinline{Nil}.
 Pro vyvolání chybového stavu je možné \lstinline{Nil} zmínit přímo v TIL-Script konstrukci.
 Trivializace \lstinline{Nil} však není povolená gramatikou, neboť Trivializace nemůžou nikdy
-být nevlastní.
+být nevlastní\cite{til-duzi}.
 
 Specifikem implementace je, že hodnota \lstinline{Nil} obsahuje metadata popisující kde a proč
 došlo k selhání a konstrukce nezkonstruovala žádnou hodnotu. Pokud konstrukce na nejvyšší úrovni
@@ -763,9 +765,9 @@ na nejvyšší úrovni zkonstruovala hodnotu \lstinline{Nil}.
 
 \subsection{Struktury}\label{structs}
 
-Struktury v jazyce TIL-Script nám umožňují definovat nový typ. Struktury, obdobně jako n-tice,
-umožňují shlukovat více hodnot různorodých typů. Hlavní rozdíl mezi strukturou a n-ticí je, že
-definicí struktury vytvoříme nový typ.
+Struktury v jazyce TIL-Script nám umožňují definovat nový molekulární typ. Struktury, obdobně jako
+n-tice, umožňují shlukovat více hodnot různorodých typů. Hlavní rozdíl mezi strukturou a n-ticí je,
+že definicí struktury vytvoříme nový typ.
 
 Na rozdíl od n-tic, jejichž členy indexujeme číselně, atributy struktur jsou pojmenované a
 přistupujeme k nim jménem. Dále můžou být struktury definovány rekurzivně. Tato charakteristika
@@ -820,18 +822,18 @@ Struct Tree {
 \subsubsection{Konstruktory struktur}
 
 Konstruktory struktur umožňují vytvářet objekty uživatelem definovaného typu -- struktury.
-Pro konstruktory byla vytvořena nová syntax. Do složených závorek uvedeme nejprve název struktury,
-následně pak uvádíme konstrukce, které budou provedeny jako konstituenty konstruktoru. Výsledky
-provedení poté budou přiřazeny jednotlivým atributům struktury. Argumenty konstruktoru musíme uvést
-v pořadí odpovídající definici struktury. Konstruktory nevyužívají typové reference, název
-konstruovaného typu tedy netrivializujeme, jedná se pouze o syntaktický prvek. Jinak jsou
+Pro konstruktory byla vytvořena nová syntax. Do složených závorek uvedeme nejprve název struktury
+(název typu), následně pak uvádíme konstrukce, které budou provedeny jako konstituenty konstruktoru.
+Výsledky provedení poté budou přiřazeny jednotlivým atributům struktury. Argumenty konstruktoru
+musíme uvést v pořadí odpovídající definici struktury. Konstruktory nevyužívají typové reference,
+název konstruovaného typu tedy netrivializujeme, jedná se pouze o syntaktický prvek. Jinak jsou
 konstruktory ekvivalentní kompozicím -- pokud konstruktor neobdrží alespoň jeden z požadovaných
 argumentů, je konstruktor $v$-nevlastní, jinak konstruktor konstruuje hodnotu specifikovaného typu.
 
-Konstruktory můžeme využít také ke konstrukci prázdných listů. Konstrukce listů pomocí
-\lstinline{ListOf} využívá typovou inferenci pro určení typu seznamu. Prázdný list však pomocí
+Konstruktory můžeme využít také ke konstrukci prázdných seznamů. Konstrukce seznamů pomocí
+\lstinline{ListOf} využívá typovou inferenci pro určení typu seznamu. Prázdný seznam však pomocí
 kompozice nelze vytvořit. Dále využití konstruktorů pro konstrukci prázdných seznamů umožňuje
-vyhnout se využívání typových referencí. Neprázdný list pomocí konstruktoru vytvořit nelze.
+vyhnout se využívání typových referencí. Neprázdný seznam pomocí konstruktoru vytvořit nelze.
 
 \begin{lstlisting}[caption={Příklad definice struktury},label=tree-creation]
 {List(Tree)}. -- Konstrukce prazdného listu
@@ -847,14 +849,14 @@ myTree -> Tree := {Tree
 \subsubsection{Přístup k atributům}
 
 Za účelem přístupu k atributům byl přidán syntaktický konstrukt \lstinline{::}. Za název objektu,
-k jehož atributu přistupujeme, zapíšeme \lstinline{::} následované názvem požadovaného atributu.
-Přístupy k atributům lze řetězit, potřebujeme-li přistoupit k atributu atributu. Při parsování
-je přístupu k atributu přiřazena vyšší priorita než Trivializaci. Tedy například konstrukce
-\lstinline{'object::attribute::attribute} značí Trivializaci atributu
+k jehož atributu přistupujeme, zapíšeme sekvenci \lstinline{::} následovanou názvem požadovaného
+atributu. Přístupy k atributům lze řetězit, potřebujeme-li přistoupit k atributu atributu.
+Při~parsování je přístupu k atributu přiřazena vyšší priorita než Trivializaci. Tedy například
+konstrukce \lstinline{'object::attribute::attribute} značí Trivializaci atributu
 \lstinline{object::attribute::attribute}.
 
-Reálně je však atribut pouze proměnná, ačkoliv se jedná o proměnnou ve strukturovaném shluku.
-Proto i sémantika provedení atributu je stejná jako sémantika provedení proměnné. Přístup
+Prakticky je atribut pouze proměnná, ačkoliv se jedná o proměnnou ve strukturovaném složeném
+objektu. Proto i sémantika provedení atributu je stejná jako sémantika provedení proměnné. Přístup
 k neexistujícímu atributu je chybou. Provedení existujícího atributu (proměnné) vždy zkonstruuje
 hodnotu, neboť atributy nemůžou být $v$-nevlastní.
 

@@ -1,6 +1,5 @@
 \documentclass[czech,master]{diploma}
 \usepackage[autostyle=true,czech=quotes]{csquotes}
-\usepackage[backend=biber, style=iso-numeric, alldates=iso]{biblatex}
 \usepackage{dcolumn}
 \usepackage{subfig}
 \usepackage{hyperref}
@@ -113,16 +112,44 @@
 
 % \printbibliography[title={Literatura}, heading=bibintoc]
 
+\renewcommand{\bibname}{Zdroje}
 \begin{thebibliography}{50}
+
+\bibitem{ngram-models}
+Jurafsky, D., Martin, H.J.: \textit{N-gram Language Models}\\
+Dostupné z: \url{https://web.stanford.edu/~jurafsky/slp3/3.pdf}\\
+Stanford University
+
+\bibitem{word2vec}
+Mikolov, T., Chen, K., Corrado, G., Dean, J.: \textit{Efficient Estimation of Word Representations in Vector Space}\\
+Dostupné z: \url{https://arxiv.org/pdf/1301.3781.pdf}\\
+Proceedings of Workshop at ICLR. 2013.
+
+\bibitem{gpt3}
+Tom B. Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, Sandhini Agarwal, Ariel Herbert-Voss, Gretchen Krueger, Tom Henighan, Rewon Child, Aditya Ramesh, Daniel M. Ziegler, Jeffrey Wu, Clemens Winter, Christopher Hesse, Mark Chen, Eric Sigler, Mateusz Litwin, Scott Gray, Benjamin Chess, Jack Clark, Christopher Berner, Sam McCandlish, Alec Radford, Ilya Sutskever, and Dario Amodei: \textit{Language models are few-shot learners}\\
+Dostupné z: \url{https://arxiv.org/pdf/2005.14165.pdf}\\
+In Proceedings of the 34th International Conference on Neural Information Processing Systems (NIPS'20). Curran Associates Inc., Red Hook, NY, USA, Article 159, 1877–1901.
 
 \bibitem{til-duzi}
 Duží, M., Materna, P.: \textit{TIL jako procedurální logika, (průvodce zvídavého čtenáře Transparentní intensionální logikou)} \\
 Aleph Bratislava 2012, ISBN 978-80-89491-08-7
 
+\bibitem{logika-duzi}
+Duží, M.: \textit{Logika pro informatiky (a příbuzné obory)} \\
+VŠB-TU Ostrava (2012), ISBN 978-80-248-2662-2
+
+\bibitem{partiality}
+Raclavský, J.: \textit{On Partiality and Tichý's Transparent Intensional Logic} \\
+Dostupné z: \url{https://www.phil.muni.cz/~raclavsky/texty/partiality_til.pdf} \\
+Magyar Filozofiai Szemle 54 (4): 120-128.
+
 \bibitem{til-script}
-Ciprich, N., Duží, M., Košinár, M.: \textit{TIL-Script: Functional Programming Based on
-Transparent Intensional Logic} \\
-In: \textit{RASLAN 2007}, Sojka, P., Horák, A., (Eds.), Masaryk University Brno, 2007, pp. 37–42.
+Ciprich, N., Duží, M., Košinár, M.: \textit{TIL-Script: Functional Programming Based on Transparent Intensional Logic} \\
+\textit{RASLAN 2007}, Sojka, P., Horák, A., (Eds.), Masaryk University Brno, 2007, pp. 37–42.
+
+\bibitem{vyletelek}
+Vyletělek, P.: \textit{Využití Transparentní intensionální logiky pro podporu realizace inferenčního stroje v multiagentovém systému} \\
+VŠB-TU Ostrava (2009)
 
 \bibitem{antlr-src}
 Parr, T.: \textit{ANTLR v4} [online, cit. 2022-06-09] \\
@@ -146,8 +173,13 @@ Proceedings of the London Mathematical Society, s2-42: 230-265.
 
 \bibitem{lisp-src}
 John McCarthy. 1960. \textit{Recursive functions of symbolic expressions and their computation by machine, Part I.}\\
-Dostupné z: \url{https://doi.org/10.1145/367177.367199}
+Dostupné z: \url{https://doi.org/10.1145/367177.367199}\\
 Commun. ACM 3, 4 (April 1960), 184–195.
+
+\bibitem{lambda-calculus}
+Barendregt, H., Barendsen, E.: \textit{Introduction to Lambda Calculus}\\
+Dostupné z: \url{https://www.cse.chalmers.se/research/group/logic/TypesSS05/Extra/geuvers.pdf}\\
+Chalmers University of Technology, March 2000
 
 \end{thebibliography}
 

@@ -1,20 +1,23 @@
 \chapter{Transparentní intenzionální logika}
 \label{sec:TILIntroduction}
 
-% TODO: Citace
 Transparentní intenzionální logika (TIL) je logický systém založený na typovaném lambda kalkulu.
-TIL je využíván k logické analýze přirozeného jazyka. Oproti tradičnímu lambda kalkulu, jenž
-se využívá jako komputační model, tedy jako pouhý prostředek k dosažení konkrétní hodnoty --
+TIL je využíván k logické analýze přirozeného jazyka. Oproti tradičnímu lambda kalkulu, jak jej
+definoval Alonso Church\cite{lambda-calculus}, jenž
+se využívá jako výpočetní model, tedy jako pouhý prostředek k dosažení konkrétní hodnoty --
 výsledku, v Transparentní intenzionální logice hraje konstrukce kalkulu často důležitější roli,
-než hodnota, kterou by konstrukce po provedení zkonstruovala.
+než hodnota, kterou by konstrukce po provedení zkonstruovala\cite{til-duzi}.
 
 Jako příklad využití lambda kalkulu jako výpočetní model lze uvést např. funkcionální programovací
-jazyk Haskell. Interně je Haskell kompilován do lambda kalkulu (přesněji do jeho supersetu
-obsahujícího např. čísla nebo logické hodnoty, která jinak v lambda kalkulu musíme kódovat pomocí
-Churchova kódování -- K-kombinátorů, apod.). Ultimátně v Haskellu ovšem lambda kalkul slouží pouze
-k získání konkrétního výsledku. Nadefinujeme vztah mezi vstupem a výstupem, a program napsaný
-v Haskellu nám vstup transformuje. Pokud zanedbáme efektivitu programu, nezajímá nás, jakým
-způsobem program spočítal výsledek, dokud jej spočítal správně.
+jazyk Haskell. Interně je Haskell kompilován do lambda kalkulu (přesněji do jeho nadmnožiny
+obsahující např. čísla a logické hodnoty, která jinak v lambda kalkulu musíme kódovat pomocí
+Churchova kódování -- K-kombinátorů\cite{lambda-calculus}, apod.).
+Ultimátně v Haskellu ovšem lambda kalkul slouží pouze jako prostředek k získání konkrétního
+výsledku. Nadefinujeme vztah mezi vstupem a výstupem, a program napsaný v Haskellu nám vstup
+transformuje. Pokud zanedbáme efektivitu programu, nezajímá nás, jakým způsobem program spočítal
+výsledek, dokud jej spočítal správně.
+
+\lstset{language=Haskell}
 
 Naopak Transparentní intenzionální logika je hyperintenzionálním kalkulem, který nám umožňuje
 vytvářet konstrukce vypovídající o jiných konstrukcích. TIL vychází z myšlenky, že výraz
@@ -23,18 +26,18 @@ významem výrazu ovšem není samotný denotát, který ani nemusí nutně exis
 abstraktní procedura a lze jej zachytit konstrukcí. Daná konstrukce poté při provedení zkonstruuje
 denotát výrazu. Jako příklad lze uvést například výraz ``francouzský král.'' V době psaní této práce
 Francie krále nemá. Denotátem výrazu je tak neobsazená individuová role -- výraz tedy neoznačuje
-žádné individuum. Přesto výrazu ``francouzský král'' rozumíme, výraz má svůj význam, jen v současné době neuvádí žádnou osobu.
-A budeme-li chtít o významu výrazu ``francouzský král'' něco vypovědět, například že francouzský král
-je monarchou v čele Francie, daný monarcha nemusí existovat. Dále lze uvést například rozdíl mezi
-výrazy ``logaritmus 1024 o základě 2'' a ``5 + 5''. Denotátem obou výrazů je 10. Zadáme-li do
-interpretu Haskellu výrazy
-
-\lstset{language=Haskell}
+žádné individuum. Přesto výrazu ``francouzský král'' rozumíme, výraz má svůj význam, jen v současné
+době neuvádí žádnou osobu. A budeme-li chtít o významu výrazu ``francouzský král'' něco vypovědět,
+například že francouzský král je monarchou v čele Francie, daný monarcha nemusí existovat. Dále lze
+uvést například rozdíl mezi výrazy ``logaritmus 1024 o základě 2'' a ``5 + 5''. Denotátem obou
+výrazů je 10. Zadáme-li do interpretu Haskellu výrazy
 \lstinline{logBase 2 1024} a \lstinline{5 + 5}, získáme v obou případech stejný výsledek.
 V přirozeném jazyce ovšem chápeme značný rozdíl mezi oběma výrazy, ačkoliv mají stejný denotát.
 ``Logaritmus 1024 o základě 2'' vyjadřuje číslo, kterým musíme umocnit dvojku, abychom získali 1024.
-Výraz ``5 + 5'' očividně vyjadřuje úplně jinou matematickou operaci a jeho výsledek spočítáme jiným
-postupem.
+Výraz ``5 + 5'' očividně vyjadřuje úplně jinou matematickou operaci -- sčítání, a jeho výsledek
+spočítáme jiným postupem. Jistě by bylo zvláštní říct, že žák první třídy základní školy počítá
+$log_{2} 1024$, když žák ve skutečnosti počítá příklad $3 + 7$, ačkoliv jsou tyto výrazy
+ekvivalentní.
 
 \begin{figure}
     \centering
@@ -57,18 +60,18 @@ postupem.
 Denotátem výrazu může být nejen objekt z báze, ale i konstrukce nebo funkce.
 
 Jak již bylo zmíněno, Transparentní intenzionální logika vychází z typovaného lambda kalkulu, proto
-také každý objekt musí mít svůj typ. Pro správné pochopení TILu, a tedy i této práce, je tak nutné 
-znát typovou hierarchii TIL.
+také každý objekt musí mít svůj typ. Dále je vždy dbáno na dodržení typové koherence. Pro správné
+pochopení TIL, a tedy i této práce, je tak nutné znát typovou hierarchii TIL.
 
 \section{Objektová báze}
 
 Objektová báze je kolekce vzájemně disjunktních neprázdných množin, které dohromady vymezují
-nulární funkce, se kterými budeme pracovat. Bázi volíme dle potřeb konkrétní aplikace a univerza
-diskurzu. Například používáme-li TIL k logické analýze matematických vět, jako bázi lze zvolit
-například množinu celých čísel, množinu reálných čísel, a množinu pravdivostních hodnot. Musíme
-však vzít v potaz, že tato báze neobsahuje čísla komplexní.
+nulární funkce, se kterými budeme pracovat\cite{til-duzi}. Bázi volíme dle potřeb konkrétní aplikace
+a univerza diskurzu. Například používáme-li TIL k logické analýze matematických vět, jako bázi lze
+zvolit například množinu celých čísel, množinu reálných čísel, a množinu pravdivostních hodnot.
+Musíme však vzít v potaz, že tato báze neobsahuje čísla komplexní.
 
-Patří-li objekt $x$ do množiny $\alpha$ z báze, říkáme, že se jedná o objekt typu $\alpha$.
+Patří-li objekt $x$ do bázové množiny $\alpha$, říkáme, že se jedná o objekt typu $\alpha$.
 K explicitnímu uvedení typu objektu \textit{x} využíváme zápis $x/\alpha$. Množinám tvořícím bázi
 lze říkat typy.
 
@@ -94,25 +97,25 @@ $\tau$, $\omega$}. Tyto typy jsou podrobněji popsány v tabulce \peteref{tab:de
 \section{Funkce}\label{fn-arity}
 
 V některých logických systémech, například v predikátové logice, se jako základní molekulární typ
-využívají relace. Funkce je poté speciální typ relace, která je zprava jednoznačná. V TIL je však
-základním molekulárním typem funkce. Chceme-li v TIL vyjádřit $n$-ární relaci nad množinou
-$\alpha_1 \times ... \times \alpha_n$, lze tak samozřejmě udělat definicí $n$-ární funkce
+využívají relace\cite{logika-duzi}. Funkce je poté speciální typ relace, která je zprava
+jednoznačná. V TIL je však základním molekulárním typem funkce. Chceme-li v TIL vyjádřit $n$-ární
+relaci nad množinou $\alpha_1 \times ... \times \alpha_n$, lze tak samozřejmě udělat
+definicí $n$-ární funkce
 z $\alpha_1 \times ... \times \alpha_n$ do $o$, která každému prvku
 z $\alpha_1 \times ... \times \alpha_n$ přiřadí pravdivostní hodnotu na základě toho, zda prvek
-do relace patří, nebo ne.
+do relace patří, nebo ne\cite{til-duzi}.
 
-% TODO: https://www.phil.muni.cz/~raclavsky/texty/partiality_til.pdf
-Narozdíl od tradičního lambda kalkulu je Transparentní intenzionální logika kalkulem parciálních
+Na rozdíl od tradičního lambda kalkulu je Transparentní intenzionální logika kalkulem parciálních
 funkcí. Z parciality funkcí poté vyplývá další vlastnost TIL -- arita funkcí není shora omezená.
 V lambda kalkulech totálních funkcí lze využít Sch{\"o}nfinkelovu redukci k redukci funkcí
 $n$-árních na unární za využití skládání funkcí. Tato redukce však není ekvivalentní, pracujeme-li
-s funkcemi parciálními.
+s funkcemi parciálními\cite{partiality}.
 
 \subsection{Intenze a extenze}
 
 V TIL dále rozlišujeme funkce na tzv. \textit{intenze} a \textit{extenze}. Intenze jsou funkce
 z možných světů. Extenze jsou funkce, jejichž doménou množina možných světů není, a tudíž jejich
-funkční hodnota nezávisí na stavu světa.
+funkční hodnota nezávisí na stavu světa\cite{til-duzi}.
 
 Intenze jsou obecně funkce typu $(\alpha\omega)$ pro libovolný typ $\alpha$. Nejčastěji se však
 jedná o funkce typu $((\alpha\tau)\omega)$, tedy funkce zobrazující možné světy do chronologií
@@ -125,6 +128,7 @@ strukturované -- nejedná se o množiny, mají pevně danou strukturu, a na usp
 podprocedur záleží. Tyto konstrukce lze podle definovaných pravidel provést. Provedením konstrukce
 získáme výstup, případně nezískáme nic. Konstrukce, které nekonstruují žádný výstup, nazýváme
 \textit{nevlastní} (anglicky \textit{improper}). V TIL pracujeme s šesti druhy konstrukcí.
+\cite{til-duzi}
 
 Jak již bylo zmíněno, konstrukce můžou v TIL operovat nejen nad objekty, které nejsou konstrukcemi,
 tedy nad objekty z báze a funkcemi, ale také nad jinými konstrukcemi. Konstrukce však může operovat
@@ -136,20 +140,21 @@ sebe samotné, a čtyři molekulární. Atomickými konstrukcemi jsou \textit{Tr
 \textit{Provedení} a \textit{Dvojí Provedení}.
 
 \textit{Proměnné} jsou konstrukce, které na základě valuace \textit{v} \textit{v}-konstruují
-objekty. Skutečnost, že proměnná $x$ \textit{v}-konstruuje hodnotu typu $\alpha$ značíme
+objekty. Skutečnost, že proměnná $x$ \textit{v}-konstruuje hodnotu typu $\alpha$, značíme
 $x \rightarrow_v \alpha$.
 
 \lstset{language=Lisp}
 \textit{Trivializace} pro libovolný objekt \textit{X} konstruuje samotný objekt \textit{X}.
-Konstrukce je v Transparentní intenzionální logice potřebná, neboť výchozím módem pro konstrukce
-je provedení. Samotná konstrukce \textit{X} by tak byla automaticky provedena, a místo konstrukce
-\textit{X} bychom dostali pouze její denotát. Pokud bychom chtěli zkonstruovat konstrukci
+Konstrukce Trivializace je v Transparentní intenzionální logice potřebná, neboť výchozím módem pro
+konstrukce je provedení. Samotná konstrukce \textit{X} by tak byla automaticky provedena, a místo
+konstrukce \textit{X} bychom dostali pouze její denotát. Pokud bychom chtěli zkonstruovat konstrukci
 \textit{X}, musíme ji trivializovat. Tím se provede pouze konstrukce Trivializace. A protože
-Trivializace nemá jiný konstituent, než sebe samotnou, konstrukce \textit{X} se tak neprovede.
-V literatuře se Trivializace \textit{X} tradičně značí ${}^0X$. Alternativně se používá také zápis
-$'X$. Tento zápis je poté využit i v jazyce TIL-Script. Trivializaci lze považovat za ekvivalent
-funkce \lstinline{QUOTE} z jazyka Lisp. Trivializace taktéž bývá využívána ke konstruování hodnot,
-které nelze provést (objekty z báze, funkce) a tudíž je nelze zmínit netrivializované.
+Trivializace nemá jiný konstituent, než sebe samotnou, trivializovaná konstrukce \textit{X} se tak
+neprovede. V literatuře se Trivializace \textit{X} tradičně značí ${}^0X$. Alternativně se
+používá také zápis $'X$. Tento zápis je poté využit i v jazyce TIL-Script.\footnote{Trivializaci lze
+považovat za ekvivalent funkce \lstinline{QUOTE} z jazyka Lisp.} Trivializace taktéž bývá využívána
+ke konstruování hodnot, které nelze provést (objekty z báze, funkce) a tudíž je nelze zmínit
+netrivializované.
 \footnote{
     V jazyce Lisp čísla konstruují sebe samotné, tedy provedením čísla získáme zpět prováděné
     číslo. \lstinline{1} a \lstinline{'1} jsou tedy v Lispu ekvivalentní výrazy. V TIL však není
@@ -160,40 +165,44 @@ které nelze provést (objekty z báze, funkce) a tudíž je nelze zmínit netri
 \textit{Kompozice} je procedura aplikace funkce na argumenty. Kompozice $[X Y_1...Y_m]$ značí
 aplikaci funkce konstruované konstrukcí $X$ na argumenty zkonstruované konstrukcemi $Y_1,...,Y_m$.
 Pokud konstrukce $X$ $v$-konstruuje funkci $f$, všechny podkonstrukce $Y_1,...,Y_m$ $v$-konstruují
-hodnotu, a je-li funkce $f$ na daných argumentech definovaná, kompozice $v$-konstruuje funkční
-hodnotu na těchto argumentech. V opačném případě je kompozice $v$-nevlastní.
+hodnotu, a je-li funkce $f$ na daných argumentech definovaná, Kompozice $v$-konstruuje funkční
+hodnotu na těchto argumentech. V opačném případě je Kompozice $v$-nevlastní.
 
 \textit{Uzávěr} $\lambda x_1...x_m Y$ je konstrukce $v$-konstruující funkci. $x_1,...x_m$ musí
 být navzájem různé proměnné, $Y$ musí být konstrukcí. Konstruce uzávěru je velmi podobná abstrakci
-v lambda kalkulu. Narozdíl od lambda kalkulu však v TILu může uzávěr konstruovat funkce s aritou
-vyšší než jedna. Uzávěr nemůže být nikdy nevlastní, může však konstruovat tzv.
-\textit{degenerovanou funkci}, tedy funkci, která je nedefinovaná na celém definičním oboru.
+v lambda kalkulu, ze které také vychází. Na rozdíl od lambda kalkulu však v TIL může Uzávěr
+konstruovat funkce s aritou vyšší než jedna. Uzávěr nemůže být nikdy nevlastní, může však
+konstruovat tzv. \textit{degenerovanou funkci}, tedy funkci, která je nedefinovaná na celém
+definičním oboru.
 
 \textit{Provedení} ${}^1X$ je konstrukce $v$-konstruující objekt konstruovaný konstrukcí $X$.
 Pokud je konstrukce $X$ $v$-nevlastní, je provedení ${}^1X$ také $v$-nevlastní. Jelikož je však
-provedení výchozím módem pro objekty, většinou se neuvádí. Provést lze pouze konstrukce. Objekty
-z báze (tedy čísla, individua, apod...) či funkce nelze provést, jejich provedení nekonstruuje nic.
-Proto je potřeba tyto objekty vždy trivializovat.
+provedení výchozím módem pro objekty, většinou se explicitně neuvádí. Provést lze pouze konstrukce.
+Objekty z báze (tedy čísla, individua, apod...) či funkce nelze provést, jejich provedení
+nekonstruuje nic. Proto je potřeba tyto objekty vždy trivializovat.
 
 \textit{Dvojí provedení} ${}^2X$ je poslední z výčtu konstrukcí. Je-li $X$ konstrukcí
 $v$-konstruující konstrukci $Y$, a $v$-konstruuje-li konstrukce $Y$ objekt $Z$, pak ${}^2X$
-$v$-konstruuje $Z$. V opačném případě je dvojí provedení ${}^2X$ $v$-nevlastní.
+$v$-konstruuje $Z$. V opačném případě je Dvojí provedení ${}^2X$ $v$-nevlastní.
 
 Jiné konstrukce v Transparentní intenzionální logice neexistují.
 
 \subsection{Princip kompozicionality} 
 
-Princip kompozicionality je důležitým rysem Transparentní intenzionální logiky. Z principu
-kompozicionality vyplývá, že je-li libovolný konstituent konstrukce $X$ $v$-nevlastní a pro danou
-valuaci $v$ nekonstruuje žádnou hodnotu, pak je $v$-nevlastní i konstrukce $X$.
+Princip kompozicionality je důležitým rysem Transparentní intenzionální logiky.
+Princip kompozicionality říká, že význam výrazu je jednoznačně určen významy jeho podsložek.
+
+Z principu kompozicionality vyplývá, že je-li libovolný konstituent konstrukce $X$ $v$-nevlastní
+a pro danou valuaci $v$ nekonstruuje žádnou hodnotu, pak je $v$-nevlastní i konstrukce $X$. Právě
+tento důsledek principu kompozicionality bude v této práci velmi důležitý.
 
 \section{Typy 1. řádu}\label{fst-order}
 
-% TODO: Doplnit citaci
 Definice je skoro slovo od slova převzata z knihy
 \textit{TIL jako procedurální logika -- Průvodce zvídavého čtenáře Transparentní intensionální
-logikou}. Tato sekce slouží jako krátké vysvětlení základů Transparentní intenzionální logiky
-se čtenář může obrátit například na tuto knihu.
+  logikou}\cite{til-duzi}. Tato sekce slouží jako krátké vysvětlení základů Transparentní
+intenzionální logiky. Pro podrobnosti a důkladnější vysvětlení se čtenář může obrátit například
+na tuto knihu.
 
 Nechť \textit{B} je báze. Pak:
 
@@ -207,8 +216,7 @@ Nechť \textit{B} je báze. Pak:
 
 \section{Rozvětvěná hierarchie typů}\label{type-order}
 
-%TODO: Doplnit citaci
-Definice je opět skoro slovo od slova převzata z Průvodce.
+Definice je opět skoro slovo od slova převzata z Průvodce\cite{til-duzi}.
 
 Nechť \textit{B} je báze. Pak:
 
@@ -240,21 +248,6 @@ Nechť $*_n$ je kolekce všech konstrukcí řádu $n$ nad $B$.
         \textit{typy řádu n+1 nad B}.
     \item Nic jiného není typ řádu $n+1$ nad \textit{B} než dle i) a ii).
 \end{enumerate}
-
-% \section{Charakteristické rysy TIL}
-
-% \subsection{Princip kompozicionality}
-
-% Princip kompozicionality říká, že význam výrazu je jednoznačně určen významy jeho podsložek.
-% Z principu kompozicionality také vyplývá, že nemá-li konstrukce žádný význam (tedy jedná se o
-% nevlastní konstrukci), nemají význam ani konstrukce, pro něž je daná nevlastní konstrukce
-% konstituentem.
-
-% \subsection{Antikontextualismus}
-
-% Antikontextualismus znamená, že význam výrazu je stejný nezávisle na stavu světa.
-
-% \subsection{Antiaktualismus}
 
 \section{Analytické a empirické výrazy}
 

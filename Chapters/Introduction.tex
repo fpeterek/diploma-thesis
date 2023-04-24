@@ -1,27 +1,25 @@
 \chapter{Úvod}
 \label{sec:Introduction}
 
-% TODO: Ocitovat n-gramove modely, word2vec, GPT-3
-% W2V: https://arxiv.org/pdf/1301.3781.pdf
-% GPT-3: https://arxiv.org/abs/2005.14165
-
 Analýza přirozeného jazyka jako disciplína stále rychleji stoupá na oblibě i důležitosti. Jistě
-málokomu unikly například n-gramové modely založené na predikci následujícího slova
-z předcházejících $n$ slov, či vektorové modely jako Word2Vec, umožňující reprezentovat význam
-slov pomocí vektorů. Poslední dobou se velmi často mluví o jazykovém modelu GPT-3.
+málokomu unikly například n-gramové\cite{ngram-models} modely založené na predikci následujícího
+slova z předcházejících $n$ slov, či vektorové modely jako Word2Vec\cite{word2vec}, umožňující
+reprezentovat význam slov pomocí vektorů. Poslední dobou se velmi často mluví o jazykovém modelu
+GPT-3\cite{gpt3}.
 
 Výčet přístupů k analýze přirozeného jazyka však nekončí n-gramy a neuronovými sítěmi. K analýze
 přirozených jazyků lze přistoupit také pomocí logiky. Mezi průkopníky tohoto přístupu patřil také
 český logik Pavel Tichý, tvůrce Transparentní intenzionální logiky.
 
 Transparentní intenzionální logika (dále také TIL) je logický systém založený na typovaném lambda
-kalkulu. TIL umožňuje modelovat a analyzovat výrazy přirozeného jazyka za pomocí logiky. Jako
-doplněk TILu poté vznikl také funkcionální programovací jazyk TIL-Script, sloužící k interpretaci
-konstrukcí Transparentní intenzionální logiky. Syntax i sémantika jazyka TIL-Script jsou silně
-inspirovány TILem, ovšem přirozeně s určitými úpravami tak, aby byl TIL-Script rozumně zapisovatelný
-a interpretovatelný na počítači.
+kalkulu\cite{til-duzi}. TIL umožňuje modelovat a analyzovat výrazy přirozeného jazyka za pomocí
+logiky. Jako doplněk TIL poté vznikl také funkcionální programovací jazyk
+TIL-Script\cite{til-script}, sloužící k interpretaci konstrukcí Transparentní intenzionální logiky.
+Syntax i sémantika jazyka TIL-Script jsou silně inspirovány Transparentní intenzionální logikou,
+ovšem přirozeně s určitými úpravami tak, aby byl TIL-Script rozumně zapisovatelný a
+interpretovatelný na počítači.
 
-A právě interpretací jazyka TIL-Script se zabývá tento text. Součástí práce tak je navázání
+Právě interpretací jazyka TIL-Script se zabývá tento text. Součástí práce tak je navázání
 na předcházející vývoj jazyka TIL-Script, rozšíření gramatiky nutné pro akomodaci nových
 prvků jazyka (např. výraz \textit{Import} sloužící k importu symbolů definovaných v jiném
 souboru), nebo také samotná interpretace jazyka TIL-Script, společně s kontrolou typové koherence.
@@ -33,7 +31,7 @@ do budoucna nebyl problém rychle a jednoduše naprogramovat přístup k libovol
 Nakonec se práce snaží navrhnout určitou nadmnožinu jazyka TIL-Script tak, aby TIL-Script mohl
 sloužit nejen k interpretaci konstrukcí TIL, ale také k jejich tvorbě a analýze. V současné době
 pro analýzu a práci s konstrukcemi jazyka TIL-Script existují nástroje psané v jazyce Java.
-Existuje-li však v současné době programovací jazyk vytvořený přímo pro logiky pracující s TILem,
+Existuje-li však v současné době programovací jazyk vytvořený přímo pro logiky pracující s TIL,
 není důvod tento jazyk nevyužít a nerozšířit také o nástroje pro analýzu, tvorbu i transformaci
 TIL-Script konstrukcí. Pro pokročilejší práci s jazykem TIL-Script by tak nebylo třeba učit se jiný
 programovací jazyk (Java), nebo využívat externí nástroje, ale naopak by byl k dispozici již
@@ -46,10 +44,12 @@ vyhnout a nevyužívat ji. Také lze, na základě tohoto textu, implementovat p
 TIL-Script bez jakýchkoliv navrhovaných rozšíření.
 
 Práce se do znatelné míry inspiruje výzkumem amerického profesora Johna McCarthyho a programovacím
-jazykem Lisp. Jelikož Lisp vychází z lambda kalkulu, pracuje s parciálními funkcemi, a nerozlišuje
-mezi programem a daty (tedy Lisp programy můžou pracovat s, generovat a transformovat Lisp
-konstrukce), lze mezi Lispem a TILem nalézt řadu podobností. Primárním odlišovacím znakem
-Transparentní intenzionální logiky je ovšem rigorózně definovaný typový systém.
+jazykem Lisp\cite{lisp-src}. Jelikož Lisp vychází z lambda kalkulu, pracuje s parciálními funkcemi,
+a nerozlišuje mezi programem a daty (tedy Lisp programy můžou pracovat s, generovat a transformovat
+Lisp výrazy), lze mezi Lispem a Transparentní intenzionální logikou nalézt řadu podobností.
+Primárním odlišovacím znakem Transparentní intenzionální logiky je ovšem rigorózně definovaná
+hierarchie typů a silný důraz na typovou koherenci. Naprostá většina dialektů jazyka Lisp je naopak
+dynamicky typovaná.
 
 Text samotný je rozdělen do čtyř částí. V první části budou představeny základy Transparentní
 intenzionální logiky, jejichž znalost je nutná k pochopení práce. Druhá část představí programovací

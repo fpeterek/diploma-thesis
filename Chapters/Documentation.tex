@@ -642,7 +642,7 @@ překladači.
 ./tilscript.sh script.tils
 \end{lstlisting}
 
-\section{Standardní knihovna}
+\section{Standardní knihovna}\label{stdlib-doc}
 
 Standardní knihovna jazyka TIL-Script obsahuje základní funkce pro práci s objekty Transparentní
 intenzionální logiky. Dále obsahuje definice atomických typů a tří proměnných. Z důvodu náročnosti
@@ -854,7 +854,7 @@ oddělovač nevypisuje.
 \subsubsection*{Funkce: \lstinline{If}}
 Typ: \lstinline{(Any1 Bool Any1 Any1)}
 
-Funkce \lstinline{If} je, narozdíl od všech ostatních funkcí, prováděna líně. Funkce \lstinline{If}
+Funkce \lstinline{If} je, na rozdíl od všech ostatních funkcí, prováděna líně. Funkce \lstinline{If}
 přijímá tři argumenty. První argument je objekt typu \lstinline{Bool}. Druhým argumentem je hodnota,
 kterou funkce vrátí, je-li první argument \lstinline{True}. Jinak funkce \lstinline{If} vrátí svůj
 druhý argument. Konstrukce, která konstruuje argument funkce \lstinline{If}, je ovšem provedena až
@@ -908,7 +908,7 @@ kódování v Transparentní intenzionální logice také nepotřebujeme.
 Funkce \lstinline{Progn} je binární funkcí, existuje pro ni ovšem podobný syntaktický cukr, jako pro
 \lstinline{Cond} nebo \lstinline{ListOf}. Předáme-li funkci \lstinline{Progn} více než dva
 argumenty, překladač aplikaci \lstinline{Progn} na více argumentů rozepíše na vnořené aplikace
-binární funkce \lstinline{Progn}. Narozdíl od \lstinline{Cond}, \lstinline{Progn} je tedy
+binární funkce \lstinline{Progn}. Na rozdíl od \lstinline{Cond}, \lstinline{Progn} je tedy
 skutečnou funkcí.
 
 Název \lstinline{Progn} je převzat z jazyka Lisp.
@@ -1261,7 +1261,7 @@ Proměnná slouží převážně jako argument funkce \lstinline{NilAt}, viz~\re
 
 Matematická knihovna slouží také jako ukázka tvorby TIL-Script knihoven v jazycích kompilovaných
 do JVM bytekódu, nebo jako test importu jmen z Java archivů. Přesto obsahuje několik užitečných
-definic. Narozdíl od standardní knihovny, všechny funkce matematické knihovny jsou plně
+definic. Na rozdíl od standardní knihovny, všechny funkce matematické knihovny jsou plně
 definované, a lze tedy provést jejich aplikaci na argumenty.
 
 \subsection{Funkce}
