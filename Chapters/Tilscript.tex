@@ -124,8 +124,8 @@ sémantiku funkce.
 Pro představu uveďme několik příkladů, kdy stačí dodat deklaraci (název a typ), protože
 nepotřebujeme definici (název, typ i sémantiku).
 
-Představme si situaci, kdy analyzujeme větu ``V minulosti se pro výpočet převrácené hodnoty druhé
-odmocniny využívala funkce \textit{Fast Inverse Square Root}''. Jistě pro analýzu věty budeme
+Představme si situaci, kdy analyzujeme větu \textquote{V minulosti se pro výpočet převrácené hodnoty
+  druhé odmocniny využívala funkce \textit{Fast Inverse Square Root}}. Jistě pro analýzu věty budeme
 nutně potřebovat deklarovat funkci \lstinline{FastInvSqrt/(Real Real)}. Implementaci funkce
 \textit{Fast Inverse Square Root} v jazyce C lze jednoduše nalézt na internetu. Tato funkce se však
 již roky nevyužívá, neboť moderní procesory implementují výpočet druhé odmocniny i její převrácené
@@ -146,8 +146,8 @@ zdroje, nekonečnou tabulku sestavit nelze. A jelikož, jak dokázal již Alan T
 algoritmicky nerozhodnutelný, nemůžeme ani sestavit algoritmus, který obdrží na vstupu zdrojový kód,
 a na základě analýzy zdrojového kódu rozhodne, zda program zastaví\cite{halting-problem-src}. Přesto
 však funkci \lstinline{Zastaví/(Bool Text)}, případně \lstinline{Halts/(Bool Text)} můžeme
-potřebovat například k analýze věty ``Programátor zkoumá, zda jeho program někdy zastaví.'' V tomto
-případě deklaraci bez definice využijeme proto, že korektní definice funkce
+potřebovat například k analýze věty \textquote{Programátor zkoumá, zda jeho program někdy zastaví.}
+V tomto případě deklaraci bez definice využijeme proto, že korektní definice funkce
 \lstinline{Halts/(Bool Text)} neexistuje.
 
 Názvosloví \textit{deklarace}, \textit{definice} je převzato z programovacího jazyka C, kde
