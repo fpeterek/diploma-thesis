@@ -47,16 +47,20 @@
 \SubmissionYear{2023}
 
 \ThesisAssignmentFileName{Figures/spec.pdf}
-% TODO: Doplnit
-% \Acknowledgement{Děkuji Adélce za to, že mě ignoruje, a já tak mám čas psát diplomovou práci.}
+% TODO: Odkomentovat
+% \Acknowledgement{
+%   Děkuji paní prof. RNDr. Marii Duží, CSc. a panu Mgr. Marku Menšíkovi, Ph.D. za~poskytnuté rady a
+%   konzultace při tvorbě překladače a za~pomoc a korekturu při psaní textu. Děkuji Adéle Zelenkové
+%   za~morální podporu.
+% }
 
 \CzechAbstract{
     Cílem práce je implementovat programovací jazyk TIL-Script. Jazyk TIL-Script slouží jako
     výpočetní varianta logického kalkulu TIL, jenž umožňuje jednoduchý strojový zápis konstrukcí
     Transparentní intenzionální logiky, ale také jejich následné provedení. Práce dále řeší
-    praktické problémy s interpretací jazyka TIL-Script, a to například definice pojmenovaných
+    praktické problémy s~interpretací jazyka TIL-Script, a to například definice pojmenovaných
     funkcí, interakce s databází, apod. Dále se práce snaží navrhnout nadmnožinu jazyka TIL-Script,
-    která umožní konstrukce TILu nejen provádět, ale také analyzovat, vytvářet je, a pracovat
+    která umožní konstrukce TIL nejen provádět, ale také analyzovat, vytvářet je, a pracovat
     s nimi.
 }
 
@@ -130,54 +134,13 @@ Tom B. Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla
 Dostupné z: \url{https://arxiv.org/pdf/2005.14165.pdf}\\
 In Proceedings of the 34th International Conference on Neural Information Processing Systems (NIPS'20). Curran Associates Inc., Red Hook, NY, USA, Article 159, 1877–1901.
 
-\bibitem{sicp-src}
-Sussman, G. J., Abelson, Hal: \textit{Structure and Interpretation of Computer Programs} \\
-Cambridge, MA: MIT Press, ISBN 0-262-01077-1
-
 \bibitem{til-duzi}
 Duží, M., Materna, P.: \textit{TIL jako procedurální logika, (průvodce zvídavého čtenáře Transparentní intensionální logikou)} \\
 Aleph Bratislava 2012, ISBN 978-80-89491-08-7
 
-\bibitem{logika-duzi}
-Duží, M.: \textit{Logika pro informatiky (a příbuzné obory)} \\
-VŠB-TU Ostrava (2012), ISBN 978-80-248-2662-2
-
-\bibitem{partiality}
-Raclavský, J.: \textit{On Partiality and Tichý's Transparent Intensional Logic} \\
-Dostupné z: \url{https://www.phil.muni.cz/~raclavsky/texty/partiality_til.pdf} \\
-Magyar Filozofiai Szemle 54 (4): 120-128.
-
 \bibitem{til-script}
 Ciprich, N., Duží, M., Košinár, M.: \textit{TIL-Script: Functional Programming Based on Transparent Intensional Logic} \\
 \textit{RASLAN 2007}, Sojka, P., Horák, A., (Eds.), Masaryk University Brno, 2007, pp. 37–42.
-
-\bibitem{vyletelek}
-Vyletělek, P.: \textit{Využití Transparentní intensionální logiky pro podporu realizace inferenčního stroje v multiagentovém systému} \\
-VŠB-TU Ostrava (2009)
-
-\bibitem{benes-compilers}
-Beneš, M.: \textit{Překladače} \\
-VŠB-TU Ostrava
-
-\bibitem{antlr-src}
-Parr, T.: \textit{ANTLR v4} [online, cit. 2022-06-09] \\
-Dostupné z: \url{https://www.antlr.org} \\
-Terence Parr
-
-\bibitem{kotlin-src}
-Kotlin: \textit{Kotlin Programming Language} [online, cit. 2022-06-09] \\
-Dostupné z: \url{https://kotlinlang.org} \\
-Jetbrains, s.r.o.
-
-\bibitem{gradle-src}
-Gradle: \textit{Gradle Build Tool} [online, cit. 2022-06-09] \\
-Dostupné z: \url{https://gradle.org} \\
-Gradle Enterprise
-
-\bibitem{halting-problem-src}
-Turing, A. M.: \textit{On Computable Numbers, With Application To Entscheidungsproblem} \\
-Dostupné z: \url{https://doi.org/10.1112/plms/s2-42.1.230}\\
-Proceedings of the London Mathematical Society, s2-42: 230-265.
 
 \bibitem{lisp-src}
 John McCarthy. 1960. \textit{Recursive functions of symbolic expressions and their computation by machine, Part I.}\\
@@ -189,9 +152,50 @@ Barendregt, H., Barendsen, E.: \textit{Introduction to Lambda Calculus}\\
 Dostupné z: \url{https://www.cse.chalmers.se/research/group/logic/TypesSS05/Extra/geuvers.pdf}\\
 Chalmers University of Technology, March 2000
 
+\bibitem{logika-duzi}
+Duží, M.: \textit{Logika pro informatiky (a příbuzné obory)} \\
+VŠB-TU Ostrava (2012), ISBN 978-80-248-2662-2
+
+\bibitem{partiality}
+Raclavský, J.: \textit{On Partiality and Tichý's Transparent Intensional Logic} \\
+Dostupné z: \url{https://www.phil.muni.cz/~raclavsky/texty/partiality_til.pdf} \\
+Magyar Filozofiai Szemle 54 (4): 120-128.
+
+\bibitem{halting-problem-src}
+Turing, A. M.: \textit{On Computable Numbers, With Application To Entscheidungsproblem} \\
+Dostupné z: \url{https://doi.org/10.1112/plms/s2-42.1.230}\\
+Proceedings of the London Mathematical Society, s2-42: 230-265.
+
+\bibitem{vyletelek}
+Vyletělek, P.: \textit{Využití Transparentní intensionální logiky pro podporu realizace inferenčního stroje v multiagentovém systému} \\
+VŠB-TU Ostrava (2009)
+
+\bibitem{kotlin-src}
+Kotlin: \textit{Kotlin Programming Language} [online, cit. 2022-06-09] \\
+Dostupné z: \url{https://kotlinlang.org} \\
+Jetbrains, s.r.o.
+
+\bibitem{gradle-src}
+Gradle: \textit{Gradle Build Tool} [online, cit. 2022-06-09] \\
+Dostupné z: \url{https://gradle.org} \\
+Gradle Enterprise
+
+\bibitem{antlr-src}
+Parr, T.: \textit{ANTLR v4} [online, cit. 2022-06-09] \\
+Dostupné z: \url{https://www.antlr.org} \\
+Terence Parr
+
+\bibitem{benes-compilers}
+Beneš, M.: \textit{Překladače} \\
+VŠB-TU Ostrava
+
+\bibitem{sicp-src}
+Sussman, G. J., Abelson, Hal: \textit{Structure and Interpretation of Computer Programs} \\
+Cambridge, MA: MIT Press, ISBN 0-262-01077-1
 \end{thebibliography}
 
 \appendix
+\input{Chapters/Appendix1.tex}
 \input{Chapters/Appendix2.tex}
 
 \end{document}

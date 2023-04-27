@@ -1405,7 +1405,8 @@ libovolný jazyk kompilovaný pro platformu JVM, nejen Javu nebo Kotlin. Impleme
 \subsection{Implementace funkce}
 
 Začneme vytvořením třídy \lstinline{InvSqrt}. Tato třída musí být potomkem třídy
-\lstinline{DefaultFunction}, abychom ji mohli použít jako TIL-Script funkci.
+\lstinline{DefaultFunction}, abychom ji mohli použít jako TIL-Script funkci. Definice třídy
+\lstinline{DefaultFunction} je přiložena v příloze.
 
 \begin{lstlisting}[caption={Třída InvSqrt}, language=Java]
 public class InvSqrt extends DefaultFunction {
@@ -1458,7 +1459,9 @@ argument.
 \end{lstlisting}
 
 Nakonec musíme naprogramovat sémantiku funkce \lstinline{InvSqrt}. Za tímto účelem musíme vytvořit
-metodu \lstinline{apply}. Jelikož přepisujeme zděděnou abstraktní metodu, můžeme si ji nechat
+metodu \lstinline{apply}. Definice třídy \lstinline{DefaultFunction} je přiložena v příloze,
+signaturu metody \lstinline{apply} lze proto zkopírovat z přílohy.
+Alternativně, protože přepisujeme zděděnou abstraktní metodu, si metodu můžeme nechat
 vygenerovat vývojovým prostředím nebo jazykovým serverem.
 
 Jakmile máme vygenerovanou hlavičku funkce, stačí funkci naprogramovat. Funkce přijímá pouze jeden
@@ -1540,6 +1543,11 @@ aliasy (\lstinline{TypeDef}), apod. Zde uvedeme pouze definici metody \lstinline
 jež slouží k registraci funkcí. Zbylé metody vrací pouze prázdný seznam
 (\lstinline{java.util.ArrayList}) a neuvádíme je v ukázce za účelem zkrácení zápisu, v reálné
 implementaci by funkce pouze vraceli instanci prázného seznamu, nesměly by však chybět.
+
+Rozhraní \lstinline{SymbolRegistrar} je přiloženo v příloze. Programátor tak může při implementaci
+vlastního registrátoru konzultovat přílohu práce, případně si může metody vygenerovat automaticky,
+používá-li vývojové prostředí nebo jazykový server s podporou generování implementací abstraktních
+metod.
 
 Metoda \lstinline{getFunctions()} pouze vytvoří seznam obsahující instanci námi vytvořené funkce.
 

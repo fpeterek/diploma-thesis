@@ -15,17 +15,22 @@ knihovna jsou zdokumentovány v tomto textu.
 Překladač umožňuje implementovat TIL-Script funkce, které interně volají funkce jazyka Java -- tím
 se jazyku TIL-Script otvírá také celý Java ekosystém, včetně knihoven pro jazyk Java.
 
-Při tvorbě překladače bylo myšleno také na budoucí rozvoj. Současnou implementaci překladač je možné
-nahradit implementací novou. Pokud bude nový překladač implementovat potřebná rozhraní, bude tento
-překladač plně kompatibilní se standardní a matematickou knihovnou, případně s jakoukoliv jinou
-knihovnou psanou pro jazyk TIL-Script.
+Při tvorbě překladače bylo myšleno také na budoucí rozvoj. Současnou implementaci překladače je
+možné nahradit implementací novou. Pokud bude nový překladač implementovat potřebná rozhraní, bude
+tento překladač plně kompatibilní se standardní i matematickou knihovnou, případně s~jakoukoliv
+jinou knihovnou psanou pro jazyk TIL-Script.
 
 Nakonec byla práce také doplněna o řadu ukázek TIL-Script programů, ale také o ukázku tvorby
 TIL-Script knihoven pomocí jazyků Java a Kotlin. Do budoucna lze jazyk TIL-Script i překladač dále
-rozvíjet, kromě dříve zmíněných optimalizací by například bylo možné překladač doplnit o
-interaktivní prostředí, které umožní zadávat TIL-Script věty a konstrukce interaktivně a postupně
-je překládat. K interaktivnímu rozhraní by pak bylo možné vytvořit grafické prostředí, například
-skrze webovou aplikaci. Přesto je však překladač funkčí a použitelný již v současné verzi, a snad
-tedy umožní další vývoj na poli logické analýzy přirozeného jazyka.
+rozvíjet, kromě dříve zmíněných optimalizací by například bylo možné překladač doplnit
+o~interaktivní prostředí, které umožní zadávat TIL-Script věty a konstrukce interaktivně a postupně
+je překládat. K interaktivnímu rozhraní by pak bylo možné vytvořit grafické prostředí,
+implementované například ve~formě webové aplikace. I přes některé nedostatky je však překladač
+funkční a použitelný již v~současné verzi, a snad tedy umožní další vývoj na poli logické analýzy
+přirozeného jazyka.
+
+Obdobně jako tento text, i zdrojový kód překladače je veřejně dostupný, zájemci si jej tedy mohou
+kdykoliv sestavit a vyzkoušet, případně se mohou zapojit do rozvoje překladače. Repozitář
+s projektem lze nalézt na adrese \url{https://github.com/fpeterek/tilscript}.
 
 \endinput
