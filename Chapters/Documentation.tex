@@ -1264,14 +1264,12 @@ provedena. Proměnná slouží především k umožnění lepšího hlášení c
 
 Proměnná slouží převážně jako argument funkce \lstinline{NilAt}, viz~\ref{nilat-fn}.
 
-%TODO: Pokračovat v korektuře
-
 \section{Matematická knihovna}
 
 Matematická knihovna slouží také jako ukázka tvorby TIL-Script knihoven v jazycích kompilovaných
-do JVM bytekódu, nebo jako test importu jmen z Java archivů. Přesto obsahuje několik užitečných
-definic. Na rozdíl od standardní knihovny, všechny funkce matematické knihovny jsou plně
-definované, a lze tedy provést jejich aplikaci na argumenty.
+do JVM bytekódu, nebo jako test importu jmen z Java archivů, proto nebyl kladen důraz na obsáhlost
+této knihovny. Přesto obsahuje několik užitečných definic. Na rozdíl od standardní knihovny, všechny
+funkce matematické knihovny jsou plně definované, a lze tedy provést jejich aplikaci na argumenty.
 
 \subsection{Funkce}
 
@@ -1379,7 +1377,7 @@ Hodnota \lstinline{Pi} nám umožňuje symbolicky zmínit číslo $\pi$, viz \pe
 
 \subsubsection*{Hodnota \lstinline{E/Real}}
 
-Hodnota \lstinline{E} nám umožňuje symbolicky zmínit Eulerovo číslo $e$,
+Hodnota \lstinline{E} nám umožňuje symbolicky zmínit Eulerovo číslo,
 viz \peteref{symbolic-values}.
 
 \begin{lstlisting}[caption={Ukázka využití E}]
@@ -1406,8 +1404,8 @@ Proměnná \lstinline{e -> Real} aproximuje Eulerovo číslo s přesností na 15
 
 \section{Implementace knihovny}
 
-Nyní si ukážeme, jak implementovat vlastní TIL-Script knihovnu v jazyce Java. Ukázku implementace
-v jazyce Kotlin přiložíme za účelem porovnávání těchto dvou jazyků v příloze. V praxi lze využít
+Nyní si ukážeme, jak implementovat vlastní TIL-Script knihovnu v~jazyce Java. Ukázku implementace
+v jazyce Kotlin přiložíme za účelem porovnání těchto dvou jazyků v~příloze. V~praxi lze využít
 libovolný jazyk kompilovaný pro platformu JVM, nejen Javu nebo Kotlin. Implementovat budeme funkci
 \lstinline{InvSqrt/(Real Real)}, tedy převrácenou hodnotu druhé odmocniny.
 
@@ -1415,7 +1413,9 @@ libovolný jazyk kompilovaný pro platformu JVM, nejen Javu nebo Kotlin. Impleme
 
 Začneme vytvořením třídy \lstinline{InvSqrt}. Tato třída musí být potomkem třídy
 \lstinline{DefaultFunction}, abychom ji mohli použít jako TIL-Script funkci. Definice třídy
-\lstinline{DefaultFunction} je přiložena v příloze.
+\lstinline{DefaultFunction} i jejího předka \lstinline{FunctionInterface} je přiložena v příloze.
+Uživatel tak může nahlédnout do přílohy práce, aby zjistil, jak dané třídy fungují a jaké metody
+musí implementovat sám.
 
 \begin{lstlisting}[caption={Třída InvSqrt}, language=Java]
 public class InvSqrt extends DefaultFunction {
@@ -1447,6 +1447,7 @@ danému argumentu nastaví korektní hodnota. Nakonec tedy vytvoříme seznam ob
 argument.
 
 \begin{lstlisting}[caption={Konstruktor InvSqrt}, language=Java]
+public class InvSqrt extends DefaultFunction {
 
   private static AtomicType real = Primitives.INSTANCE.getReal();
 
@@ -1465,31 +1466,32 @@ argument.
       Collections.singletonList(arg)
       );
   }
+}
 \end{lstlisting}
 
 Nakonec musíme naprogramovat sémantiku funkce \lstinline{InvSqrt}. Za tímto účelem musíme vytvořit
-metodu \lstinline{apply}. Definice třídy \lstinline{DefaultFunction} je přiložena v příloze,
-signaturu metody \lstinline{apply} lze proto zkopírovat z přílohy.
+metodu \lstinline{apply}. Definice tříd \lstinline{DefaultFunction} a \lstinline{FunctionInterface}
+jsou přiloženy v příloze, signaturu metody \lstinline{apply} lze proto zkopírovat z přílohy.
 Alternativně, protože přepisujeme zděděnou abstraktní metodu, si metodu můžeme nechat
 vygenerovat vývojovým prostředím nebo jazykovým serverem.
 
-Jakmile máme vygenerovanou hlavičku funkce, stačí funkci naprogramovat. Funkce přijímá pouze jeden
-argument, proto si tento argument uložíme do pomocné proměnné, abychom nemuseli při každém
-přístupu k argumentu indexovat seznam argumentů.
+Jakmile máme specifikovanou hlavičku metody, stačí metodu naprogramovat. Funkce \lstinline{InvSqrt}
+přijímá pouze jeden argument, proto si tento argument uložíme do pomocné proměnné, abychom nemuseli
+při každém přístupu k~argumentu indexovat seznam argumentů.
 
-Následně se ujistíme, že je argument Java objektem typu \lstinline{Real}. Díky typové kontroly víme,
-že argument bude reálné číslo, pouze nevíme, zda se jedná o konkrétní číslo (Java objekt typu
-\lstinline{Real} reprezentující reálná čísla), nebo o symbolickou hodnotu (Java objekt typu
-\lstinline{Symbol}). Pokud argumentem není konkrétní hodnota, bohužel nevíme, jakou hodnotu
+Následně se ujistíme, že je dodaný argument Java objektem typu \lstinline{Real}. Díky typové
+kontroly víme, že argument bude reálné číslo, pouze nevíme, zda se jedná o konkrétní číslo (Java
+objekt typu \lstinline{Real} reprezentující reálná čísla), nebo o symbolickou hodnotu (Java objekt
+typu \lstinline{Symbol}). Pokud argumentem není konkrétní hodnota, bohužel nevíme, jakou hodnotu
 potřebujeme odmocnit.
 
 Následně potřebujeme získat hodnotu argumentu jako proměnnou typu \lstinline{double}, abychom
-mohli provádět matematické operace v jazyku Java.
+mohli provádět matematické operace v~jazyce Java.
 
-Dále se musíme ujistit, že funkce obdržela argument, na kterém je definovaná.
+Dále se musíme ujistit, že funkce obdržela argument, na~kterém je definovaná.
 
-Poté už stačí jen spočítat výsledek a vrátit objekt typu \lstinline{Real}, reprezentující reálné
-číslo v jazyce TIL-Script.
+Poté už stačí jen spočítat výsledek a vrátit objekt typu \lstinline{Real} reprezentující reálné
+číslo v~jazyce TIL-Script.
 
 \begin{lstlisting}[caption={Konstruktor InvSqrt}, language=Java]
   @NotNull
@@ -1526,41 +1528,41 @@ Poté už stačí jen spočítat výsledek a vrátit objekt typu \lstinline{Real
 \end{lstlisting}
 
 Metoda \lstinline{apply} přijímá tři argumenty. První argument -- objekt typu
-\lstinline{InterpreterInterface} slouží ke komunikaci s překladačem jazyka TIL-Script -- v tomto
+\lstinline{InterpreterInterface} slouží ke komunikaci s překladačem jazyka TIL-Script -- v~tomto
 případě jej nevyužijeme. Druhý argument je seznam argumentů, které obdržela funkce
 \lstinline{InvSqrt}. Posledním argumentem je kontext aplikace funkce. Kontext obsahuje pozici
-ve zdrojovém kódu, kde k aplikaci funkce došlo. Kontext využíváme pro hlášení chyb -- můžeme
+ve~zdrojovém kódu, kde k~aplikaci funkce došlo. Kontext využíváme pro hlášení chyb -- můžeme
 uživateli naší knihovny přesněji říct, kde aplikoval funkci na argumenty, na kterých není
 definována.
 
 Konstruktor třídy \lstinline{Nil} přijímá pozici ve zdrojovém kódu, kde tato hodnota vznikla,
 seznam hlášení, který opět bude prázdný, a nakonec důvod, proč je výsledkem aplikace funkce hodnota
-\lstinline{Nil}. Seznam hlášení by v jazyce Kotlin nebylo třeba explicitně uvádět, neboť by byl
+\lstinline{Nil}. Seznam hlášení by v~jazyce Kotlin nebylo třeba explicitně uvádět, neboť by byl
 vytvořen implicitním argumentem. Tento seznam slouží k hlášení chyb, které však nemůžou vzniknout
-při implementaci funkce v jazyce Java.
+při implementaci funkce v jazyce Java (nebo libovolném jiném jazyce kompilovaném pro~platformu JVM).
 
 Konstruktor třídy \lstinline{Real} přijímá reálné číslo, které daný objekt představuje, pozici
-ve zdrojovém kódu, kde byl daný objekt zkonstruován, a (opět prázdný) seznam hlášení.
+ve zdrojovém kódu, kde byl daný objekt zkonstruován, a (v~tomto případě opět prázdný) seznam
+hlášení.
 
 \subsection{Implementace registrátoru}
 
 Dále musíme implementovat vlastní registrátor -- třídu, jejíž instance nám umožní importovat
 námi definovanou funkci. Registrátor musí implementovat rozhraní
 \lstinline{SymbolRegistrar}. Rozhraní definuje řadu abstraktních metod -- opět si je můžeme nechat
-vygenerovat vývojovým prostředím. Tyto metody nám umožňují registrovat např. struktury, typové
-aliasy (\lstinline{TypeDef}), apod. Zde uvedeme pouze definici metody \lstinline{getFunctions()},
-jež slouží k registraci funkcí. Zbylé metody vrací pouze prázdný seznam
-(\lstinline{java.util.ArrayList}) a neuvádíme je v ukázce za účelem zkrácení zápisu, v reálné
-implementaci by funkce pouze vraceli instanci prázného seznamu, nesměly by však chybět.
-
-Rozhraní \lstinline{SymbolRegistrar} je přiloženo v příloze. Programátor tak může při implementaci
-vlastního registrátoru konzultovat přílohu práce, případně si může metody vygenerovat automaticky,
-používá-li vývojové prostředí nebo jazykový server s podporou generování implementací abstraktních
-metod.
+vygenerovat vývojovým prostředím, případně je nalezneme v~příloze práce. Tyto metody nám umožňují
+registrovat např. struktury, typové aliasy (\lstinline{TypeDef}), apod. Zde uvedeme pouze definici
+metody \lstinline{getFunctions()}, jež slouží k registraci funkcí. Zbylé metody vrací pouze prázdný
+seznam (\lstinline{java.util.ArrayList}) a neuvádíme je v ukázce za účelem zkrácení zápisu, v~reálné
+implementaci by funkce pouze vracely instanci prázného seznamu, nesměly by však chybět.
 
 Metoda \lstinline{getFunctions()} pouze vytvoří seznam obsahující instanci námi vytvořené funkce.
 
 \begin{lstlisting}[caption={Java registrátor}, language=Java]
+package org.fpeterek.tilscript.javamath;
+
+/* Imports... */
+
 public class JavaMathRegistrar implements SymbolRegistrar {
 
   @NotNull
@@ -1576,8 +1578,9 @@ public class JavaMathRegistrar implements SymbolRegistrar {
 
 \subsection{Aplikace \lstinline{InvSqrt} v TIL-Script programu}
 
-Po implementaci a sestavení naší Java knihovny již stačí pouze knihovnu importovat v TIL-Script
-programu a funkci aplikovat.
+Po implementaci a sestavení naší Java knihovny stačí pouze knihovnu importovat v~TIL-Script
+programu a funkci aplikovat. Nesmíme zapomenout na to, že musíme vždy uvést plně kvalifikovaný název
+Java třídy.
 
 \begin{lstlisting}[caption={Aplikace InvSqrt}, language=Haskell]
 Import "class://org.fpeterek.tilscript.javamath.JavaMathRegistrar".

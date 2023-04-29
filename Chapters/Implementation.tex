@@ -93,7 +93,7 @@ s jazykem TIL-Script.
 
 Matematická knihovna \lstinline{math} slouží jako ukázková implementace TIL-Script knihovny
 v Kotlinu, případně v Javě. Dále je využívána k testování funkčnosti importování Java knihoven.
-Na rozdíl od standardní knihovny, překladač je naprosto nezávislý na knihovně \lstinline{math}.
+Na rozdíl od~standardní knihovny, překladač je naprosto nezávislý na knihovně \lstinline{math}.
 \lstinline{math} je třeba importovat explicitně pomocí výrazu \lstinline{Import}.
 
 Knihovnu nelze označit za extenzivní, obsahuje pouze malé množství funkcí, definice symbolických
@@ -114,7 +114,7 @@ s jazykem TIL-Script. Typovou kontrolu provádí překladač pouze za běhu prog
 
 V této sekci nejprve nastíníme fungování překladače. Poté popíšeme zajímavé problémy týkající se
 implementace překladače. Problémy můžou být zajímavé jak z hlediska řešeného problému, tak
-z hlediska budoucího rozvoje.
+z~hlediska budoucího rozvoje.
 
 \subsection{Vysokoúrovňový pohled na interpret}
 
@@ -156,7 +156,7 @@ Následně již dochází k interpretaci programu. Jednotlivé výrazy ovšem ne
 v takovém pořadí, v jakém jsou v programu uvedeny. Při překladu jsou nejprve provedeny výrazy
 \lstinline{Import}. Pokud překladač narazí na výraz \lstinline{Import}, je interpretace aktuálního
 souboru pozastavena a překladač přeloží importovaný soubor. Po přeložení importovaného skriptu
-jsou do kontextu současného souboru naimportovány symboly definované závislostí\footnote{
+jsou do~kontextu současného souboru naimportovány symboly definované závislostí\footnote{
   Symboly zde myslíme názvy -- jména funkcí, proměnných, i symbolických hodnot. V daném kontextu
   slovo symbol nesouvisí se symbolickými hodnotami, využíváme jej stejně jako jej například
   využívají linkery kompilovaných programovacích jazyků.
@@ -196,9 +196,9 @@ není překládán do bytekódu, který by byl následně interpretován.
 
 Tento přístup k interpretaci má jednu velkou výhodu -- nízkou náročnost na implementaci. Překlad
 do bytekódu by s sebou nesl značnou přidanou komplexitu. V první řadě by bylo potřeba implementovat
-vlastní mechanismus zásobníku. V současné době TIL-Script sdílí zásobník s Java prostředím. Aplikace
+vlastní mechanismus zásobníku. V současné době TIL-Script sdílí zásobník s~Java prostředím. Aplikace
 funkcí je řešena rekurzivně. Při aplikaci TIL-Script funkce volá interpret interně metodu, která
-aplikaci provede. S voláním metody na JVM je vždy vytvořen nový rámec na zásobníku\footnote{
+aplikaci provede. S voláním metody na JVM je vždy vytvořen nový rámec na~zásobníku\footnote{
   Tzv. \textit{inlining funkcí} zde nebereme v potaz. Při aplikaci TIL-Script funkcí navíc musí
   překladač vždy zavolat virtuální metodu objektu, jenž funkci reprezentuje. Inlining virtuálních
   metod je možný, avšak složitější, a na podstatu řešení TIL-Script překladače nemá žádný vliv,
@@ -206,7 +206,7 @@ aplikaci provede. S voláním metody na JVM je vždy vytvořen nový rámec na z
   nejedná o koncové volání, kompilátor nemůže aplikovat ani TCO.
 }.
 Na tomto rámci se poté uloží kontext aplikované TIL-Script funkce (argumenty funkce, apod.).
-Po dokončení interpretace TIL-Script funkce se interpret vrací z metody zpět na místo, odkud byla
+Po dokončení interpretace TIL-Script funkce se interpret vrací z metody zpět na~místo, odkud byla
 metoda zavolána. S návratem z funkce je spojena destrukce rámce na zásobníku -- destrukce, která
 v současné implementaci obsahuje také zapomenutí kontextu funkce. Paměť využitá kontextem funkce
 je v případě potřeby uvolněna garbage collectorem během reklamačního cyklu.
@@ -226,7 +226,7 @@ bytekódem a JVM objekty. Ve většině programovacích jazyků stačí implemen
 do interpretovatelného bytekódu. Dále poté překladač pouze interpretuje daný bytekód. TIL-Script
 ovšem umožňuje definovat funkce nejen pomocí konstrukcí Transparentní intenzionální logiky, ale také
 jako Java funkce. Tyto funkce psané v Javě přirozeně jako své argumenty očekávají JVM objekty.
-Pokud bychom však překládali zdrojový kód do bytekódu, museli bychom před voláním Java funkce
+Pokud bychom však překládali zdrojový kód do bytekódu, museli bychom před~voláním Java funkce
 převést všechny její argumenty z bytekódu zpět na JVM objekty.
 
 V závislosti na definici bytekódu a implementaci překladače by také mohlo být třeba implementovat
@@ -296,7 +296,7 @@ načítání kódu za běhu. Způsoby neomezeného načítání kódu existují,
 platformy Java, ale hlavně představují potenciální velký bezpečnostní problém.
 
 Abychom mohli bezpečně načíst kód za běhu, museli bychom znát nejen název třídy, jež potřebujeme
-načíst, ale také cestu k JAR souboru, ve kterém se třída nachází. Pokud bychom po uživateli jazyka
+načíst, ale také cestu k JAR souboru, ve kterém se třída nachází. Pokud bychom po~uživateli jazyka
 TIL-Script chtěli, ať uvádí i Java archiv i plně kvalifikovaný název registrátoru, byly by
 \lstinline{Import} výrazy příliš složité. Uvést pouze Java archiv nestačí, neboť nemusíme znát obsah
 daného archivu, případně alespoň názvy registrátorů. Abychom mohli uvést pouze registrátor, museli
@@ -315,7 +315,7 @@ Pokud ne, překladač automaticky považuje daný parametr za cestu k TIL-Script
 na příponě, konvencí však je používat příponu \textit{.tils}). Pokud parametr začíná požadovanou
 přeponou, překladač přeponu odstraní a pokusí se načíst specifikovanou třídu. Následně vytvoří
 instanci této třídy pomocí konstruktoru bez parametrů (všechny registrátory tedy musí tento
-konstruktor definovat). Dále již překladač s vytvořenou instancí pracuje jako s objektem typu
+konstruktor definovat). Dále již překladač s~vytvořenou instancí pracuje jako s objektem typu
 \lstinline{SymbolRegistrar}. Všechny registrátory proto musí toto rozhraní implementovat.
 
 Rozhraní \lstinline{SymbolRegistrar} definuje šest metod -- \textit{getterů} vracejících Java
@@ -356,7 +356,7 @@ překladač provádí méně operací, nevýhodou pak je, že překladač nedok�
 
 Ukázku hlášení chyby lze vidět například v ukázce \peteref{type-error-reporting}. Funkce
 \lstinline{CatS/(Text Text Text)} slouží ke konkatenaci textových řetězců. Pokusíme-li
-se však funkci aplikovat na celé číslo, překladač chybu zachytí, nahlásí, a překlad programu skončí
+se však funkci aplikovat na~celé číslo, překladač chybu zachytí, nahlásí, a překlad programu skončí
 neúspěchem.
 
 \begin{lstlisting}[caption={Příklad hlášení chyby},label=type-error-reporting]
@@ -368,7 +368,7 @@ neúspěchem.
 
 Typová kontrola probíhá během provedení konstruktoru struktury, přiřazení hodnoty proměnné, při
 deklaraci funkce, symbolické hodnoty i proměnné, při definici typového aliasu, a také před i
-po aplikaci funkce.
+po~aplikaci funkce.
 
 Typová kontrola při provádění konstruktoru struktury zajistí, že jsou atributům struktury přiřazeny
 objekty správného typu. Obdobně pomocí typové kontroly zajistíme, že je proměnné přiřazena hodnota
@@ -385,8 +385,8 @@ definicí typových aliasů, vyžaduje pouze porovnání dvou konkrétních nege
 Kontrola konfliktních definic struktur obsahuje kontrolu na úrovni atributů. Při porovnávání
 atributů jsou porovnávány názvy i typy $i$-tého atributu obou z porovnávaných struktur. Pokud se
 atribut liší v názvu nebo v typu, jsou struktury automaticky považovány za rozdílné typy.
-K porovnání atributů vůbec nedojde, pokud se počet atributů liší, nebo pokud se struktury liší
-v názvu. Z popisu typové kontroly struktur vyplývá, že záleží na pořadí atributů -- ačkoliv by to
+K~porovnání atributů vůbec nedojde, pokud se počet atributů liší, nebo pokud se struktury liší
+v~názvu. Z popisu typové kontroly struktur vyplývá, že záleží na pořadí atributů -- ačkoliv by to
 ve vysokoúrovňovém skriptovacím jazyku nemuselo být třeba (např. protože neřešíme padding), cílem
 této volby je přinutit uživatele nevytvářet zbytečné definice struktur, zamezit případům, kdy
 se špatně navrhnutá struktura využívá k účelům, ke kterým nebyla zamýšlena, a také zjednodušení
@@ -429,7 +429,7 @@ rámec neobsahuje požadovanou proměnnou, překladač rekurzivně prohledává 
 rámec. Pokud rámec žádného rodiče nemá a proměnná nebyla nalezena, program končí chybou.
 
 První rámec je vytvořen při spuštění skriptu. Na tomto rámci jsou ukládány proměnné definované
-na nejvyšší úrovni programu -- proměnné, které budeme využívat jako volné proměnné v konstrukcích.
+na nejvyšší úrovni programu -- proměnné, které budeme využívat jako volné proměnné v~konstrukcích.
 Tento rámec nemá žádného rodiče.
 
 Nový rámec zásobníku je vytvořen vždy při aplikaci funkce. Na tento rámec jsou umístěny
@@ -438,10 +438,10 @@ na začátku zásobníku, tedy rámec reprezentující globální stav.
 
 Pokud však funkci konstruujeme pomocí uzávěru, situace se komplikuje. Takové funkce mají přístup
 nejen k vlastním argumentům a proměnným definovaným na nejvyšší úrovni v programu, ale také
-k $\lambda$-vázaným argumentům funkce, v níž byl uzávěr proveden a funkce zkonstruována. V takovém
+k $\lambda$-vázaným argumentům funkce, v níž byl uzávěr proveden a funkce zkonstruována. V~takovém
 případě je k funkci konstruované uzávěrem uložen také rámec, na kterém byla daná funkce vytvořena.
 Tento rámec poté při aplikaci funkce vytvořené uzávěrem poslouží právě jako rodičovský rámec.
-Nejnižší rámec v zásobníku je nastaven jako rodičovský pouze pokud uzávěr nebyl proveden ve funkci,
+Nejnižší rámec v zásobníku je nastaven jako rodičovský pouze pokud uzávěr nebyl proveden ve~funkci,
 ale na nejvyšší úrovni v programu.
 
 Pro znázornění si představme následující konstrukci. Konstrukce konstruuje funkci následníka.
@@ -489,7 +489,7 @@ jazycích nezbytná, či překlad do bytekódu umožňující efektivnější p�
 žádoucí, aby nastala potřeba přepsat nebo upravit také všechny již existující TIL-Script knihovny,
 standardní knihovnu, apod. Pro implementaci TIL-Script knihovny je však potřeba, aby např.
 TIL-Script funkce implementované v Javě měly určitý přístup k překladači, nebo alespoň kontextu,
-ve kterém jsou volány. Jinak by tyto funkce nemohly přistupovat k proměnným, k jiným funkcím, apod.
+ve~kterém jsou volány. Jinak by tyto funkce nemohly přistupovat k proměnným, k jiným funkcím, apod.
 
 Za účelem odstranění závislosti na konkrétním překladači definuje knihovna \lstinline{common}
 rozhraní \lstinline{InterpreterInterface}. Toto rozhraní specifikuje základní funkce, které
