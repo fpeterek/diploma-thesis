@@ -92,7 +92,7 @@ pak potřebujeme funkci zmínit, využijeme k tomu její jméno. Pojmenovanou fu
 trivializovat.
 
 V ukázce si také zkusíme vytvořit trochu zajímavější funkci. V předchozí ukázce jsme chtěli vypsat
-konstrukci i její výsledek. V nynější ukázce si nad tímto výpisem vytvoříme abstrakci. V ukázce
+konstrukci i její výsledek. V nynější ukázce si nad tímto výpisem vytvoříme abstrakci. V~ukázce
 využijeme funkci \lstinline{Progn}. Funkce je podrobněji popsána v dokumentaci funkcí standardní
 knihovny, viz\ref{progn-fn}. Nyní pouze uvedeme, že se jedná o syntaktický cukr
 nad kombinátorem $\lambda x y . y$. Je-li alespoň jeden z argumentů \lstinline{Progn} hodnota
@@ -136,7 +136,7 @@ Defn PrettyPrint(cons: Construction) -> Any1 :=
 \end{lstlisting}
 
 V praxi se klidně může stát, že bude funkce \lstinline{PrettyPrint} aplikována na funkci,
-která je $v$-nevlastní pro aktuálně zkoumanou valuaci $v$. Aplikací funkce \lstinline{Println}
+která je $v$\babelhyphen{nobreak}nevlastní pro aktuálně zkoumanou valuaci $v$. Aplikací funkce \lstinline{Println}
 na hodnotu \lstinline{Nil} dojde k výpisu \lstinline{Nil} na výstup programu, přesto bude celá
 Kompozice $v$-nevlastní. Toto chování je v praxi pravděpodobně žádoucí, chtěli bychom vidět, že naše
 Kompozice byla $v$-nevlastní a nezkonstruovala žádnou hodnotu. Jako cvičení si však můžeme napsat
@@ -382,8 +382,8 @@ nám umožňuje využít typovou kontrolu k zabránění chybné záměny souřa
 Abychom si předvedli práci se strukturami, vytvoříme si funkci pro převod kartézských souřadnic
 na polární. Za tímto účelem si ovšem nejprve definujeme funkci \lstinline{GetAngle}. Argumenty
 této funkce jsou souřadnice \lstinline{x}, \lstinline{y} bodu a vzdálenost tohoto bodu od počátku
-v kartézském systému. V reálné implementaci by si funkce vzdálenost od počátku mohla spočítat sama,
-jelikož se však jedná pouze o pomocnou funkci, vzdálenost předáme jako argument, abychom ji nemuseli
+v kartézském systému. V~reálné implementaci by si funkce vzdálenost od počátku mohla spočítat sama,
+jelikož se však jedná pouze o~pomocnou funkci, vzdálenost předáme jako argument, abychom ji nemuseli
 počítat vícekrát. Funkce \lstinline{GetAngle} spočítá úhel mezi osou x a úsečkou definovanou
 počátkem a bodem.
 
@@ -393,7 +393,7 @@ argumentem je právě tato vzdálenost. Funkci vytvořenou uzávěrem poté okam
 na vypočítanou vzdálenost od počátku. V tomto případě uzávěr využíváme pouze ke zkrácení zápisu,
 abychom nemuseli vícekrát uvádět vzorec Pythagorovy věty. V praxi ovšem můžeme pomocí uzávěrů
 tímto způsobem omezit například vícenásobné provádění drahých operací (čtení z disku, komunikace
-po síti), nebo zabránit možným chybám (například kdy opakovanou aplikací funkce \lstinline{Random}
+po~síti), nebo zabránit možným chybám (například kdy opakovanou aplikací funkce \lstinline{Random}
 získáme různá náhodná čísla). Ve funkci využijeme konstruktor struktury pro vytvoření objektu typu
 \lstinline{Polar}. Následně jen vytvoříme proměnnou $v$-konstruující objekt typu \lstinline{Cart},
 a převod mezi souřadnicemi otestujeme.
@@ -669,7 +669,7 @@ jsou ovšem čistě syntaktické, nedokáží tedy dokázat pravdivost tvrzení 
 V takových případech bychom se museli uchýlit k sémantické analýze predikátu $P$.
 Predikát ovšem může být netriviální a jeho analýza velmi složitá. Iterace přes celý obor hodnot
 predikátu je naopak nepraktická nebo nemožná. Pokud by predikát $P$ byla funkce typu $(o\tau)$
-(nezapomeňme, že v Transparentní intenzionální logice pracujeme pouze s funkcemi), iterovat přes
+(nezapomeňme, že v~Transparentní intenzionální logice pracujeme pouze s funkcemi), iterovat přes
 obor hodnot by bylo nemožné, neboť množina reálných čísel je nespočetná. Množina všech validních
 hodnot 64-bitového čísla s plovoucí řádovou čárkou spočetná je, proto je možné přes tato čísla
 iterovat, není to však praktické, neboť by výpočet nemusel v skončit v rozumném čase.
@@ -837,7 +837,7 @@ na neprázdný seznam získáme \lstinline{False}.
 Typ: \lstinline{(List(Any1) Type)}
 
 Funkce \lstinline{EmptyListOf} jako svůj jediný vstup přijímá objekt typu \lstinline{Type}.
-Výsledkem aplikace na typ je poté prázdný seznam objektů specifikovaného typu.
+Výsledkem aplikace na~typ je poté prázdný seznam objektů specifikovaného typu.
 
 \begin{lstlisting}[caption={Ukázka využití EmptyListOf}]
 ['IsEmptyOf 'Int].
@@ -881,7 +881,7 @@ a k vyhodnocení dalších podkonstrukcí již nedojde.
 není funkce sama o sobě, překladačem je ovšem při procesu tvorby AST přeložena na sérii vnořených
 aplikací funkce \lstinline{If}.
 
-Máme-li pouze jednu podmínku se dvěmi větvemi, \textit{if} a \textit{else}, je využití funkce
+Máme-li pouze jednu podmínku se dvěma větvemi, \textit{if} a \textit{else}, je využití funkce
 \lstinline{If} jednoduché a čitelné. Máme-li však větví více, musíme aplikace funkce \lstinline{If}
 zanořit -- větví \textit{else} tak musí být další aplikace \lstinline{If}.
 
@@ -941,8 +941,8 @@ Trivializuje svůj argument.
 \subsubsection*{Funkce: \lstinline{TypeOf}}
 Typ: \lstinline{(Type Any1)}
 
-Vrátí typ svého argumentu. Funkce může být užitečná například v~typově polymorfních funkcích,
-potřebujeme-li provést rozhodnutí na~základě typu argumentu.
+Vrátí typ svého argumentu. Funkce může být užitečná například při~implementaci typově polymorfních
+funkcích, potřebujeme-li provést rozhodnutí na~základě typu argumentu.
 
 \begin{lstlisting}[caption={Ukázka využití TypeOf}]
 -- Volba funkce na základě typu argumentu typově polymorfní funkce
@@ -1218,7 +1218,7 @@ Argumentem funkce je důvod, proč byla vrácena hodnota \lstinline{Nil}, a pozi
 k aplikaci funkce na argumenty, na kterých není definována. Často zde budeme chtít použít proměnnou
 \lstinline{callsite}, viz \peteref{callsite-var}.
 
-Ukázka je schválně jednoduchá, logaritmus v matematické knihovně tuto situaci řeší sám, v praxi tedy
+Ukázka je schválně jednoduchá, logaritmus v matematické knihovně tuto situaci řeší sám, v~praxi tedy
 není třeba kontrolovat argument logaritmu manuálně. Proměnná \lstinline{callsite} konstruuje
 pozici ve zdrojovém kódu, kde došlo k aplikaci funkce konstruované uzávěrem.
 
@@ -1412,10 +1412,11 @@ libovolný jazyk kompilovaný pro platformu JVM, nejen Javu nebo Kotlin. Impleme
 \subsection{Implementace funkce}
 
 Začneme vytvořením třídy \lstinline{InvSqrt}. Tato třída musí být potomkem třídy
-\lstinline{DefaultFunction}, abychom ji mohli použít jako TIL-Script funkci. Definice třídy
-\lstinline{DefaultFunction} i jejího předka \lstinline{FunctionInterface} je přiložena v příloze.
-Uživatel tak může nahlédnout do přílohy práce, aby zjistil, jak dané třídy fungují a jaké metody
-musí implementovat sám.
+\lstinline{DefaultFunction} specifikované v Java knihovně \lstinline{common}, abychom ji mohli
+použít jako TIL-Script funkci. Definice třídy \lstinline{DefaultFunction}, ale také jejího předka,
+třídy \lstinline{FunctionInterface} obsahující signaturu metody \lstinline{apply()}, je přiložena
+v~příloze. Uživatel tak může nahlédnout do~přílohy práce, aby zjistil, jak dané třídy fungují a jaké
+metody musí implementovat sám.
 
 \begin{lstlisting}[caption={Třída InvSqrt}, language=Java]
 public class InvSqrt extends DefaultFunction {
@@ -1437,7 +1438,7 @@ vytváříme v kódu statickou proměnnou \lstinline{real}.
 Třetím argumentem je seznam proměnných -- argumentů funkce. Zde nám postačí jeden argument. Opět
 vytvoříme pomocnou proměnnou, tentokrát pojmenovanou \lstinline{arg}. Konstruktor třídy
 \lstinline{Variable} přijímá pět argumentů. Prvním je název proměnné. Druhým argumentem je pozice
-ve zdrojovém kódu -- tento argument se využívá v parseru jazyka TIL-Script a využívá se k hlášení
+ve~zdrojovém kódu -- tento argument se využívá v parseru jazyka TIL-Script a využívá se k hlášení
 chyb. Jelikož je funkce implementovaná v Javě, ne v jazyce TIL-Script, nastavíme pozici na hodnotu,
 která značí, že je pozice neznámá. Třetí argument konstruktoru určuje typ proměnné. Čtvrtým
 argumentem je seznam chyb hlášených při definici proměnné -- jelikož nechceme zbytečně hlásit chyby
@@ -1532,7 +1533,7 @@ Metoda \lstinline{apply} přijímá tři argumenty. První argument -- objekt ty
 případě jej nevyužijeme. Druhý argument je seznam argumentů, které obdržela funkce
 \lstinline{InvSqrt}. Posledním argumentem je kontext aplikace funkce. Kontext obsahuje pozici
 ve~zdrojovém kódu, kde k~aplikaci funkce došlo. Kontext využíváme pro hlášení chyb -- můžeme
-uživateli naší knihovny přesněji říct, kde aplikoval funkci na argumenty, na kterých není
+uživateli naší knihovny přesněji říct, kde aplikoval funkci na~argumenty, na kterých není
 definována.
 
 Konstruktor třídy \lstinline{Nil} přijímá pozici ve zdrojovém kódu, kde tato hodnota vznikla,
@@ -1553,7 +1554,7 @@ námi definovanou funkci. Registrátor musí implementovat rozhraní
 vygenerovat vývojovým prostředím, případně je nalezneme v~příloze práce. Tyto metody nám umožňují
 registrovat např. struktury, typové aliasy (\lstinline{TypeDef}), apod. Zde uvedeme pouze definici
 metody \lstinline{getFunctions()}, jež slouží k registraci funkcí. Zbylé metody vrací pouze prázdný
-seznam (\lstinline{java.util.ArrayList}) a neuvádíme je v ukázce za účelem zkrácení zápisu, v~reálné
+seznam (\lstinline{java.util.ArrayList}) a neuvádíme je v ukázce za~účelem zkrácení zápisu, v~reálné
 implementaci by funkce pouze vracely instanci prázného seznamu, nesměly by však chybět.
 
 Metoda \lstinline{getFunctions()} pouze vytvoří seznam obsahující instanci námi vytvořené funkce.

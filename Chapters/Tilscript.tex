@@ -692,6 +692,11 @@ zařízení lze uvést například funkci \lstinline{Now} vracející aktuální
 nic však nebrání využití např. hardwarových generátorů náhodných čísel nebo
 \lstinline{/dev/random}, pokud je to na~dané platformě možné).
 
+Argumenty typu \lstinline{DeviceState} využíváme převážně u~funkcí, které by jinak žádný argument
+nepotřebovaly, neboť nulární funkce v~jazyce TIL-Script mít nemůžeme. Funkcím, které sice
+závisí na~stavu zařízení, ale vyžadují alespoň jeden argument, nemusíme argument typu
+\lstinline{DeviceState} nutně přidávat.
+
 \begin{lstlisting}[caption={Příklad funkcí závislých na stavu zařízení}]
 ['Now deviceState].
 ['Random deviceState].
