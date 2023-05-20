@@ -11,6 +11,8 @@
 *.lol
 *.lot
 .auctex-auto
+*.snm
+*.nav
 
 .DS_Store
 *.py[co]
