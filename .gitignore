@@ -13,6 +13,7 @@
 .auctex-auto
 *.snm
 *.nav
+*.vrb
 
 .DS_Store
 *.py[co]

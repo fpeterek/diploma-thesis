@@ -37,7 +37,7 @@
     \begin{itemize}
         \item Define the TIL-Script programming language
             \begin{itemize}
-                \item Improve upon the current grammar
+                \item Build upon the current grammar
                 \item Define the semantics of the language
             \end{itemize}
         \item Create a working TIL-Script interpreter
@@ -54,7 +54,9 @@
         \item Based on typed Lambda calculi
         \item Rigorously defined type hierarchy
         \item Procedural and hyperintensional
-        \item Constructions can mention other constructions
+            \begin{itemize}
+                \item Constructions can mention other constructions
+            \end{itemize}
         \item Sentence meaning is carried by a procedure
             \begin{itemize}
                 \item We mostly care for the procedure itself, seldom do we care for the value
@@ -68,7 +70,7 @@
 \begin{frame}
     \frametitle{TIL-Script}
     \begin{itemize}
-        \item Grammar closely resembles TIL grammar
+        \item Grammar closely resembles TIL grammar and conventions
         \item Adds upon TIL to form a useable programming language
             \begin{itemize}
                 \item Lists
@@ -106,6 +108,15 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{Nil Value}
+    \begin{itemize}
+        \item Used to represent a state when no real value was produced
+        \item Internally carries a position in the source code where the value was produced
+        \item Also carries the reason as to why a construction was improper
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
     \frametitle{Declarations And Definitions}
     \begin{itemize}
         \item Declaration only specifies a name and a type
@@ -116,6 +127,34 @@
                 \item Function Halts/(Bool Program) cannot be implemented
             \end{itemize}
         \item Definition also specifies semantics or value
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tuples And Lists}
+    \begin{itemize}
+        \item Originally
+            \begin{itemize}
+                \item Tuples were homogenous and finite
+                \item Lists were homogenous and infinite
+            \end{itemize}
+        \item Now
+            \begin{itemize}
+                \item Tuples are heterogenous and fixed in size
+                \item Lists are homogenous, size is unlimited
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Structs}
+    \begin{itemize}
+        \item User defined compound types
+        \item Cannot be coerced into other types with same layout
+        \item Allows for better use of the TIL-Script type system
+            \begin{itemize}
+                \item E.g. cartesian vs. polar coordinates
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -205,7 +244,7 @@ Defn Filter(list: List(Int), pred: (Bool Int))
                 \item Not the best choice for an interpreter
                 \item Simplifies dealing with functions of different implementations
                 \item The interpreter can be replaced with a better, drop-in replacement
-                \item Limited choice in the JVM
+                \item Limited choice on the JVM
             \end{itemize}
         \item Functional approach where possible
         \item Immutability is preferred
@@ -255,6 +294,18 @@ Defn Filter(list: List(Int), pred: (Bool Int))
     \begin{center}
         \Huge The End
     \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Questions}
+    \begin{itemize}
+        \item What is a degenerate function?
+            \begin{itemize}
+                \item A function which is undefined on the entirety of its domain
+                \item $\lambda x \, . \, x \div 0$
+                \item $\lambda x \, . \, log_x 0$
+            \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \end{document}
